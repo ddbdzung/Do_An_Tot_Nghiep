@@ -1,0 +1,36 @@
+version: '3'
+services:
+  # The Application
+  api_template:
+    container_name: api_template
+    build:
+      context: ./
+      dockerfile: ./node.dockerfile
+    restart: always
+    networks:
+      - traefik_traefik
+      - default
+    working_dir: /usr/src/app
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api_template.entrypoints=http'
+      - 'traefik.http.routers.api_template.rule=Host(`${DOMAIN}`)&&PathPrefix(`/api`)'
+      - 'traefik.docker.network=traefik_traefik'
+      - 'traefik.http.services.api_template.loadbalancer.server.port=3000'
+      #      - "traefik.http.routers.api_template.middlewares=api_template-stripprefix"
+      - 'traefik.http.middlewares.api_template-stripprefix.stripprefix.prefixes=/api'
+      - 'traefik.http.routers.api_template.middlewares=api_template-stripprefix'
+
+      - 'traefik.http.middlewares.api_template-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.api_template.middlewares=api_template-https-redirect'
+      - 'traefik.http.routers.api_template-secure.rule=Host(`${DOMAIN}`)&&PathPrefix(`/api`)'
+      - 'traefik.http.middlewares.api_template-secure-stripprefix.stripprefix.prefixes=/api'
+      - 'traefik.http.routers.api_template-secure.middlewares=api_template-stripprefix'
+      - 'traefik.http.routers.api_template-secure.tls=true'
+      - 'traefik.http.routers.api_template-secure.tls.certresolver=http'
+      - 'traefik.http.routers.api_template-secure.entrypoints=https'
+      - 'traefik.http.routers.api_template-secure.service=api_template'
+
+networks:
+  traefik_traefik:
+    external: true

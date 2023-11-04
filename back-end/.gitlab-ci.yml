@@ -1,0 +1,15 @@
+image: docker/compose
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: docker/compose
+  script:
+    - cp ./.env.development ./.env
+    # - docker-compose down
+    - docker-compose --env-file .env.development build
+    - docker-compose up -d
+  only:
+    refs:
+      - master
