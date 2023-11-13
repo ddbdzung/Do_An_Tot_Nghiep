@@ -60,6 +60,9 @@ const packServiceSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
+    deletedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

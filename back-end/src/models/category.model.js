@@ -7,12 +7,14 @@ const categorySchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      text: true,
+      unique: true,
     },
     image: {
       type: String,
       trim: true,
       maxLength: 255,
-    }
+    },
   },
   {
     timestamps: true,

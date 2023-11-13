@@ -27,28 +27,34 @@ const priceHistorySchema = mongoose.Schema(
     value: {
       type: Number,
       required: true,
+      min: 0,
     },
-  }, {
+  },
+  {
     timestamps: {
       createdAt: false,
       updatedAt: true,
     },
     id: true,
-  }
-)
+  },
+);
+
+exports.priceHistorySchema = priceHistorySchema;
 
 const priceSchema = mongoose.Schema(
   {
     lastValue: {
       type: Number,
       required: true,
+      min: 0,
     },
     history: [priceHistorySchema],
-  }, {
+  },
+  {
     timestamps: false,
     id: false,
   },
-)
+);
 
 const productSchema = mongoose.Schema(
   {
@@ -56,6 +62,7 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      text: true,
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,
@@ -83,8 +90,13 @@ const productSchema = mongoose.Schema(
     quantity: {
       type: Number,
       required: true,
+      min: 0,
     },
     price: priceSchema,
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

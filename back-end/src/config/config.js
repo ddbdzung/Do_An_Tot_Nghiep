@@ -38,6 +38,18 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description(
       'the from field in the emails sent by the app',
     ),
+    MULTIMEDIA_CLOUD_NAME: Joi.string()
+      .required()
+      .trim()
+      .description('Cloudinary name'),
+    MULTIMEDIA_API_KEY: Joi.string()
+      .required()
+      .trim()
+      .description('Cloudinary api key'),
+    MULTIMEDIA_API_SECRET: Joi.string()
+      .required()
+      .trim()
+      .description('Cloudinary api secret'),
   })
   .unknown();
 
@@ -83,5 +95,10 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+  },
+  multimedia: {
+    cloudName: envVars.MULTIMEDIA_CLOUD_NAME,
+    apiKey: envVars.MULTIMEDIA_API_KEY,
+    apiSecret: envVars.MULTIMEDIA_API_SECRET,
   },
 };

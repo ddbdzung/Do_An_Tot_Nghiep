@@ -7,3 +7,6 @@ module.exports.roleService = require('./role.service');
 module.exports.sinhVienService = require('./sinhVien.service');
 module.exports.schoolService = require('./school.service');
 module.exports.transactionService = require('./transaction.service');
+module.exports.packService = require('./pack-service.service');
+module.exports.productService = require('./product.service');
+module.exports.categoryService = require('./category.service');

@@ -1,23 +1,36 @@
-// const express = require('express');
-// const auth = require('../../middlewares/auth');
-// const validate = require('../../middlewares/validate');
-// const { permission } = require('../../config/permission');
-// const { schoolController } = require('../../controllers');
-// const { schoolValidation } = require('../../validations');
+const express = require('express');
+const auth = require('../../middlewares/auth');
+const validate = require('../../middlewares/validate');
+const { permission } = require('../../config/permission');
+const { productController } = require('../../controllers');
+const { productValidation } = require('../../validations');
 
-// const router = express.Router();
+const router = express.Router();
 
-// router
-//   .route('/')
-//   .get(
-//     auth(permission.SCHOOL.GET_SCHOOLS),
-//     validate(schoolValidation.getSchools),
-//     schoolController.getSchools,
-//   )
-//   .post(
-//     auth(permission.SCHOOL.CREATE_SCHOOL),
-//     validate(schoolValidation.createSchool),
-//     schoolController.createSchool,
-//   );
+router
+  .route('/')
+  .get(
+    auth(permission.PRODUCT.GET_PRODUCTS),
+    validate(productValidation.getProducts),
+    productController.getProducts,
+  )
+  .post(
+    auth(permission.PRODUCT.CREATE_PRODUCT),
+    validate(productValidation.createProduct),
+    productController.createProduct,
+  );
 
-// module.exports = router;
+router
+  .route('productId')
+  .patch(
+    auth(permission.PRODUCT.UPDATE_PRODUCT),
+    validate(productValidation.updateProduct),
+    productController.updateProduct,
+  )
+  .delete(
+    auth(permission.PRODUCT.DELETE_PRODUCT),
+    validate(productValidation.softDeleteProduct),
+    productController.softDeleteProduct,
+  );
+
+module.exports = router;

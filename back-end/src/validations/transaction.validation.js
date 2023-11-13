@@ -2,19 +2,20 @@ const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const createTransaction = {
-  body: Joi.object().keys({
-    v: Joi.string().required(),
+  params: Joi.object().keys({
+    packServiceId: Joi.string().required().custom(objectId),
   }),
-};
-
-const updateTransactionsWithSchool = {
   body: Joi.object().keys({
-    transactionIds: Joi.array().min(1).items(Joi.string().custom(objectId)),
-    schoolId: Joi.string().required().custom(objectId),
+    products: Joi.array().items(
+      Joi.object().keys({
+        product: Joi.string().required().custom(objectId),
+        amount: Joi.number().integer().required().min(0),
+        price: Joi.number().integer().required().min(0),
+      }),
+    ),
   }),
 };
 
 module.exports = {
   createTransaction,
-  updateTransactionsWithSchool,
 };

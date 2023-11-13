@@ -32,13 +32,37 @@ const permission = {
     MANAGE_USER: 'manage_user',
     DELETE_USER: 'delete_user',
   },
+
+  // pack-service module
+  PACK_SERVICE: {
+    GET_PACK_SERVICES: 'get_pack_services',
+    CREATE_PACK_SERVICE: 'create_pack_service',
+    UPDATE_PACK_SERVICE: 'update_pack_service',
+    DELETE_PACK_SERVICE: 'delete_pack_service',
+  },
+
+  // product module
+  PRODUCT: {
+    GET_PRODUCTS: 'get_products',
+    CREATE_PRODUCT: 'create_product',
+    UPDATE_PRODUCT: 'update_product',
+    DELETE_PRODUCT: 'delete_product',
+  },
+
+  // category module
+  CATEGORY: {
+    GET_CATEGORIES: 'get_categories',
+    CREATE_CATEGORY: 'create_category',
+    UPDATE_CATEGORY: 'update_category',
+    DELETE_CATEGORY: 'delete_category',
+  },
 };
-const permissionArr = Object.values(permission).reduce((pNow, pCurren) => {
+const permissionArr = Object.values(permission).reduce((pNow, pCurrent) => {
   let pNowTemp = pNow;
   if (typeof pNow === 'object') {
     pNowTemp = Object.values(pNow);
   }
-  return [...pNowTemp, ...Object.values(pCurren)];
+  return [...pNowTemp, ...Object.values(pCurrent)];
 });
 
 module.exports = {
