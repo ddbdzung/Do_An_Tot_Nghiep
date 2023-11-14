@@ -1,3 +1,5 @@
+import { IResponse } from './IResponse';
+
 export class ResponsePayload implements IResponse {
   code: number;
   message: string;
