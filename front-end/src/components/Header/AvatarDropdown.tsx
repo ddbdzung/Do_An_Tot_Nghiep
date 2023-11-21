@@ -1,13 +1,27 @@
 "use client";
-
+import { useEffect, useState, Fragment } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { AuthContext } from "@/shared/PassAuthProp";
 import { Popover, Transition } from "@/app/(landing-page)/headlessui";
 import { avatarImgs } from "@/contains/fakeData";
-import { Fragment } from "react";
 import Avatar from "@/shared/Avatar/Avatar";
 import SwitchDarkMode2 from "@/shared/SwitchDarkMode/SwitchDarkMode2";
 import Link from "next/link";
+import { notifySuccess } from "@/utils/notify";
 
-export default function AvatarDropdown() {
+function AvatarDropdown() {
+  const { accessToken, permissions } = useAppSelector(
+    (store) => store.authReducer
+  );
+  const [isAuth, setAuth] = useState<boolean>(
+    !accessToken || permissions.length === 0 ? false : true
+  );
+  useEffect(() => {
+    if (accessToken && permissions.length > 0) {
+      setAuth(true);
+    }
+  }, [accessToken, permissions]);
+
   return (
     <div className="AvatarDropdown ">
       <Popover className="relative">
@@ -50,17 +64,26 @@ export default function AvatarDropdown() {
               <Popover.Panel className="absolute z-10 w-screen max-w-[260px] px-4 mt-3.5 -right-10 sm:right-0 sm:px-0">
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
-                    <div className="flex items-center space-x-3">
-                      <Avatar imgUrl={avatarImgs[7]} sizeClass="w-12 h-12" />
+                    {/* Avatar Start */}
+                    {isAuth && (
+                      <>
+                        <div className="flex items-center space-x-3">
+                          <Avatar
+                            imgUrl={avatarImgs[7]}
+                            sizeClass="w-12 h-12"
+                          />
 
-                      <div className="flex-grow">
-                        <h4 className="font-semibold">Eden Smith</h4>
-                        <p className="text-xs mt-0.5">Los Angeles, CA</p>
-                      </div>
-                    </div>
-
-                    <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
-
+                          <div className="flex-grow">
+                            <h4 className="font-semibold">Eden Smith</h4>
+                            <p className="text-xs mt-0.5">Los Angeles, CA</p>
+                          </div>
+                        </div>
+                        <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
+                      </>
+                    )}
+                    {/* Avatar End */}
+                    {isAuth 
+                    ? <>
                     {/* ------------------ 1 --------------------- */}
                     <Link
                       href={"/account"}
@@ -321,7 +344,63 @@ export default function AvatarDropdown() {
                       <div className="ml-4">
                         <p className="text-sm font-medium ">{"Log out"}</p>
                       </div>
+                    </Link></> 
+                    : <>
+                    {/* ------------------ 1 --------------------- */}
+                    <Link
+                      href={"/account"}
+                      className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                      onClick={() => close()}
+                    >
+                      <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium ">{"My Account"}</p>
+                      </div>
                     </Link>
+
+                    {/* ------------------ 2 --------------------- */}
+                    <Link
+                      href={"/checkout"}
+                      className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                      onClick={() => close()}
+                    >
+                      <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium ">{"My Order"}</p>
+                      </div>
+                    </Link>
+                    </>
+                    }
                   </div>
                 </div>
               </Popover.Panel>
@@ -332,3 +411,5 @@ export default function AvatarDropdown() {
     </div>
   );
 }
+
+export default AvatarDropdown;
