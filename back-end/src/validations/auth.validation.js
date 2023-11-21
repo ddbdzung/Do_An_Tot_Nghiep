@@ -10,7 +10,7 @@ const register = {
     address: Joi.string(),
     gender: Joi.string()
       .valid(...Object.values(GENDER))
-      .required(),
+      .default(GENDER.Male),
     dateOfBirth: Joi.date(),
   }),
 };

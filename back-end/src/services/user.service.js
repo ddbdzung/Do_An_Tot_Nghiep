@@ -4,6 +4,13 @@ const { User, Role } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { roles } = require('../config/roles');
 
+const getPermissions = async (roleId, options = { lean: false }) => {
+  const role = await Role.findById(roleId, 'permission', options);
+  if (!role) return null;
+
+  return role.permission;
+};
+
 /**
  * Create a user
  * @param {Object} userBody
@@ -92,4 +99,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getPermissions,
 };

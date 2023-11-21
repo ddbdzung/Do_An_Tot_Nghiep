@@ -6,11 +6,27 @@ const {
   tokenService,
   emailService,
 } = require('../services');
+const { ResponsePayloadBuilder } = require('../common/response-payload');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  const permissions = await userService.getPermissions(user.roleId, {
+    lean: true,
+  });
+  const {
+    _doc: { isPasswordChange, password, __v, roleId, ...plainUser },
+    ...rest
+  } = user;
+  return res.status(httpStatus.CREATED).json(
+    new ResponsePayloadBuilder()
+      .setCode(httpStatus.CREATED)
+      .setMessage('User registered successfully')
+      .withData({
+        user: Object.assign(plainUser, { permissions }),
+        tokens,
+      }),
+  );
 });
 
 const login = catchAsync(async (req, res) => {
