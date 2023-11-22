@@ -184,7 +184,7 @@ const PageSignUp = () => {
               <ButtonPrimary type="submit">Continue</ButtonPrimary>
             ) : (
               <ButtonPrimary type="submit">
-                <span className="mx-2">Đang tải</span>
+                <span className="mx-2">Loading</span>
                 <svg
                   role="status"
                   className="inline mr-3 w-4 h-4 text-white animate-spin"

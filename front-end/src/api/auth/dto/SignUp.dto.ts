@@ -1,5 +1,3 @@
-import { IResponsePayload } from "@/http-service/response-handler";
-
 export interface ISignUpBodyDto {
   email: string;
   password: string;

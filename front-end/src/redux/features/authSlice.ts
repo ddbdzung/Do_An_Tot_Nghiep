@@ -1,16 +1,17 @@
 import { ISignUpBodyDto, ISignUpResponseDto } from "@/api/auth/dto/SignUp.dto";
-import { SIGN_UP } from "@/api/auth/endpoints";
+import { SIGN_IN, SIGN_OUT, SIGN_UP } from "@/api/auth/endpoints";
 import {
   createSlice,
   PayloadAction,
   createAsyncThunk,
   Action,
 } from "@reduxjs/toolkit";
-import { fetchSignUp } from "../services/authApi";
+import { fetchSignIn, fetchSignUp } from "../services/authApi";
 import { handleResponsePayload } from "@/http-service/response-handler";
 import { notifyError } from "@/utils/notify";
 import { HttpMessage } from "@/http-service/http-message";
 import { loadState, saveState } from "@/utils/localStorage";
+import { ISignInResponseDto } from "@/api/auth/dto/SignIn.dto";
 
 export const signUpAsync = createAsyncThunk(
   SIGN_UP,
@@ -19,6 +20,19 @@ export const signUpAsync = createAsyncThunk(
     return data;
   }
 );
+
+export const signInAsync = createAsyncThunk(
+  SIGN_IN,
+  async (payload: ISignInBodyDto, { getState }) => {
+    const data = await fetchSignIn(payload);
+    return data;
+  }
+);
+
+// export const signOutAsync = createAsyncThunk(
+//   SIGN_OUT,
+//   async (payload: )
+// )
 
 export enum AuthFormStatus {
   IDLE = "idle",
@@ -46,6 +60,18 @@ export const auth = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    signOut: (state) => {
+      state.accessToken = null;
+      state.email = null;
+      state.fullname = null;
+      state.permissions = [];
+
+      saveState("accessToken", null);
+      saveState("permissions", []);
+      saveState("email", null);
+      saveState("fullname", null);
+      return state;
+    },
   },
   extraReducers(builder) {
     builder
@@ -76,9 +102,37 @@ export const auth = createSlice({
         state.formStatus = AuthFormStatus.IDLE;
         notifyError(HttpMessage.INTERNAL_SERVER_ERROR);
         return state;
+      })
+      .addCase(signInAsync.pending, (state) => {
+        state.formStatus = AuthFormStatus.LOADING;
+        return state;
+      })
+      .addCase(signInAsync.fulfilled, (state, action) => {
+        const res = handleResponsePayload<ISignInResponseDto>(action.payload);
+        state.formStatus = AuthFormStatus.IDLE;
+        if (!res) {
+          return state;
+        }
+
+        state.accessToken = res.data?.tokens.access.token;
+        state.permissions = res.data?.user.permissions;
+        state.email = res.data?.user.email;
+        state.fullname = res.data?.user.name;
+
+        saveState("accessToken", res.data?.tokens.access.token);
+        saveState("permissions", res.data?.user.permissions);
+        saveState("email", res.data?.user.email);
+        saveState("fullname", res.data?.user.name);
+
+        return state;
+      })
+      .addCase(signInAsync.rejected, (state, action) => {
+        state.formStatus = AuthFormStatus.IDLE;
+        notifyError(HttpMessage.INTERNAL_SERVER_ERROR);
+        return state;
       });
   },
 });
 
-export const { reset } = auth.actions;
+export const { reset, signOut } = auth.actions;
 export default auth.reducer;

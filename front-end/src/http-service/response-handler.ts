@@ -1,25 +1,25 @@
 import { notifyError, notifySuccess } from "@/utils/notify";
 
 export interface IResponsePayload<T> {
-  code: any;
+  statusCode: any;
   message: string;
   data: T | null;
 }
 
 export function handleResponsePayload<T>(response: IResponsePayload<T>) {
-  const { code, message, data } = response;
-  if (code >= 200 && code < 300) {
+  const { statusCode, message, data } = response;
+  if (statusCode >= 200 && statusCode < 300) {
     notifySuccess(message);
     return {
       metadata: {
-        code,
+        statusCode,
         message,
       },
       data,
     };
   }
 
-  if (code >= 400 && code < 500) {
+  if (statusCode >= 400 && statusCode < 500) {
     notifyError(message);
     return null;
   }
