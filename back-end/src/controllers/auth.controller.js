@@ -6,9 +6,9 @@ const {
   tokenService,
   emailService,
 } = require('../services');
-const { ResponsePayloadBuilder } = require('../common/response-payload');
+const responseEmitter = require('../utils/responseEmitter');
 
-const register = catchAsync(async (req, res) => {
+const register = catchAsync(async (req, res, next) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
   const permissions = await userService.getPermissions(user.roleId, {
@@ -18,30 +18,46 @@ const register = catchAsync(async (req, res) => {
     _doc: { isPasswordChange, password, __v, roleId, ...plainUser },
     ...rest
   } = user;
-  return res.status(httpStatus.CREATED).json(
-    new ResponsePayloadBuilder()
-      .setCode(httpStatus.CREATED)
-      .setMessage('User registered successfully')
-      .withData({
-        user: Object.assign(plainUser, { permissions }),
-        tokens,
-      }),
+
+  responseEmitter(req, res, next)(
+    httpStatus.CREATED,
+    'User registered successfully',
+    {
+      user: Object.assign(plainUser, { permissions }),
+      tokens,
+    },
   );
 });
 
-const login = catchAsync(async (req, res) => {
+const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
 
-  const { password: _, roleId, ...userObj } = user.toObject();
+  const {
+    password: _,
+    roleId,
+    isPasswordChange,
+    __v,
+    ...userObj
+  } = user.toObject();
+  const permissions = await userService.getPermissions(roleId, {
+    lean: true,
+  });
 
-  res.send({ user: userObj, tokens });
+  responseEmitter(req, res, next)(
+    httpStatus.OK,
+    'User logged in successfully',
+    {
+      user: Object.assign(userObj, { permissions }),
+      tokens,
+    },
+  );
 });
 
-const logout = catchAsync(async (req, res) => {
+const logout = catchAsync(async (req, res, next) => {
   await authService.logout(req.body.refreshToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  responseEmitter(req, res, next)(httpStatus.NO_CONTENT, 'Logout successfully');
 });
 
 const refreshTokens = catchAsync(async (req, res) => {

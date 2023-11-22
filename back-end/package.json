@@ -13,6 +13,7 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "test": "jest -i",
+    "dev": "cross-env NODE_ENV=development nodemon",
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
@@ -25,7 +26,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
     "prepare": "husky install",
     "generate": "node generator.js",
-    "dev": "cross-env NODE_ENV=development npx tsc && cross-env NODE_ENV=development node dist/src/index.js"
+    "dev-ts": "cross-env NODE_ENV=development npx tsc && cross-env NODE_ENV=development node dist/src/index.js"
   },
   "keywords": [
     "node",

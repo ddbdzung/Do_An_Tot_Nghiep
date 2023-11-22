@@ -4,7 +4,7 @@ const path = require('path');
 const Joi = require('joi');
 const nodeEnv = process.env.NODE_ENV || 'development';
 const env = dotenv.config({
-  path: path.join(__dirname, '..', '..', '..', `.env.${nodeEnv}`),
+  path: path.join(__dirname, '..', '..', `.env.${nodeEnv}`),
 });
 dotenvExpand(env);
 
