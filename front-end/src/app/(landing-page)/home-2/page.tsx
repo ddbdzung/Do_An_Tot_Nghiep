@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import SectionHowItWork from "@/components/SectionHowItWork/SectionHowItWork";
 import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
@@ -10,6 +11,7 @@ import SectionHero3 from "@/components/SectionHero/SectionHero3";
 import SectionPromo1 from "@/components/SectionPromo1";
 import { SPORT_PRODUCTS } from "@/data/data";
 import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
+import withAuth from "@/shared/PrivateRoute";
 
 function PageHome2() {
   return (
@@ -49,4 +51,4 @@ function PageHome2() {
   );
 }
 
-export default PageHome2;
+export default withAuth({ requiredRights: ["get_sinhVien"] })(PageHome2);

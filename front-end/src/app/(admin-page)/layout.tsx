@@ -11,11 +11,7 @@ export const metadata = {
 
 const DRAWER_WIDTH = 240;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
@@ -41,3 +37,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export default RootLayout;
