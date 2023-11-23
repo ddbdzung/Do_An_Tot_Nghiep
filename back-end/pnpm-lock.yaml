@@ -127,9 +127,6 @@ devDependencies:
   faker:
     specifier: ^5.1.0
     version: 5.5.3
-  husky:
-    specifier: ^5.1.2
-    version: 5.2.0
   jest:
     specifier: ^26.0.1
     version: 26.6.3(ts-node@10.9.1)
@@ -3751,12 +3748,6 @@ packages:
   /human-signals@1.1.1:
     resolution: {integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==}
     engines: {node: '>=8.12.0'}
-    dev: true
-
-  /husky@5.2.0:
-    resolution: {integrity: sha512-AM8T/auHXRBxlrfPVLKP6jt49GCM2Zz47m8G3FOMsLmTv8Dj/fKVWE0Rh2d4Qrvmy131xEsdQnb3OXRib67PGg==}
-    engines: {node: '>= 10'}
-    hasBin: true
     dev: true
 
   /iconv-lite@0.4.24:
