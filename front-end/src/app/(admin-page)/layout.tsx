@@ -3,6 +3,7 @@ import AdminNavbar from "@/components/Admin/AdminNavbar";
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import { Providers } from "@/redux/provider";
 import { Box } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Next.js App Router + Material UI v5",
@@ -33,6 +34,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
             </Box>
           </ThemeRegistry>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

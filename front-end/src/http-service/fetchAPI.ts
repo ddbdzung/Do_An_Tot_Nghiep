@@ -11,7 +11,8 @@ export enum HTTPMethod {
 }
 const configHeaderRequest = (tokens: any) => {
   try {
-    if (!tokens?.access || !tokens?.refresh) {
+    // if (!tokens?.access || !tokens?.refresh) {
+    if (!tokens?.access) {
       return {};
     }
     return {
@@ -25,7 +26,12 @@ const configHeaderRequest = (tokens: any) => {
 
 const request =
   (method: HTTPMethod) =>
-  async (api: string, data: any, tokens: any = {}, _headers = {}) => {
+  async (
+    api: string,
+    data: null | { [key: string]: any },
+    tokens: any = {},
+    _headers = null
+  ) => {
     const headers = _headers || configHeaderRequest(tokens);
     const url = `${EnvironmentVariables.get(
       "backend.baseUrl"
@@ -33,8 +39,10 @@ const request =
     const body: { [name: string]: any } = {
       url,
       method,
-      data,
     };
+    if (data !== null) {
+      body.data = data;
+    }
     if (Object.keys(headers).length > 0) {
       /* @ts-nocheck */
       body.headers = headers;

@@ -1,4 +1,4 @@
-import { ISignUpBodyDto } from "@/api/auth/dto/SignUp.dto";
+import { ISignUpBodyDto } from "@/api/auth/dto/sign-up.dto";
 import { SIGN_IN, SIGN_UP } from "@/api/auth/endpoints";
 import { customAxios } from "@/http-service/fetchAPI";
 import { AxiosError } from "axios";
@@ -13,7 +13,7 @@ export async function fetchSignUp(payload: ISignUpBodyDto) {
       return { code, message };
     }
 
-    return response.data;
+    return errorResponse.response.data;
   }
 }
 
@@ -27,6 +27,6 @@ export async function fetchSignIn(payload: ISignUpBodyDto) {
       return { code, message };
     }
 
-    return response.data;
+    return errorResponse.response.data;
   }
 }

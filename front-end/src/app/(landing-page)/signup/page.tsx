@@ -16,7 +16,7 @@ import {
   signUpAsync,
 } from "@/redux/features/authSlice";
 import { EnvironmentVariables } from "@/configurations/EnvironmentVariable";
-import { ISignUpBodyDto } from "@/api/auth/dto/SignUp.dto";
+import { ISignUpBodyDto } from "@/api/auth/dto/sign-up.dto";
 import { throttle } from "lodash";
 import withoutAuth from "@/shared/PublicRoute";
 import { useRouter } from "next/navigation";
