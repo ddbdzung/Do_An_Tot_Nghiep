@@ -8,8 +8,8 @@ const responseEmitter = require('../utils/responseEmitter');
 exports.getCategories = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await categoryService.queryCategories(filter, options);
-  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], result);
+  const categories = await categoryService.queryCategories(filter, options);
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], categories);
 });
 
 exports.createCategory = catchAsync(async (req, res, next) => {

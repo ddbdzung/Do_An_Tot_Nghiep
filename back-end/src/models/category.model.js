@@ -8,7 +8,6 @@ const categorySchema = mongoose.Schema(
       required: true,
       trim: true,
       text: true,
-      unique: true,
     },
     image: {
       type: String,
@@ -20,7 +19,6 @@ const categorySchema = mongoose.Schema(
     timestamps: true,
   },
 );
-
 
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);

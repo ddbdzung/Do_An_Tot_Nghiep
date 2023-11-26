@@ -8,7 +8,7 @@ const { productValidation } = require('../../validations');
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/a')
   .get(
     auth(permission.PRODUCT.GET_PRODUCTS),
     validate(productValidation.getProducts),
@@ -21,7 +21,12 @@ router
   );
 
 router
-  .route('productId')
+  .route('/a/:productId')
+  .get(
+    auth(permission.PRODUCT.GET_PRODUCT),
+    validate(productValidation.getProduct),
+    productController.getProduct,
+  )
   .patch(
     auth(permission.PRODUCT.UPDATE_PRODUCT),
     validate(productValidation.updateProduct),

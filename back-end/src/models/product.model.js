@@ -16,11 +16,12 @@ const imageCollectionSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-  }, {
+  },
+  {
     timestamps: false,
     id: false,
   },
-)
+);
 
 const priceHistorySchema = mongoose.Schema(
   {
@@ -29,26 +30,10 @@ const priceHistorySchema = mongoose.Schema(
       required: true,
       min: 0,
     },
-  },
-  {
-    timestamps: {
-      createdAt: false,
-      updatedAt: true,
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-    id: true,
-  },
-);
-
-exports.priceHistorySchema = priceHistorySchema;
-
-const priceSchema = mongoose.Schema(
-  {
-    lastValue: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    history: [priceHistorySchema],
   },
   {
     timestamps: false,
@@ -70,7 +55,7 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     images: [imageCollectionSchema],
-    detail: {
+    description: {
       type: String,
       trim: true,
     },
@@ -92,7 +77,14 @@ const productSchema = mongoose.Schema(
       required: true,
       min: 0,
     },
-    price: priceSchema,
+    price: {
+      lastValue: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      history: [priceHistorySchema],
+    },
     deletedAt: {
       type: Date,
       default: null,
@@ -103,9 +95,13 @@ const productSchema = mongoose.Schema(
   },
 );
 
-
 productSchema.plugin(toJSON);
 productSchema.plugin(paginate);
+
+productSchema.methods.populateOption = async function (populate) {
+  const productPopulate = await this.populate(populate).execPopulate();
+  return productPopulate;
+};
 
 /**
  * @typedef Product

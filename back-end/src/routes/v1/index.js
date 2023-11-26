@@ -5,6 +5,8 @@ const docsRoute = require('./docs.route');
 const roleRoute = require('./role.route');
 const transactionRoute = require('./transaction.route');
 const packServiceRoute = require('./pack-service.route');
+const productRoute = require('./product.route');
+const categoriesRoute = require('./category.route');
 // New Route import go here
 
 const config = require('../../config/config');
@@ -32,6 +34,14 @@ const defaultRoutes = [
   {
     path: '/transactions',
     route: transactionRoute,
+  },
+  {
+    path: '/products',
+    route: productRoute,
+  },
+  {
+    path: '/categories',
+    route: categoriesRoute,
   },
 ];
 

@@ -10,7 +10,7 @@ const responseEmitter = require('../utils/responseEmitter');
 
 const register = catchAsync(async (req, res, next) => {
   const user = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
+  const tokens = tokenService.generateAuthTokens(user);
   const permissions = await userService.getPermissions(user.roleId, {
     lean: true,
   });
@@ -32,7 +32,7 @@ const register = catchAsync(async (req, res, next) => {
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(user);
+  const tokens = tokenService.generateAuthTokens(user);
 
   const {
     password: _,

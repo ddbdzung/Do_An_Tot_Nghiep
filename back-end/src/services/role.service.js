@@ -29,10 +29,10 @@ const queryroles = async (filter, options) => {
 /**
  * Get role by id
  * @param {ObjectId} id
- * @returns {Promise<role>}
+ * @param {{lean: boolean}} options
  */
-const getroleById = async id => {
-  return Role.findById(id);
+const getroleById = async (id, options = { lean: false }) => {
+  return Role.findById(id, null, options);
 };
 
 /**
