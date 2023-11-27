@@ -43,7 +43,7 @@ const createProduct = catchAsync(async (req, res, next) => {
   responseEmitter(req, res, next)(httpStatus.CREATED, httpStatus[201], product);
 });
 
-const updateProduct = catchAsync(async (req, res) => {
+const updateProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.params;
   const updateProductDto = pick(req.body, [
     'price',
@@ -58,16 +58,14 @@ const updateProduct = catchAsync(async (req, res) => {
     productId,
     updateProductDto,
   );
-  res.send(product);
+
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], product);
 });
 
-const softDeleteProduct = catchAsync(async (req, res) => {
+const softDeleteProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.params;
-  await productService.softDeleteProductById(productId);
-  res.status(httpStatus.OK).json({
-    statusCode: httpStatus.OK,
-    message: httpStatus[200],
-  });
+  const product = await productService.softDeleteProductById(productId);
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], product);
 });
 
 module.exports = {

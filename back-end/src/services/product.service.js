@@ -6,6 +6,10 @@ const Mongoose = require('mongoose');
 
 exports.getProductById = async id => {
   const product = await Product.findById(id);
+  if (!product || product.deletedAt) {
+    return null;
+  }
+
   return product.populateOption('category');
 };
 
@@ -18,8 +22,11 @@ exports.queryProducts = async (filter, options) => {
       return productPopulate;
     }),
   );
+  const resultsNotDeleted = resultsWithPopulate.filter(
+    product => !product.deletedAt,
+  );
   return {
-    results: resultsWithPopulate,
+    results: resultsNotDeleted,
     ...rest,
   };
 };
@@ -78,7 +85,8 @@ exports.updateProductById = async (productId, updateProductDto) => {
     }
 
     const oldPrice = {
-      value: lastValue,
+      value: price,
+      createdAt: Date.now(),
     };
     history.push(oldPrice);
 
