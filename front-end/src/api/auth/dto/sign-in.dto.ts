@@ -1,4 +1,4 @@
-import { IUser } from "./SignUp.dto";
+import { IUser } from "./sign-up.dto";
 
 export interface ISignInBodyDto {
   email: string;

@@ -6,10 +6,41 @@ export interface IResponsePayload<T> {
   data: T | null;
 }
 
-export function handleResponsePayload<T>(response: IResponsePayload<T>) {
+const assureOptionalObjectParams = (
+  actualParams: { [key: string]: any },
+  defaultParams: { [key: string]: any }
+) => {
+  const result = { ...defaultParams };
+  for (const key in actualParams) {
+    if (Object.prototype.hasOwnProperty.call(actualParams, key)) {
+      result[key] = actualParams[key];
+    }
+  }
+  return result;
+};
+
+export function handleResponsePayload<T>(
+  response: IResponsePayload<T>,
+  options = {
+    notifySuccessMessage: true,
+    successMessage: "",
+    notifyErrorMessage: true,
+    errorMessage: "",
+  }
+) {
+  const defaultOptions = {
+    notifySuccessMessage: true,
+    successMessage: "",
+    notifyErrorMessage: true,
+    errorMessage: "",
+  };
+  options = assureOptionalObjectParams(options, defaultOptions);
+
   const { statusCode, message, data } = response;
   if (statusCode >= 200 && statusCode < 300) {
-    notifySuccess(message);
+    if (options.notifySuccessMessage) {
+      notifySuccess(options.successMessage || message);
+    }
     return {
       metadata: {
         statusCode,
@@ -20,7 +51,9 @@ export function handleResponsePayload<T>(response: IResponsePayload<T>) {
   }
 
   if (statusCode >= 400 && statusCode < 500) {
-    notifyError(message);
+    if (options.notifyErrorMessage) {
+      notifyError(options.errorMessage || message);
+    }
     return null;
   }
 

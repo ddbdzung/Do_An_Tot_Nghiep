@@ -2,34 +2,57 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { STATUS } = require('../config/constant');
-
-const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-  if (err || info || !user) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
-  }
-  req.user = await user.populateOption('roleId');
-  if (req.user.status === STATUS.Delete || req.user.status === STATUS.Lock) {
-    return reject(new ApiError(httpStatus.FORBIDDEN, 'User is lock or delete'));
-  }
-  if (requiredRights.length) {
-    const userRights = req.user.roleId.permission || [];
-    const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.userId !== req.user.id) {
-      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-    }
-  }
-
-  resolve();
-};
+const { tokenService, userService, roleService } = require('../services');
 
 const auth =
   (...requiredRights) =>
-    async (req, res, next) => {
-      return new Promise((resolve, reject) => {
-        passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
-      })
-        .then(() => next())
-        .catch((err) => next(err));
-    };
+  async (req, _res, next) => {
+    const authHeader = req.headers?.authorization;
+    try {
+      if (!authHeader) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Token is required');
+      }
 
+      const token = authHeader.split(' ')[1];
+      const { role, status, sub: id } = tokenService.verifyToken(token);
+
+      if (status === STATUS.BANNED) {
+        throw new ApiError(httpStatus.FORBIDDEN, httpStatus[403]);
+      }
+
+      const user = await userService.getUserById(id);
+      if (!user) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
+      }
+
+      const roleUser = await roleService.getroleById(role, { lean: true });
+      if (!roleUser) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
+      }
+
+      if (requiredRights.length) {
+        const requiredRightsClean = requiredRights.flat();
+        const userWithPermissions = await user.populateOption('roleId');
+        const userRights = userWithPermissions.roleId.permission;
+        const hasRequiredRights = requiredRightsClean.every(requiredRight =>
+          userRights.includes(requiredRight),
+        );
+
+        if (!hasRequiredRights) {
+          throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
+        }
+
+        const userId = req.params?.userId;
+        if (userId && userId !== req.user._id.toString()) {
+          throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
+        }
+      }
+
+      const { _doc } = user;
+      req.user = _doc;
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
 module.exports = auth;

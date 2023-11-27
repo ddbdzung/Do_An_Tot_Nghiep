@@ -1,145 +1,112 @@
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
-const httpStatus = require('http-status');
-const config = require('../config/config');
-const userService = require('./user.service');
-const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { tokenTypes } = require('../config/tokens');
+const { DateTime } = require('luxon');
+const jwt = require('jsonwebtoken');
+const httpStatus = require('http-status');
+const { Token } = require('../models');
+const config = require('../config/config');
+const logger = require('../config/logger');
+
+const { accessTokenLife, accessTokenKey, refreshTokenLife, refreshTokenKey } =
+  config.jwt;
+
+const generateToken = (payload, key, options) =>
+  jwt.sign(payload, key, options);
 
 /**
- * Generate token
- * @param {ObjectId} userId
- * @param {Moment} expires
- * @param {string} [secret]
- * @returns {string}
+ * Create a new session of user
+ * @param {string} token refresh token
+ * @param {string} id object id of user
+ * @returns {Promise<mongoose>}
  */
-const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
+const createSessionUser = async (token, id) =>
+  Token.create({
+    token,
+    user: id,
+  });
+
+const generateAuthTokens = user => {
+  const now = DateTime.now().toUnixInteger(); // Epoch time in second
+  const accessTokenExpires = accessTokenLife * 60; // In Second
+  const refreshTokenExpires = refreshTokenLife * 60 * 60 * 24; // In second
+  const id = user?._id || user?.id;
+  const { roleId, status } = user;
   const payload = {
-    sub: userId,
-    iat: moment().unix(),
-    exp: expires.unix(),
-    type,
+    status,
+    role: roleId,
+    sub: id,
+    iat: now, // Epoch time in second
   };
-  return jwt.sign(payload, secret);
-};
-
-/**
- * Save a token
- * @param {string} token
- * @param {ObjectId} userId
- * @param {Moment} expires
- * @param {string} type
- * @param {boolean} [blacklisted]
- * @returns {Promise<Token>}
- */
-const saveToken = async (token, userId, expires, type, blacklisted = false) => {
-  const tokenDoc = await Token.create({
-    token,
-    user: userId,
-    expires: expires.toDate(),
-    type,
-    blacklisted,
-  });
-  return tokenDoc;
-};
-
-/**
- * Verify token and return token doc (or throw an error if it is not valid)
- * @param {string} token
- * @param {string} type
- * @returns {Promise<Token>}
- */
-const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await Token.findOne({
-    token,
-    type,
-    user: payload.sub,
-    blacklisted: false,
-  });
-  if (!tokenDoc) {
-    throw new Error('Token not found');
+  if (process.env.NODE_ENV === 'test') {
+    // Unique token in test env with sync timer
+    payload.salt = Math.random();
   }
-  return tokenDoc;
-};
-
-/**
- * Generate auth tokens
- * @param {User} user
- * @returns {Promise<Object>}
- */
-const generateAuthTokens = async user => {
-  const accessTokenExpires = moment().add(
-    config.jwt.accessExpirationMinutes,
-    'minutes',
-  );
-  const accessToken = generateToken(
-    user._id,
-    accessTokenExpires,
-    tokenTypes.ACCESS,
-  );
-
-  const refreshTokenExpires = moment().add(
-    config.jwt.refreshExpirationDays,
-    'days',
-  );
-  const refreshToken = generateToken(
-    user._id,
-    refreshTokenExpires,
-    tokenTypes.REFRESH,
-  );
-  await saveToken(
-    refreshToken,
-    user.id,
-    refreshTokenExpires,
-    tokenTypes.REFRESH,
-  );
+  const accessToken = generateToken(payload, accessTokenKey, {
+    expiresIn: accessTokenExpires,
+  });
+  const refreshToken = generateToken(payload, refreshTokenKey, {
+    expiresIn: refreshTokenExpires,
+  });
 
   return {
     access: {
       token: accessToken,
-      expires: accessTokenExpires.toDate(),
+      expiresAt: now + accessTokenExpires, // Time expires in epoch second
     },
     refresh: {
       token: refreshToken,
-      expires: refreshTokenExpires.toDate(),
+      expiresAt: now + refreshTokenExpires, // Time expires in epoch second
     },
   };
 };
+/**
+ * @Returns {string} a validate account token
+ */
+const generateValAccToken = userId =>
+  generateToken({ id: userId }, config.jwt.secret, {
+    expiresIn: 5 * 1000 * 60,
+  });
 
 /**
- * Generate reset password token
- * @param {string} email
- * @returns {Promise<string>}
+ * Return decoded payload or throw API error when token is invalid
+ * @param {string} token
+ * @param {string} keyType 'access' | 'refresh' | 'validateAccount' | 'default' | 'client' | 'secure'
+ * @param {string} msg custom message throw when token is invalid
+ * @returns {object|error}
  */
-const generateResetPasswordToken = async email => {
-  const user = await userService.getUserByEmail(email);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
+const verifyToken = (token, keyType = 'access', msg = undefined) => {
+  let key;
+  if (keyType === 'access') {
+    key = config.jwt.accessTokenKey;
+  } else if (keyType === 'refresh') {
+    key = config.jwt.refreshTokenKey;
+  } else {
+    throw new Error("Type error! Key must be one of 'access' or 'refresh'");
   }
-  const expires = moment().add(
-    config.jwt.resetPasswordExpirationMinutes,
-    'minutes',
-  );
-  const resetPasswordToken = generateToken(
-    user.id,
-    expires,
-    tokenTypes.RESET_PASSWORD,
-  );
-  await saveToken(
-    resetPasswordToken,
-    user.id,
-    expires,
-    tokenTypes.RESET_PASSWORD,
-  );
-  return resetPasswordToken;
+
+  try {
+    const decodedPayload = jwt.verify(token, key);
+    return decodedPayload;
+  } catch (e) {
+    logger.error('Error verify token', e);
+    // Invalid token: malformed token
+    throw new ApiError(httpStatus.UNAUTHORIZED, msg || httpStatus[401]);
+  }
 };
 
+const getSessionByToken = async token =>
+  Token.findOne({ token }).populate('user');
+
+const getSessionByPreviousToken = async token =>
+  Token.findOne({ previousToken: token });
+
+const removeSession = async token => Token.findOneAndRemove({ token });
+
 module.exports = {
-  generateToken,
-  saveToken,
-  verifyToken,
   generateAuthTokens,
-  generateResetPasswordToken,
+  generateValAccToken,
+  verifyToken,
+  getSessionByToken,
+  getSessionByPreviousToken,
+  removeSession,
+  createSessionUser,
 };

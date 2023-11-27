@@ -43,6 +43,7 @@ const permission = {
 
   // product module
   PRODUCT: {
+    GET_PRODUCT: 'get_product',
     GET_PRODUCTS: 'get_products',
     CREATE_PRODUCT: 'create_product',
     UPDATE_PRODUCT: 'update_product',
