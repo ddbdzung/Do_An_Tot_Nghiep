@@ -10,8 +10,10 @@ import { HttpMessage } from "@/http-service/http-message";
 import { loadState, saveState } from "@/utils/localStorage";
 import {
   fetchCreateProduct,
+  fetchDeleteProduct,
   fetchGetProduct,
   fetchGetProducts,
+  fetchUpdateProduct,
 } from "../services/productApi";
 import {
   IGetProductsQueryDto,
@@ -30,6 +32,9 @@ import {
 } from "@/api/category/dto/get-categories.dto";
 import { fetchGetCategories } from "../services/categoryApi";
 import { IGetProductQueryDto } from "@/api/product/dto/get-product.dto";
+import { IUpdateProductDto } from "@/api/product/dto/update-product.dto";
+import enUS from "@/locales/en-us.locales";
+import { IDeleteProductDto } from "@/api/product/dto/delete-product.dto";
 
 export const getProductsAsync = createAsyncThunk(
   "admin/getProductsAsync",
@@ -44,7 +49,7 @@ export const getProductsAsync = createAsyncThunk(
 );
 
 export const adminGetProductAsync = createAsyncThunk(
-  "admin/adminGetProductAsync",
+  "admin/getProductAsync",
   async (payload: IGetProductQueryDto, { getState }) => {
     const states: RootState = getState();
     const tokens = {
@@ -56,13 +61,37 @@ export const adminGetProductAsync = createAsyncThunk(
 );
 
 export const createProductAsync = createAsyncThunk(
-  "admin/adminCreateProductAsync",
+  "admin/createProductAsync",
   async (payload: ICreateProductBodyDto, { getState }) => {
     const states: RootState = getState();
     const tokens = {
       access: states.authReducer.accessToken,
     };
     const data = await fetchCreateProduct(tokens, payload);
+    return data;
+  }
+);
+
+export const adminUpdateProductAsync = createAsyncThunk(
+  "admin/updateProductAsync",
+  async (payload: IUpdateProductDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchUpdateProduct(tokens, payload);
+    return data;
+  }
+);
+
+export const adminDeleteProductAsync = createAsyncThunk(
+  "admin/deleteProductAsync",
+  async (payload: IDeleteProductDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchDeleteProduct(tokens, payload);
     return data;
   }
 );
@@ -110,7 +139,10 @@ export const admin = createSlice({
       .addCase(getProductsAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
         const res = handleResponsePayload<IGetProductsResponseDto>(
-          action.payload
+          action.payload,
+          {
+            successMessage: enUS.ADMIN.MANAGE.PRODUCTS.GET_PRODUCTS_SUCCESS,
+          }
         );
         if (!res) {
           return state;
@@ -118,7 +150,6 @@ export const admin = createSlice({
         state.products = res.data?.results;
       })
       .addCase(getProductsAsync.rejected, (state, action) => {
-        console.log("action", action);
         state.formStatus = AdminFormStatus.IDLE;
       })
       .addCase(createProductAsync.pending, (state) => {
@@ -139,17 +170,92 @@ export const admin = createSlice({
       .addCase(createProductAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
       })
+      .addCase(adminGetProductAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+      })
+      .addCase(adminGetProductAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<IProduct>(action.payload, {
+          notifySuccessMessage: false,
+        });
+        if (!res) {
+          return state;
+        }
+        if (!state.products) {
+          state.products = [];
+        }
+        state.products.push(res.data as IProduct);
+        return state;
+      })
+      .addCase(adminGetProductAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+      })
+      .addCase(adminUpdateProductAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+      })
+      .addCase(adminUpdateProductAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<IProduct>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.PRODUCTS.UPDATE_PRODUCT_SUCCESS,
+        });
+
+        if (!res) {
+          return state;
+        }
+
+        const updatedProduct = res.data as IProduct;
+        const prevProduct = state.products?.find(
+          (i) => i.id === updatedProduct.id
+        );
+
+        if (!prevProduct) {
+          return state;
+        }
+
+        Object.assign(prevProduct, updatedProduct);
+        return state;
+      })
+      .addCase(adminUpdateProductAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+      })
+      .addCase(adminDeleteProductAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+      })
+      .addCase(adminDeleteProductAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<IProduct>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.PRODUCTS.DELETE_PRODUCT_SUCCESS,
+        });
+
+        if (!res) {
+          return state;
+        }
+
+        const deletedProduct = res.data as IProduct;
+        state.products = state.products?.filter(
+          (i) => i.id !== deletedProduct.id
+        );
+
+        return state;
+      })
+      .addCase(adminDeleteProductAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+      })
       .addCase(getCategoriesAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
       })
       .addCase(getCategoriesAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
         const res = handleResponsePayload<IGetCategoriesResponseDto>(
-          action.payload
+          action.payload,
+          {
+            notifySuccessMessage: false,
+          }
         );
         if (!res) {
           return state;
         }
+
         state.categories = res.data?.results;
       })
       .addCase(getCategoriesAsync.rejected, (state, action) => {

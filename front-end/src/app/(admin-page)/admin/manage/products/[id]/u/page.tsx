@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { ICreateProductBodyDto } from "@/api/product/dto/create-product.dto";
 import {
   AdminFormStatus,
+  adminUpdateProductAsync,
   createProductAsync,
   getCategoriesAsync,
 } from "@/redux/features/adminSlice";
@@ -18,52 +19,75 @@ import {
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import { FormikHelpers, useFormik } from "formik";
+import { Form, FormikHelpers, useFormik } from "formik";
 import { throttle } from "lodash";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import withAuth from "@/shared/PrivateRoute";
+import { fetchGetProduct } from "@/redux/services/productApi";
+import { IResponsePayload } from "@/http-service/response-handler";
+import { IProduct } from "@/api/product/dto/get-products.dto";
+import {
+  IUpdateProductBodyDto,
+  IUpdateProductDto,
+} from "@/api/product/dto/update-product.dto";
+import { getChangedValues } from "@/utils/getChangesObject";
+import { notifyError, notifyPromise } from "@/utils/notify";
 
-const throttleCreate = throttle(
+const throttleUpdate = throttle(
   async function (
     values: any,
     actions: FormikHelpers<any>,
     dispatch: (...arg: any) => any
   ) {
-    const payload: ICreateProductBodyDto = {
-      name: values.name,
-      brand: values.brand,
-      quantity: values.quantity,
-      price: values.price,
-      categoryId: values.categoryId,
-      unit: values.unit,
-    };
-    if (values.image) {
-      payload.image = values.image;
-    }
-    if (values.description) {
-      payload.description = values.description;
-    }
-
-    dispatch(createProductAsync(payload));
+    dispatch(adminUpdateProductAsync(values as IUpdateProductDto));
   },
   1000,
   { trailing: false }
 );
 
-function CreateProductPage() {
+function UpdateProductPage() {
   const router = useRouter();
+  const { id } = useParams();
   const { formStatus, categories } = useAppSelector(
     (state) => state.adminReducer
   );
+  const { accessToken } = useAppSelector((state) => state.authReducer);
+  const [product, setProduct] = useState<IProduct | null>(null);
+
+  const fetchProductPromise = (mounted: boolean) =>
+    fetchGetProduct({ access: accessToken }, { id }).then(
+      (res: IResponsePayload<IProduct>) => {
+        if (mounted) {
+          if (res.statusCode !== 200) {
+            notifyError(res.message);
+            snooze(1000).then(() => {
+              router.back();
+            });
+          } else {
+            setProduct(res.data);
+          }
+        }
+      }
+    );
+
   useEffect(() => {
+    let mounted = true;
     dispatch(
       getCategoriesAsync({
         limit: 100,
         page: 1,
       })
     );
+    notifyPromise(fetchProductPromise(mounted), {
+      successMessage: "Get product successfully",
+      errorMessage: "Get product failed",
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
   const handleGoBackBtn = () => {
     router.back();
@@ -73,14 +97,15 @@ function CreateProductPage() {
   };
   const dispatch = useAppDispatch();
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      brand: "",
-      quantity: "",
-      price: "",
-      description: "",
-      categoryId: "",
-      unit: "",
+      name: product?.name ?? "",
+      brand: product?.brand ?? "",
+      quantity: product?.quantity ?? 0,
+      price: product?.price.lastValue ?? 0,
+      description: product?.description ?? "",
+      categoryId: product?.category.id ?? "",
+      unit: product?.unit ?? "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required").trim(),
@@ -92,21 +117,33 @@ function CreateProductPage() {
       unit: Yup.string().required("Required").trim(),
     }),
     onSubmit: (values, actions) => {
-      throttleCreate(values, actions, dispatch);
-      router.push("/admin/manage/products");
+      const changedValues = getChangedValues(
+        values,
+        formik.initialValues
+      ) as IUpdateProductBodyDto;
+      if (Object.keys(changedValues).length === 0) {
+        notifyError("No changes to update");
+        return;
+      }
+
+      const payload: IUpdateProductDto = {
+        id,
+        body: changedValues,
+      };
+      throttleUpdate(payload, actions, dispatch);
     },
   });
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
+      <form onClick={formik.handleSubmit}>
         <Box display="flex" justifyContent="space-between" marginBottom="1rem">
           <Typography variant="h5" gutterBottom>
-            Create Product
+            Update Product
           </Typography>
           <Box display="flex" justifyContent="space-between" gap="0.25rem">
             {formStatus && formStatus === AdminFormStatus.IDLE ? (
               <Button type="submit" variant="contained" color="info">
-                Create
+                Update
               </Button>
             ) : (
               <Button type="submit" variant="contained" color="info">
@@ -316,5 +353,5 @@ function CreateProductPage() {
 }
 
 export default withAuth({
-  requiredRights: ["create_product", "get_categories"],
-})(CreateProductPage);
+  requiredRights: ["update_product", "get_categories"],
+})(UpdateProductPage);

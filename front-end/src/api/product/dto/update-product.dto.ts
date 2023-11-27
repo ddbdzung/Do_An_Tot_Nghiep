@@ -1,21 +1,20 @@
-export interface IGetProductsQueryDto {
-  limit?: number;
-  page?: number;
-  search?: string;
-  category?: string;
-  sort?: string;
-  order?: string;
+export interface IUpdateProductBodyDto {
+  name?: string;
+  price?: number;
+  brand?: string;
+  categoryId?: string;
+  unit?: string;
+  quantity?: number;
+  image?: string;
+  description?: string;
 }
 
-export interface IGetProductsResponseDto {
-  results: IProduct[];
-  page: number;
-  limit: number;
-  totalPages: number;
-  totalResults: number;
+export interface IUpdateProductDto {
+  id: string;
+  body: IUpdateProductBodyDto;
 }
 
-export interface IProduct {
+export interface IUpdateProductResponseDto {
   id: number;
   name: string;
   price: {
@@ -28,6 +27,7 @@ export interface IProduct {
       }
     ];
   };
+  deletedAt: string | null;
   brand: string;
   unit: string;
   category: {

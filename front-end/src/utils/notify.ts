@@ -13,3 +13,26 @@ export const notifySuccess = (message: string) => {
     duration: 1000,
   });
 };
+
+export const notifyPromise = (
+  promise: Promise<any>,
+  {
+    successMessage,
+    errorMessage,
+    loadingMessage = "Loading...",
+  }: {
+    successMessage: string;
+    errorMessage: string;
+    loadingMessage?: string;
+  }
+) => {
+  toast.promise(promise, {
+    loading: loadingMessage,
+    success: (data) => {
+      return successMessage;
+    },
+    error: (err) => {
+      return errorMessage;
+    },
+  });
+};

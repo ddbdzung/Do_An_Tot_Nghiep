@@ -18,13 +18,24 @@ import { IProduct } from "@/api/product/dto/get-products.dto";
 import { formatDateToLocale } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
 
-function Row(props: { row: IProduct }) {
+function Row(props: {
+  row: IProduct;
+  handleDeleteProduct: (id: string, productName: string) => void;
+}) {
+  const { handleDeleteProduct, prodName } = props;
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const handleViewDetail = () => {
-    router.push(`/admin/manage/products/${row.id}`);
+
+  const handleViewDetailBtn = () => {
+    router.push(`/admin/manage/products/${row.id}/v`);
+  };
+  const handleEditBtn = () => {
+    router.push(`/admin/manage/products/${row.id}/u`);
+  };
+  const handleDeleteBtn = () => {
+    handleDeleteProduct(row.id, row.name);
   };
 
   return (
@@ -46,11 +57,15 @@ function Row(props: { row: IProduct }) {
         <TableCell align="right">{row.quantity}</TableCell>
         <TableCell align="left">{formatDateToLocale(row.updatedAt)}</TableCell>
         <TableCell align="center">
-          <Button variant="outlined" onClick={handleViewDetail}>
+          <Button variant="outlined" onClick={handleViewDetailBtn}>
             View
           </Button>
-          <Button variant="outlined">Edit</Button>
-          <Button variant="outlined">Delete</Button>
+          <Button variant="outlined" onClick={handleEditBtn}>
+            Edit
+          </Button>
+          <Button variant="outlined" onClick={handleDeleteBtn}>
+            Delete
+          </Button>
         </TableCell>
       </TableRow>
 
@@ -72,7 +87,9 @@ function Row(props: { row: IProduct }) {
                   {row.price.history.map((price) => (
                     <TableRow key={price._id}>
                       <TableCell align="right">{price.value}</TableCell>
-                      <TableCell align="left">{price.createdAt}</TableCell>
+                      <TableCell align="left">
+                        {formatDateToLocale(price.createdAt)}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

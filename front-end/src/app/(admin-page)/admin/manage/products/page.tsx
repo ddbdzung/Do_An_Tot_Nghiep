@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { Box, Button, Typography } from "@mui/material";
 import ProductTable, { headersType } from "./Table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getProductsAsync } from "@/redux/features/adminSlice";
 import { useEffect, useState } from "react";
 import withAuth from "@/shared/PrivateRoute";
+import { throttle } from "lodash";
 
 const headers: headersType = [
   {
@@ -34,7 +36,22 @@ const headers: headersType = [
     align: "center",
   },
 ];
-import Link from "next/link";
+
+const throttleReloadGetProducts = throttle(
+  async function (dispatch: (...arg: any) => any) {
+    dispatch(
+      getProductsAsync({
+        limit: 30,
+        page: 1,
+      })
+    );
+  },
+  3000,
+  {
+    trailing: false,
+  }
+);
+
 function ManageProductPage() {
   const { formStatus, products } = useAppSelector(
     (state) => state.adminReducer
@@ -48,6 +65,9 @@ function ManageProductPage() {
       })
     );
   }, []);
+  const handleReloadBtn = () => {
+    throttleReloadGetProducts(dispatch);
+  };
 
   return (
     <>
@@ -55,9 +75,18 @@ function ManageProductPage() {
         <Typography variant="h5" gutterBottom>
           Products
         </Typography>
-        <Link href="/admin/manage/products/c">
-          <Button variant="contained">Create</Button>
-        </Link>
+        <Box>
+          <Button
+            variant="contained"
+            onClick={handleReloadBtn}
+            style={{ marginRight: "1rem" }}
+          >
+            Reload
+          </Button>
+          <Link href="/admin/manage/products/c">
+            <Button variant="contained">Create</Button>
+          </Link>
+        </Box>
       </Box>
       <ProductTable
         headers={headers}

@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { throttle } from "lodash";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { use, useEffect, useState } from "react";
 import withAuth from "@/shared/PrivateRoute";
@@ -28,11 +28,11 @@ import { IResponsePayload } from "@/http-service/response-handler";
 import { notifyError } from "@/utils/notify";
 import { snooze } from "@/utils/snooze";
 
-function CreateProductPage({ params }: { params: { id: string } }) {
+function CreateProductPage() {
   const dispatch = useAppDispatch();
   const { accessToken } = useAppSelector((state) => state.authReducer);
   const router = useRouter();
-  const id = params.id;
+  const { id } = useParams();
   const [product, setProduct] = useState<IProduct | null>(null);
   useEffect(() => {
     let mounted = true;
@@ -162,12 +162,6 @@ function CreateProductPage({ params }: { params: { id: string } }) {
   );
 }
 
-// export default withAuth({
-//   requiredRights: ["get_product"],
-// })(CreateProductPage);
-
-export default CreateProductPage;
-
-// export default function Abc({ params }: { params: { id: string } }) {
-//   return <div>{params.id}</div>;
-// }
+export default withAuth({
+  requiredRights: ["get_product"],
+})(CreateProductPage);
