@@ -61,7 +61,7 @@ export async function fetchCreateProduct(
   payload: ICreateProductBodyDto
 ) {
   try {
-    const { data } = await customAxios.patch(
+    const { data } = await customAxios.post(
       ADMIN_CREATE_PRODUCT,
       payload,
       token

@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import { Route } from "@/routers/types";
-import imageRightPng from "@/images/hero-right.png";
+// import imageRightPng from "@/images/hero-right.png";
+import imageRightPng from "@/images/water-purifier/water-purifier-banner-e118-1.png";
 import imageRightPng2 from "@/images/hero-right-2.png";
 import imageRightPng3 from "@/images/hero-right-3.png";
 
