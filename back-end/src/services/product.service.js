@@ -57,8 +57,16 @@ exports.updateProductById = async (productId, updateProductDto) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-  const { categoryId, price, quantity, name, detail, unit, brand } =
-    updateProductDto;
+  const {
+    categoryId,
+    price,
+    quantity,
+    name,
+    detail,
+    unit,
+    brand,
+    description,
+  } = updateProductDto;
 
   if (categoryId) {
     const category = await categoryService.getCategoryById(categoryId, {
@@ -77,7 +85,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
   if (price) {
     const lastValue = product.price.lastValue;
     const history = [...product.price.history];
-    if (product.price.lastValue === price) {
+    if (lastValue === price) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
         'Price must be different from last value',
@@ -99,6 +107,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
   product.detail = detail || product.detail;
   product.unit = unit || product.unit;
   product.brand = brand || product.brand;
+  product.description = description || product.description;
 
   return product.save();
 };

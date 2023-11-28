@@ -135,7 +135,7 @@ function UpdateProductPage() {
   });
   return (
     <>
-      <form onClick={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
         <Box display="flex" justifyContent="space-between" marginBottom="1rem">
           <Typography variant="h5" gutterBottom>
             Update Product
@@ -169,7 +169,7 @@ function UpdateProductPage() {
             <Button onClick={handleResetBtn} type="reset" variant="contained">
               Reset
             </Button>
-            <Button onClick={handleGoBackBtn} variant="contained">
+            <Button onClick={handleGoBackBtn} type="button" variant="contained">
               Go back
             </Button>
           </Box>
