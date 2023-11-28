@@ -74,4 +74,3 @@ function HomePage() {
 }
 
 export default withAuth({ requiredRights: [] })(HomePage);
-// export default HomePage;

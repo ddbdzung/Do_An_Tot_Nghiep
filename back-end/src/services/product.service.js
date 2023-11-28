@@ -2,15 +2,52 @@ const ApiError = require('../utils/ApiError');
 const { Product } = require('../models/');
 const httpStatus = require('http-status');
 const { categoryService } = require('../services');
-const { priceHistorySchema } = require('../models/product.model');
+const Mongoose = require('mongoose');
+
+exports.getProductById = async id => {
+  const product = await Product.findById(id);
+  if (!product || product.deletedAt) {
+    return null;
+  }
+
+  return product.populateOption('category');
+};
 
 exports.queryProducts = async (filter, options) => {
   const products = await Product.paginate(filter, options);
-  return products;
+  const { results, ...rest } = products;
+  const resultsWithPopulate = await Promise.all(
+    results.map(async product => {
+      const productPopulate = await product.populateOption('category');
+      return productPopulate;
+    }),
+  );
+  const resultsNotDeleted = resultsWithPopulate.filter(
+    product => !product.deletedAt,
+  );
+  return {
+    results: resultsNotDeleted,
+    ...rest,
+  };
 };
 
 exports.createProduct = async createProductDto => {
-  const product = await Product.create(createProductDto);
+  const { price, categoryId, ...productDto } = createProductDto;
+
+  const priceBody = {
+    lastValue: price,
+    history: [
+      {
+        _id: new Mongoose.Types.ObjectId(),
+        value: price,
+      },
+    ],
+  };
+
+  productDto.category = categoryId;
+  productDto.price = priceBody;
+
+  const product = await Product.create(productDto);
   return product;
 };
 
@@ -47,9 +84,10 @@ exports.updateProductById = async (productId, updateProductDto) => {
       );
     }
 
-    const oldPrice = new priceHistorySchema({
-      value: lastValue,
-    });
+    const oldPrice = {
+      value: price,
+      createdAt: Date.now(),
+    };
     history.push(oldPrice);
 
     product.price.lastValue = price;

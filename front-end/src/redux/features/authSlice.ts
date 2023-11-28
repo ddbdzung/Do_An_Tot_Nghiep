@@ -1,4 +1,4 @@
-import { ISignUpBodyDto, ISignUpResponseDto } from "@/api/auth/dto/SignUp.dto";
+import { ISignUpBodyDto, ISignUpResponseDto } from "@/api/auth/dto/sign-up.dto";
 import { SIGN_IN, SIGN_OUT, SIGN_UP } from "@/api/auth/endpoints";
 import {
   createSlice,
@@ -11,10 +11,10 @@ import { handleResponsePayload } from "@/http-service/response-handler";
 import { notifyError } from "@/utils/notify";
 import { HttpMessage } from "@/http-service/http-message";
 import { loadState, saveState } from "@/utils/localStorage";
-import { ISignInResponseDto } from "@/api/auth/dto/SignIn.dto";
+import { ISignInResponseDto } from "@/api/auth/dto/sign-in.dto";
 
 export const signUpAsync = createAsyncThunk(
-  SIGN_UP,
+  "auth/signUpAsync",
   async (payload: ISignUpBodyDto, { getState }) => {
     const data = await fetchSignUp(payload);
     return data;
@@ -22,7 +22,7 @@ export const signUpAsync = createAsyncThunk(
 );
 
 export const signInAsync = createAsyncThunk(
-  SIGN_IN,
+  "auth/signInAsync",
   async (payload: ISignInBodyDto, { getState }) => {
     const data = await fetchSignIn(payload);
     return data;
@@ -80,8 +80,8 @@ export const auth = createSlice({
         return state;
       })
       .addCase(signUpAsync.fulfilled, (state, action) => {
-        const res = handleResponsePayload<ISignUpResponseDto>(action.payload);
         state.formStatus = AuthFormStatus.IDLE;
+        const res = handleResponsePayload<ISignUpResponseDto>(action.payload);
         if (!res) {
           return state;
         }

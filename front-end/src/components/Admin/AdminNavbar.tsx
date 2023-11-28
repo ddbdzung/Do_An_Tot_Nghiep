@@ -1,4 +1,4 @@
-// @ts-nocheck
+"use client";
 import {
   Divider,
   Drawer,
@@ -18,6 +18,9 @@ import Link from "next/link";
 import PeopleIcon from "@mui/icons-material/People";
 import PlumbingIcon from "@mui/icons-material/Plumbing";
 import BallotIcon from "@mui/icons-material/Ballot";
+import { useAppDispatch } from "@/redux/hooks";
+import { signOut } from "@/redux/features/authSlice";
+import { notifySuccess } from "@/utils/notify";
 
 const DRAWER_WIDTH = 240;
 
@@ -41,13 +44,21 @@ const LINKS = [
   },
 ];
 
-const PLACEHOLDER_LINKS = [
-  { text: "Settings", icon: SettingsIcon },
-  { text: "Support", icon: SupportIcon },
-  { text: "Logout", icon: LogoutIcon },
-];
-
 export default function AdminNavbar() {
+  const PLACEHOLDER_LINKS = [
+    { text: "Settings", icon: SettingsIcon },
+    { text: "Support", icon: SupportIcon },
+    {
+      text: "Logout",
+      icon: LogoutIcon,
+      onClick: () => {
+        dispatch(signOut());
+        notifySuccess("Sign out success!");
+      },
+    },
+  ];
+
+  const dispatch = useAppDispatch();
   return (
     <>
       <Drawer
@@ -80,9 +91,9 @@ export default function AdminNavbar() {
         </List>
         <Divider sx={{ mt: "auto" }} />
         <List>
-          {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
+          {PLACEHOLDER_LINKS.map(({ text, icon: Icon, onClick }) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={onClick ? onClick : () => {}}>
                 <ListItemIcon>
                   <Icon />
                 </ListItemIcon>

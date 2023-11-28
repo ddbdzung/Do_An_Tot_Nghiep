@@ -24,6 +24,8 @@ const envVarsSchema = Joi.object()
     // MONGODB_AUTH_PASS: Joi.string()
     //   .required()
     //   .description('Mongo DB auth pass'),
+    JWT_SECRET_AT: Joi.string().required().description('JWT secret key'),
+    JWT_SECRET_RT: Joi.string().required().description('JWT secret key'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
       .default(30)
@@ -84,6 +86,10 @@ module.exports = {
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: 10,
+    accessTokenLife: envVars.JWT_ACCESS_EXPIRATION_MINUTES, // In minute
+    refreshTokenLife: envVars.JWT_REFRESH_EXPIRATION_DAYS, // In day
+    accessTokenKey: envVars.JWT_SECRET_AT,
+    refreshTokenKey: envVars.JWT_SECRET_RT,
   },
   email: {
     smtp: {

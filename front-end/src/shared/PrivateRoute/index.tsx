@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 const withAuth =
   ({ requiredRights = [] }: { requiredRights: string[] }) =>
   (Component: React.ReactNode) => {
-    const AuthenticatedComponent = () => {
+    const AuthenticatedComponent = (props) => {
       const router = useRouter();
       const [auth, setAuth] = useState<boolean | undefined>();
       const { accessToken, permissions } = useAppSelector(
@@ -21,11 +21,11 @@ const withAuth =
         ) {
           setAuth(true);
         } else {
-          router.push("/signup");
+          router.push("/signin ");
         }
       }, []);
 
-      return !!auth ? <Component /> : <></>; // Render whatever you want while the authentication occurs
+      return !!auth ? <Component props={props} /> : <></>; // Render whatever you want while the authentication occurs
     };
 
     return AuthenticatedComponent;

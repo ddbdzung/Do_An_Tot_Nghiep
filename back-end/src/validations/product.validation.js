@@ -14,12 +14,13 @@ exports.getProducts = {
 exports.createProduct = {
   body: joi.object().keys({
     name: joi.string().required().trim(),
-    detail: joi.string().trim(),
+    description: joi.string().trim(),
     unit: joi.string().trim(),
     brand: joi.string().trim(),
     categoryId: joi.string().required().custom(objectId),
     price: joi.number().required().min(1),
     quantity: joi.number().required().min(0),
+    unit: joi.string().trim().required(),
   }),
 };
 
@@ -31,7 +32,7 @@ exports.updateProduct = {
     price: joi.number().min(1),
     quantity: joi.number().min(0),
     name: joi.string().trim(),
-    detail: joi.string().trim(),
+    description: joi.string().trim(),
     unit: joi.string().trim(),
     brand: joi.string().trim(),
     categoryId: joi.string().custom(objectId),
@@ -39,6 +40,12 @@ exports.updateProduct = {
 };
 
 exports.softDeleteProduct = {
+  params: joi.object().keys({
+    productId: joi.string().required().custom(objectId),
+  }),
+};
+
+exports.getProduct = {
   params: joi.object().keys({
     productId: joi.string().required().custom(objectId),
   }),

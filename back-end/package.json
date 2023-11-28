@@ -25,7 +25,8 @@
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
     "generate": "node generator.js",
-    "dev-ts": "cross-env NODE_ENV=development npx tsc && cross-env NODE_ENV=development node dist/src/index.js"
+    "dev-ts": "cross-env NODE_ENV=development npx tsc && cross-env NODE_ENV=development node dist/src/index.js",
+    "seed": "node src/seed/seeder.js"
   },
   "keywords": [
     "node",
@@ -75,9 +76,6 @@
     "pm2": "^5.1.1",
     "swagger-jsdoc": "^6.0.8",
     "swagger-ui-express": "^4.1.6",
-    "ts-loader": "^9.5.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
     "validator": "^13.0.0",
     "winston": "^3.2.1",
     "xss-clean": "^0.1.1"

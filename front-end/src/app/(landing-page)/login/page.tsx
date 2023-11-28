@@ -13,7 +13,7 @@ import withoutAuth from "@/shared/PublicRoute";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import { ISignInBodyDto } from "@/api/auth/dto/SignIn.dto";
+import { ISignInBodyDto } from "@/api/auth/dto/sign-in.dto";
 import { AuthFormStatus, signInAsync } from "@/redux/features/authSlice";
 import { throttle } from "lodash";
 
