@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import ModalImage from "react-modal-image";
 import { ICreateProductBodyDto } from "@/api/product/dto/create-product.dto";
 import {
   AdminFormStatus,
@@ -50,6 +51,31 @@ const throttleUpdate = throttle(
 function UpdateProductPage() {
   const router = useRouter();
   const { id } = useParams();
+
+  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImageList, setPreviewImageList] = useState([]);
+  const handleSetPreview = (event) => {
+    const reader = new FileReader();
+    if (event.target.files.length > 0) {
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+    }
+  };
+  const handleSetPreviewList = (event) => {
+    const files = event.target.files;
+    let fileArr = [];
+    for (let i = 0; i < files.length; i++) {
+      const reader = new FileReader();
+      reader.readAsDataURL(files[i]);
+      reader.onloadend = () => {
+        fileArr.push(reader.result);
+      };
+    }
+    setPreviewImageList(fileArr);
+  };
+
   const { formStatus, categories } = useAppSelector(
     (state) => state.adminReducer
   );
@@ -124,6 +150,9 @@ function UpdateProductPage() {
       if (Object.keys(changedValues).length === 0) {
         notifyError("No changes to update");
         return;
+      }
+      if (previewImage) {
+        changedValues.image = previewImage;
       }
 
       const payload: IUpdateProductDto = {
@@ -347,6 +376,81 @@ function UpdateProductPage() {
             )}
           </Grid>
         </Grid>
+        <div className="tablet:ml-60 font-semibold my-4">Ảnh chính</div>
+        <div className="tablet:ml-60">
+          <div>
+            <input type="file" onChange={handleSetPreview} />
+          </div>
+          {previewImage && (
+            <div>
+              <ModalImage
+                small={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                      previewImage
+                }
+                medium={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                      previewImage
+                }
+                large={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale,w_1700/v1/" +
+                      previewImage
+                }
+                alt="Ảnh chính"
+              />
+              <button
+                className="bg-black text-white font-bold p-2"
+                onClick={() => setPreviewImage(null)}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="tablet:ml-60 font-semibold my-4">Ảnh phụ</div>
+        <div className="tablet:ml-60">
+          <div>
+            <input
+              type="file"
+              onChange={(e) => {
+                handleSetPreviewList(e);
+              }}
+              multiple
+            />
+          </div>
+          {previewImageList?.length > 0 &&
+            previewImageList.map((image, idx) => (
+              <div key={idx}>
+                <ModalImage
+                  small={
+                    image.length > 255
+                      ? image
+                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                        image
+                  }
+                  medium={
+                    image.length > 255
+                      ? image
+                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                        image
+                  }
+                  large={
+                    image.length > 255
+                      ? image
+                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale,w_1700/v1/" +
+                        image
+                  }
+                  alt="Ảnh phụ"
+                />
+              </div>
+            ))}
+        </div>
       </form>
     </>
   );
