@@ -152,7 +152,10 @@ function UpdateProductPage() {
         return;
       }
       if (previewImage) {
-        changedValues.image = previewImage;
+        changedValues.image = {
+          blob: previewImage,
+          pos: 0,
+        };
       }
 
       const payload: IUpdateProductDto = {

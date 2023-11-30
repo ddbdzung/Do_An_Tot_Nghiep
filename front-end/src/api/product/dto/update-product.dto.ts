@@ -5,7 +5,10 @@ export interface IUpdateProductBodyDto {
   categoryId?: string;
   unit?: string;
   quantity?: number;
-  image?: string;
+  image?: {
+    blob: string;
+    pos: number;
+  }[];
   description?: string;
 }
 

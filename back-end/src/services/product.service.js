@@ -82,7 +82,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
 
     product.category = updateProductDto.categoryId;
   }
-  
+
   if (image) {
     // product.image = {};
     console.log('image', image);
