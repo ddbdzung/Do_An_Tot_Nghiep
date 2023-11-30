@@ -54,6 +54,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
     'brand',
     'categoryId',
     'description',
+    'image',
   ]);
   const product = await productService.updateProductById(
     productId,

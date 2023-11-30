@@ -66,6 +66,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
     unit,
     brand,
     description,
+    image,
   } = updateProductDto;
 
   if (categoryId) {
@@ -80,6 +81,11 @@ exports.updateProductById = async (productId, updateProductDto) => {
     }
 
     product.category = updateProductDto.categoryId;
+  }
+  
+  if (image) {
+    // product.image = {};
+    console.log('image', image);
   }
 
   if (price) {

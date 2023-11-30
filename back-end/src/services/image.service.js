@@ -1,8 +1,8 @@
-import { cloudinary } from '../config/cloudinary.mjs';
+const cloudinary = require('../config/cloudinary');
 
-export const uploadFile = async image =>
+exports.uploadFile = async image =>
   cloudinary.uploader.upload(image, {
     upload_preset: 'xpxrhmr4',
   });
 
-export const deleteFiles = async ids => cloudinary.api.delete_resources(ids);
+exports.deleteFiles = async ids => cloudinary.api.delete_resources(ids);

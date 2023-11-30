@@ -57,13 +57,25 @@ function Row(props: {
         <TableCell align="right">{row.quantity}</TableCell>
         <TableCell align="left">{formatDateToLocale(row.updatedAt)}</TableCell>
         <TableCell align="center">
-          <Button variant="outlined" onClick={handleViewDetailBtn}>
+          <Button
+            variant="outlined"
+            onClick={handleViewDetailBtn}
+            style={{ marginLeft: "4px", marginRight: "4px" }}
+          >
             View
           </Button>
-          <Button variant="outlined" onClick={handleEditBtn}>
+          <Button
+            variant="outlined"
+            onClick={handleEditBtn}
+            style={{ marginLeft: "4px", marginRight: "4px" }}
+          >
             Edit
           </Button>
-          <Button variant="outlined" onClick={handleDeleteBtn}>
+          <Button
+            variant="outlined"
+            onClick={handleDeleteBtn}
+            style={{ marginLeft: "4px", marginRight: "4px" }}
+          >
             Delete
           </Button>
         </TableCell>

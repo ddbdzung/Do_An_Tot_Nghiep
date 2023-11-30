@@ -36,6 +36,7 @@ exports.updateProduct = {
     unit: joi.string().trim(),
     brand: joi.string().trim(),
     categoryId: joi.string().custom(objectId),
+    image: joi.string().trim(),
   }),
 };
 
