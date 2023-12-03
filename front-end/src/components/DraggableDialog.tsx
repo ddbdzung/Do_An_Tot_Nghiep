@@ -29,17 +29,18 @@ export default function DraggableDialog(props: {
   open: boolean;
   setOpen: (open: boolean) => void;
   id: string;
-  productName: string;
+  itemName: string;
+  actionDeleteItemById?: (id: string) => void;
 }) {
   const router = useRouter();
-  const { open, setOpen, confirmText, productName } = props;
+  const { open, setOpen, confirmText, itemName, actionDeleteItemById } = props;
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
     setOpen(false);
   };
   const handleConfirm = () => {
-    dispatch(adminDeleteProductAsync({ id: props.id }));
+    dispatch(actionDeleteItemById({ id: props.id }));
     setOpen(false);
   };
 
@@ -56,7 +57,7 @@ export default function DraggableDialog(props: {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {props.content} {productName}
+            {props.content} {itemName}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -53,6 +53,7 @@ const permission = {
   // category module
   CATEGORY: {
     GET_CATEGORIES: 'get_categories',
+    GET_CATEGORY: 'get_category',
     CREATE_CATEGORY: 'create_category',
     UPDATE_CATEGORY: 'update_category',
     DELETE_CATEGORY: 'delete_category',

@@ -21,7 +21,7 @@ const withAuth =
         ) {
           setAuth(true);
         } else {
-          router.push("/signin ");
+          router.push("/");
         }
       }, []);
 

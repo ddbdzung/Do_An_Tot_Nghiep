@@ -31,3 +31,9 @@ exports.softDeleteCategory = {
     categoryId: joi.string().required().custom(objectId),
   }),
 };
+
+exports.getCategory = {
+  params: joi.object().keys({
+    categoryId: joi.string().required().custom(objectId),
+  }),
+};

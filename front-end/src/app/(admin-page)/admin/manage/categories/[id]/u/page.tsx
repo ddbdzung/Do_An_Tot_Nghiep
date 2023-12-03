@@ -8,6 +8,7 @@ import {
   adminUpdateProductAsync,
   createProductAsync,
   getCategoriesAsync,
+  updateCategoryAsync,
 } from "@/redux/features/adminSlice";
 import {
   Box,
@@ -28,17 +29,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import withAuth from "@/shared/PrivateRoute";
-import { fetchGetProduct } from "@/redux/services/productApi";
 import { IResponsePayload } from "@/http-service/response-handler";
-import { IProduct } from "@/api/product/dto/get-products.dto";
-import {
-  IUpdateProductBodyDto,
-  IUpdateProductDto,
-} from "@/api/product/dto/update-product.dto";
 import { getChangedValues } from "@/utils/getChangesObject";
 import { notifyError, notifyPromise } from "@/utils/notify";
 import Image from "next/image";
 import { renderImageCloudinary } from "@/utils/renderImage";
+import { fetchGetCategory } from "@/redux/services/categoryApi";
+import { ICategory } from "@/api/category/dto/category.dto";
+import { IUpdateCategoryDto } from "@/api/category/dto/update-category.dto";
 
 const throttleUpdate = throttle(
   async function (
@@ -46,7 +44,7 @@ const throttleUpdate = throttle(
     actions: FormikHelpers<any>,
     dispatch: (...arg: any) => any
   ) {
-    dispatch(adminUpdateProductAsync(values as IUpdateProductDto));
+    dispatch(updateCategoryAsync(values as IUpdateCategoryDto));
   },
   1000,
   { trailing: false }
@@ -57,7 +55,6 @@ function UpdateProductPage() {
   const { id } = useParams();
 
   const [previewImage, setPreviewImage] = useState(null);
-  const [previewImageList, setPreviewImageList] = useState([]);
   const handleSetPreview = (event) => {
     const reader = new FileReader();
     if (event.target.files.length > 0) {
@@ -67,28 +64,15 @@ function UpdateProductPage() {
       };
     }
   };
-  const handleSetPreviewList = (event) => {
-    const files = event.target.files;
-    let fileArr = [];
-    for (let i = 0; i < files.length; i++) {
-      const reader = new FileReader();
-      reader.readAsDataURL(files[i]);
-      reader.onloadend = () => {
-        fileArr.push(reader.result);
-      };
-    }
-    setPreviewImageList(fileArr);
-  };
-
   const { formStatus, categories } = useAppSelector(
     (state) => state.adminReducer
   );
   const { accessToken } = useAppSelector((state) => state.authReducer);
-  const [product, setProduct] = useState<IProduct | null>(null);
+  const [category, setCategory] = useState<ICategory | null>(null);
 
-  const fetchProductPromise = (mounted: boolean) =>
-    fetchGetProduct({ access: accessToken }, { id }).then(
-      (res: IResponsePayload<IProduct>) => {
+  const fetchCategoryPromise = (mounted: boolean) =>
+    fetchGetCategory({ access: accessToken }, { id }).then(
+      (res: IResponsePayload<ICategory>) => {
         if (mounted) {
           if (res.statusCode !== 200) {
             notifyError(res.message);
@@ -96,7 +80,7 @@ function UpdateProductPage() {
               router.back();
             });
           } else {
-            setProduct(res.data);
+            setCategory(res.data);
           }
         }
       }
@@ -104,15 +88,9 @@ function UpdateProductPage() {
 
   useEffect(() => {
     let mounted = true;
-    dispatch(
-      getCategoriesAsync({
-        limit: 100,
-        page: 1,
-      })
-    );
-    notifyPromise(fetchProductPromise(mounted), {
-      successMessage: "Get product successfully",
-      errorMessage: "Get product failed",
+    notifyPromise(fetchCategoryPromise(mounted), {
+      successMessage: "Get category successfully",
+      errorMessage: "Get category failed",
     });
 
     return () => {
@@ -129,23 +107,11 @@ function UpdateProductPage() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: product?.name ?? "",
-      brand: product?.brand ?? "",
-      quantity: product?.quantity ?? 0,
-      price: product?.price.lastValue ?? 0,
-      description: product?.description ?? "",
-      categoryId: product?.category.id ?? "",
-      unit: product?.unit ?? "",
-      images: product?.image ?? [],
+      name: category?.name ?? "",
+      images: category?.image ?? [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required").trim(),
-      brand: Yup.string().required("Required").trim(),
-      quantity: Yup.number().min(0).required("Required"),
-      price: Yup.number().min(1).required("Required"),
-      categoryId: Yup.string().required("Required"),
-      description: Yup.string().trim(),
-      unit: Yup.string().required("Required").trim(),
     }),
     onSubmit: (values, actions) => {
       let changedImage = {};
@@ -166,8 +132,8 @@ function UpdateProductPage() {
         return;
       }
 
-      const payload: IUpdateProductDto = {
-        id,
+      const payload: IUpdateCategoryDto = {
+        query: { id },
         body: changedValues,
       };
       throttleUpdate(payload, actions, dispatch);
@@ -214,6 +180,7 @@ function UpdateProductPage() {
             </Button>
           </Box>
         </Box>
+
         <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
             <TextField
@@ -238,160 +205,13 @@ function UpdateProductPage() {
               </span>
             )}
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Brand"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="brand"
-              name="brand"
-              value={formik.values.brand}
-              onChange={formik.handleChange}
-            />
-            {formik.touched.brand && formik.errors.brand && (
-              <span
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.brand}
-              </span>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Quantity"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="quantity"
-              name="quantity"
-              value={formik.values.quantity}
-              onChange={formik.handleChange}
-            />
-            {formik.touched.quantity && formik.errors.quantity && (
-              <span
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.quantity}
-              </span>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Price"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="price"
-              name="price"
-              value={formik.values.price}
-              onChange={formik.handleChange}
-            />
-            {formik.touched.price && formik.errors.price && (
-              <span
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.price}
-              </span>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <TextField
-              label="Description"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="description"
-              name="description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              multiline={true}
-              rows={3}
-            />
-            {formik.touched.description && formik.errors.description && (
-              <span
-                style={{
-                  margin: "0.1rem",
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.description}
-              </span>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Unit"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="unit"
-              name="unit"
-              value={formik.values.unit}
-              onChange={formik.handleChange}
-            />
-            {formik.touched.unit && formik.errors.unit && (
-              <span
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.unit}
-              </span>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <InputLabel id="categoryId">Category</InputLabel>
-            <Select
-              labelId="categoryId"
-              id="categoryId"
-              name="categoryId"
-              label="Category"
-              size="medium"
-              value={formik.values.categoryId}
-              onChange={formik.handleChange}
-            >
-              {categories?.map((category) => (
-                <MenuItem key={category.id} value={category.id}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {formik.touched.categoryId && formik.errors.categoryId && (
-              <span
-                style={{
-                  marginLeft: "8px",
-                  fontSize: "1rem",
-                  lineHeight: "1.25rem",
-                  color: "rgb(239, 68, 68)",
-                }}
-              >
-                {formik.errors.categoryId}
-              </span>
-            )}
-          </Grid>
         </Grid>
+
         <Typography
           variant="subtitle1"
           style={{ marginTop: "4px", marginBottom: "-8px" }}
         >
-          Front Image
+          Category Image
         </Typography>
         <div>
           {!previewImage && (
@@ -401,7 +221,7 @@ function UpdateProductPage() {
                 cols={3}
                 rowHeight={164}
               >
-                {product?.images.map((item) => (
+                {category?.images?.map((item) => (
                   <ImageListItem key={item.url}>
                     <Image
                       src={renderImageCloudinary(item.url)}
@@ -449,49 +269,6 @@ function UpdateProductPage() {
               </button>
             </div>
           )}
-        </div>
-        <Typography
-          variant="subtitle1"
-          style={{ marginTop: "4px", marginBottom: "-8px" }}
-        >
-          Sub Image
-        </Typography>
-        <div className="tablet:ml-60">
-          <div>
-            <input
-              type="file"
-              onChange={(e) => {
-                handleSetPreviewList(e);
-              }}
-              multiple
-            />
-          </div>
-          {previewImageList?.length > 0 &&
-            previewImageList.map((image, idx) => (
-              <div key={idx}>
-                <ModalImage
-                  small={
-                    image.length > 255
-                      ? image
-                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
-                        image
-                  }
-                  medium={
-                    image.length > 255
-                      ? image
-                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
-                        image
-                  }
-                  large={
-                    image.length > 255
-                      ? image
-                      : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale,w_1700/v1/" +
-                        image
-                  }
-                  alt="Ảnh phụ"
-                />
-              </div>
-            ))}
         </div>
       </form>
     </>

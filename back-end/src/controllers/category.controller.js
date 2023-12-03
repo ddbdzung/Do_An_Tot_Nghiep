@@ -12,6 +12,17 @@ exports.getCategories = catchAsync(async (req, res, next) => {
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], categories);
 });
 
+exports.getCategory = catchAsync(async (req, res, next) => {
+  const { categoryId } = req.params;
+  const category = await categoryService.getCategoryById(categoryId, {
+    lean: true,
+  });
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], category);
+});
+
 exports.createCategory = catchAsync(async (req, res, next) => {
   const createCategoryDto = pick(req.body, ['name']);
   const category = await categoryService.createCategory(createCategoryDto);
@@ -34,6 +45,6 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
 
 exports.softDeleteCategory = catchAsync(async (req, res, next) => {
   const { categoryId } = req.params;
-  await categoryService.softDeleteCategoryById(categoryId);
-  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200]);
+  const category = await categoryService.softDeleteCategory(categoryId);
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], category);
 });

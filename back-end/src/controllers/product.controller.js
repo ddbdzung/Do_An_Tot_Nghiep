@@ -28,6 +28,7 @@ const createProduct = catchAsync(async (req, res, next) => {
     'price',
     'quantity',
     'unit',
+    'images',
   ]);
   const category = await categoryService.getCategoryById(
     createProductDto.categoryId,
@@ -54,7 +55,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
     'brand',
     'categoryId',
     'description',
-    'image',
+    'images',
   ]);
   const product = await productService.updateProductById(
     productId,

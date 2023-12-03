@@ -3,6 +3,7 @@ const { Product } = require('../models/');
 const httpStatus = require('http-status');
 const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
+const { uploadStream } = require('./image.service');
 
 exports.getProductById = async id => {
   const product = await Product.findById(id);
@@ -32,7 +33,7 @@ exports.queryProducts = async (filter, options) => {
 };
 
 exports.createProduct = async createProductDto => {
-  const { price, categoryId, ...productDto } = createProductDto;
+  const { price, categoryId, images, ...productDto } = createProductDto;
 
   const priceBody = {
     lastValue: price,
@@ -43,6 +44,16 @@ exports.createProduct = async createProductDto => {
       },
     ],
   };
+
+  const imgs = [];
+  if (images !== undefined && Array.isArray(images) && images.length > 0) {
+    const uploadedImg = await uploadStream(images[0].blob);
+    imgs.push({
+      pos: images[0].pos,
+      url: uploadedImg.public_id,
+    });
+    productDto.images = imgs;
+  }
 
   productDto.category = categoryId;
   productDto.price = priceBody;
@@ -66,7 +77,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
     unit,
     brand,
     description,
-    image,
+    images,
   } = updateProductDto;
 
   if (categoryId) {
@@ -83,9 +94,14 @@ exports.updateProductById = async (productId, updateProductDto) => {
     product.category = updateProductDto.categoryId;
   }
 
-  if (image) {
-    // product.image = {};
-    console.log('image', image);
+  const imgs = [];
+  if (images !== undefined && Array.isArray(images) && images.length > 0) {
+    const uploadedImg = await uploadStream(images[0].blob);
+    imgs.push({
+      pos: images[0].pos,
+      url: uploadedImg.public_id,
+    });
+    product.images = imgs;
   }
 
   if (price) {

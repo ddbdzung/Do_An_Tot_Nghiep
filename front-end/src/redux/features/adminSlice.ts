@@ -30,11 +30,21 @@ import {
   IGetCategoriesQueryDto,
   IGetCategoriesResponseDto,
 } from "@/api/category/dto/get-categories.dto";
-import { fetchGetCategories } from "../services/categoryApi";
+import {
+  fetchCreateCategory,
+  fetchDeleteCategory,
+  fetchGetCategories,
+  fetchGetCategory,
+  fetchUpdateCategory,
+} from "../services/categoryApi";
 import { IGetProductQueryDto } from "@/api/product/dto/get-product.dto";
 import { IUpdateProductDto } from "@/api/product/dto/update-product.dto";
 import enUS from "@/locales/en-us.locales";
 import { IDeleteProductDto } from "@/api/product/dto/delete-product.dto";
+import { ICreateCategoryBodyDto } from "@/api/category/dto/create-category.dto";
+import { IGetCategoryQueryDto } from "@/api/category/dto/get-category.dto";
+import { IUpdateCategoryDto } from "@/api/category/dto/update-category.dto";
+import { IDeleteCategoryQueryDto } from "@/api/category/dto/delete-category.dto";
 
 export const getProductsAsync = createAsyncThunk(
   "admin/getProductsAsync",
@@ -108,6 +118,55 @@ export const getCategoriesAsync = createAsyncThunk(
   }
 );
 
+export const createCategoryAsync = createAsyncThunk(
+  "admin/createCategoryAsync",
+  async (payload: ICreateCategoryBodyDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    console.log("payload456", payload);
+    const data = await fetchCreateCategory(tokens, payload);
+    return data;
+  }
+);
+
+export const getCategoryAsync = createAsyncThunk(
+  "admin/getCategoryAsync",
+  async (payload: IGetCategoryQueryDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchGetCategory(tokens, payload);
+    return data;
+  }
+);
+
+export const updateCategoryAsync = createAsyncThunk(
+  "admin/updateCategoryAsync",
+  async (payload: IUpdateCategoryDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchUpdateCategory(tokens, payload);
+    return data;
+  }
+);
+
+export const deleteCategoryAsync = createAsyncThunk(
+  "admin/deleteCategoryAsync",
+  async (payload: IDeleteCategoryQueryDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchDeleteCategory(tokens, payload);
+    return data;
+  }
+);
+
 export enum AdminFormStatus {
   IDLE = "idle",
   LOADING = "loading",
@@ -135,6 +194,7 @@ export const admin = createSlice({
     builder
       .addCase(getProductsAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(getProductsAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -151,9 +211,11 @@ export const admin = createSlice({
       })
       .addCase(getProductsAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
       })
       .addCase(createProductAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(createProductAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -169,9 +231,11 @@ export const admin = createSlice({
       })
       .addCase(createProductAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
       })
       .addCase(adminGetProductAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(adminGetProductAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -189,9 +253,11 @@ export const admin = createSlice({
       })
       .addCase(adminGetProductAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
       })
       .addCase(adminUpdateProductAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(adminUpdateProductAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -217,9 +283,11 @@ export const admin = createSlice({
       })
       .addCase(adminUpdateProductAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
       })
       .addCase(adminDeleteProductAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(adminDeleteProductAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -240,9 +308,11 @@ export const admin = createSlice({
       })
       .addCase(adminDeleteProductAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
       })
       .addCase(getCategoriesAsync.pending, (state) => {
         state.formStatus = AdminFormStatus.LOADING;
+        return state;
       })
       .addCase(getCategoriesAsync.fulfilled, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
@@ -260,6 +330,85 @@ export const admin = createSlice({
       })
       .addCase(getCategoriesAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(createCategoryAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(createCategoryAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<ICategory>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.CATEGORIES.CREATE_CATEGORY_SUCCESS,
+        });
+        if (!res) {
+          return state;
+        }
+        if (!state.categories) {
+          state.categories = [];
+        }
+        state.categories.push(res.data as ICategory);
+        return state;
+      })
+      .addCase(createCategoryAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(updateCategoryAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(updateCategoryAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<ICategory>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.CATEGORIES.UPDATE_CATEGORY_SUCCESS,
+        });
+        if (!res) {
+          return state;
+        }
+        if (!state.categories) {
+          state.categories = [];
+        }
+        const updatedCategory = res.data as ICategory;
+        const prevCategory = state.categories.find(
+          (i) => i.id === updatedCategory.id
+        );
+
+        if (!prevCategory) {
+          return state;
+        }
+
+        Object.assign(prevCategory, updatedCategory);
+        return state;
+      })
+      .addCase(updateCategoryAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(deleteCategoryAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(deleteCategoryAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<ICategory>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.CATEGORIES.DELETE_CATEGORY_SUCCESS,
+        });
+        if (!res) {
+          return state;
+        }
+        if (!state.categories) {
+          state.categories = [];
+        }
+        const deletedCategory = res.data as ICategory;
+        state.categories = state.categories.filter(
+          (i) => i.id !== deletedCategory.id
+        );
+        return state;
+      })
+      .addCase(deleteCategoryAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
       });
   },
 });

@@ -17,7 +17,7 @@
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@mui/icons-material": "latest",
-    "@mui/material": "latest",
+    "@mui/material": "^5.14.19",
     "@reduxjs/toolkit": "^1.9.7",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.4",

@@ -8,7 +8,7 @@ const { categoryValidation } = require('../../validations');
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/a')
   .get(
     auth(permission.CATEGORY.GET_CATEGORIES),
     validate(categoryValidation.getCategories),
@@ -21,7 +21,12 @@ router
   );
 
 router
-  .route('categoryId')
+  .route('/a/:categoryId')
+  .get(
+    auth(permission.CATEGORY.GET_CATEGORY),
+    validate(categoryValidation.getCategory),
+    categoryController.getCategory,
+  )
   .patch(
     auth(permission.CATEGORY.UPDATE_CATEGORY),
     validate(categoryValidation.updateCategory),

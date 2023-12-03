@@ -17,6 +17,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "next/link";
 import PeopleIcon from "@mui/icons-material/People";
 import PlumbingIcon from "@mui/icons-material/Plumbing";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import BallotIcon from "@mui/icons-material/Ballot";
 import { useAppDispatch } from "@/redux/hooks";
 import { signOut } from "@/redux/features/authSlice";
@@ -25,20 +26,25 @@ import { notifySuccess } from "@/utils/notify";
 const DRAWER_WIDTH = 240;
 
 const LINKS = [
-  { text: "Trang chủ", href: "/admin", icon: HomeIcon },
-  { text: "Quản lý người dùng", href: "/admin/manage/users", icon: PeopleIcon },
+  { text: "Home Page", href: "/admin", icon: HomeIcon },
+  { text: "Manage Users", href: "/admin/manage/users", icon: PeopleIcon },
   {
-    text: "Quản lý đơn hàng",
+    text: "Manage Orders",
     href: "/admin/manage/orders",
     icon: ReceiptLongIcon,
   },
   {
-    text: "Quản lý sản phẩm",
+    text: "Manage Products",
     href: "/admin/manage/products",
     icon: BallotIcon,
   },
   {
-    text: "Lắp đặt - bảo trì",
+    text: "Manage Categories",
+    href: "/admin/manage/categories",
+    icon: LocalOfferIcon,
+  },
+  {
+    text: "Services",
     href: "/admin/servicing",
     icon: PlumbingIcon,
   },

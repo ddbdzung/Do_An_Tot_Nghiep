@@ -21,6 +21,12 @@ exports.createProduct = {
     price: joi.number().required().min(1),
     quantity: joi.number().required().min(0),
     unit: joi.string().trim().required(),
+    images: joi.array().items(
+      joi.object().keys({
+        blob: joi.string().trim(),
+        pos: joi.number().integer(),
+      }),
+    ),
   }),
 };
 
@@ -36,7 +42,7 @@ exports.updateProduct = {
     unit: joi.string().trim(),
     brand: joi.string().trim(),
     categoryId: joi.string().custom(objectId),
-    image: joi.array().items(
+    images: joi.array().items(
       joi.object().keys({
         blob: joi.string().trim(),
         pos: joi.number().integer(),

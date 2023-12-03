@@ -10,12 +10,21 @@ exports.getCategoryById = async (
   },
 ) => {
   const category = await Category.findById(id, {}, options);
+  if (!category || category.deletedAt) {
+    return null;
+  }
+
   return category;
 };
 
 exports.queryCategories = async (filter, options) => {
   const categories = await Category.paginate(filter, options);
-  return categories;
+  const { results, ...rest } = categories;
+  const resultsNotDeleted = results.filter(category => !category.deletedAt);
+  return {
+    results: resultsNotDeleted,
+    ...rest,
+  };
 };
 
 exports.createCategory = async createCategoryDto => {
@@ -48,7 +57,7 @@ exports.updateCategoryById = async (categoryId, updateCategoryDto) => {
 exports.softDeleteCategory = async categoryId => {
   const category = await Category.findByIdAndUpdate(
     categoryId,
-    { isDeleted: true },
+    { deletedAt: Date.now() },
     { new: true },
   );
 

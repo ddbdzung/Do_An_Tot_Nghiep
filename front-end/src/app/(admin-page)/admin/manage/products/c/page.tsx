@@ -1,5 +1,6 @@
 "use client";
 
+import ModalImage from "react-modal-image";
 import * as Yup from "yup";
 import { ICreateProductBodyDto } from "@/api/product/dto/create-product.dto";
 import {
@@ -39,8 +40,8 @@ const throttleCreate = throttle(
       categoryId: values.categoryId,
       unit: values.unit,
     };
-    if (values.image) {
-      payload.image = values.image;
+    if (values.images) {
+      payload.images = values.images;
     }
     if (values.description) {
       payload.description = values.description;
@@ -57,6 +58,30 @@ function CreateProductPage() {
   const { formStatus, categories } = useAppSelector(
     (state) => state.adminReducer
   );
+
+  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImageList, setPreviewImageList] = useState([]);
+  const handleSetPreview = (event) => {
+    const reader = new FileReader();
+    if (event.target.files.length > 0) {
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+    }
+  };
+  const handleSetPreviewList = (event) => {
+    const files = event.target.files;
+    let fileArr = [];
+    for (let i = 0; i < files.length; i++) {
+      const reader = new FileReader();
+      reader.readAsDataURL(files[i]);
+      reader.onloadend = () => {
+        fileArr.push(reader.result);
+      };
+    }
+    setPreviewImageList(fileArr);
+  };
   useEffect(() => {
     dispatch(
       getCategoriesAsync({
@@ -81,6 +106,7 @@ function CreateProductPage() {
       description: "",
       categoryId: "",
       unit: "",
+      images: [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required").trim(),
@@ -92,8 +118,15 @@ function CreateProductPage() {
       unit: Yup.string().required("Required").trim(),
     }),
     onSubmit: (values, actions) => {
+      if (previewImage) {
+        values.images = [
+          {
+            blob: previewImage,
+            pos: 0,
+          },
+        ];
+      }
       throttleCreate(values, actions, dispatch);
-      router.push("/admin/manage/products");
     },
   });
   return (
@@ -310,6 +343,91 @@ function CreateProductPage() {
             )}
           </Grid>
         </Grid>
+        <div>
+          <Typography
+            variant="subtitle1"
+            style={{ marginTop: "4px", marginBottom: "-8px" }}
+          >
+            Front Image
+          </Typography>
+          <div>
+            <input type="file" onChange={handleSetPreview} />
+          </div>
+          {previewImage && (
+            <div>
+              <ModalImage
+                small={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                      previewImage
+                }
+                medium={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                      previewImage
+                }
+                large={
+                  previewImage.length > 255
+                    ? previewImage
+                    : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale,w_1700/v1/" +
+                      previewImage
+                }
+                alt="Ảnh chính"
+              />
+              <button
+                className="bg-black text-white font-bold p-2"
+                onClick={() => setPreviewImage(null)}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+          <Typography
+            variant="subtitle1"
+            style={{ marginTop: "4px", marginBottom: "-8px" }}
+          >
+            Sub Image
+          </Typography>
+          <div className="tablet:ml-60">
+            <div>
+              <input
+                type="file"
+                onChange={(e) => {
+                  handleSetPreviewList(e);
+                }}
+                multiple
+              />
+            </div>
+            {previewImageList?.length > 0 &&
+              previewImageList.map((image, idx) => (
+                <div key={idx}>
+                  <ModalImage
+                    small={
+                      image.length > 255
+                        ? image
+                        : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                          image
+                    }
+                    medium={
+                      image.length > 255
+                        ? image
+                        : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale/v1/" +
+                          image
+                    }
+                    large={
+                      image.length > 255
+                        ? image
+                        : "https://res.cloudinary.com/dbbifu1w6/image/upload/c_scale,w_1700/v1/" +
+                          image
+                    }
+                    alt="Ảnh phụ"
+                  />
+                </div>
+              ))}
+          </div>
+        </div>
       </form>
     </>
   );

@@ -33,6 +33,17 @@ const normalizeDataResponse = data => {
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
+    if (!(error instanceof Error)) {
+      return next(
+        new ApiError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          JSON.stringify(error),
+          false,
+          err.stack,
+        ),
+      );
+    }
+
     const statusCode =
       error.statusCode || error instanceof mongoose.Error
         ? httpStatus.BAD_REQUEST

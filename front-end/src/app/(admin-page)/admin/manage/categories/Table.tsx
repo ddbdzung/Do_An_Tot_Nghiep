@@ -9,11 +9,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import Row from "./ProductRow";
+import Row from "./CategoryRow";
 import { IProduct } from "@/api/product/dto/get-products.dto";
 import DraggableDialog from "@/components/DraggableDialog";
 import React from "react";
-import { adminDeleteProductAsync } from "@/redux/features/adminSlice";
+import { deleteCategoryAsync } from "@/redux/features/adminSlice";
 
 export type headersType = {
   title: string;
@@ -28,11 +28,11 @@ export default function CollapsibleTable(props: {
   const { rows } = props;
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState("");
-  const [selectedProductName, setSelectedProductName] = React.useState("");
-  const handleDeleteProduct = (id: string, productName: string) => {
+  const [selectedCategoryName, setSelectedCategoryName] = React.useState("");
+  const handleDeleteCategory = (id: string, name: string) => {
     setDeleteDialogOpen(true);
     setSelectedId(id);
-    setSelectedProductName(productName);
+    setSelectedCategoryName(name);
   };
 
   return (
@@ -41,11 +41,11 @@ export default function CollapsibleTable(props: {
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}
         title="Warning"
-        content="You are deleting product:"
+        content="You are deleting category:"
         confirmText="Delete"
         id={selectedId}
-        itemName={selectedProductName}
-        actionDeleteItemById={adminDeleteProductAsync}
+        itemName={selectedCategoryName}
+        actionDeleteItemById={deleteCategoryAsync}
       />
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
@@ -69,7 +69,7 @@ export default function CollapsibleTable(props: {
                 <Row
                   key={row.id}
                   row={row}
-                  handleDeleteProduct={handleDeleteProduct}
+                  handleDeleteItem={handleDeleteCategory}
                 />
               ))}
           </TableBody>

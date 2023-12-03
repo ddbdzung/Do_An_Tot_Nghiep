@@ -36,7 +36,7 @@ export interface IProduct {
     createdAt: string;
     updatedAt: string;
   };
-  image?:
+  images?:
     | [
         {
           url: string;
