@@ -14,6 +14,7 @@ import productSport6 from "@/images/products/sport-6.png";
 import productSport7 from "@/images/products/sport-7.png";
 import productSport8 from "@/images/products/sport-8.png";
 import { StaticImageData } from "next/image";
+import { IProduct } from "@/api/product/dto/get-products.dto";
 
 //
 
@@ -105,6 +106,33 @@ const DEMO_VARIANT_COLORS: ProductVariant[] = [
     name: "Green",
     color: "bg-green-400",
     featuredImage: productImgs[4],
+  },
+];
+
+export const REAL_PRODUCTS: IProduct[] = [
+  {
+    id: "6565b0ce38638fc6865b61ea",
+    name: "Máy lọc nước RO nóng nguội lạnh Karofi KAD-X39 10 lõi",
+    price: 7390000,
+    images: [
+      {
+        url: "http://res.cloudinary.com/dbbifu1w6/image/upload/v1701505337/products/pnfar9fdaefr8v7empyo.jpg",
+        pos: 0,
+        alt: "Máy lọc nước RO nóng nguội lạnh Karofi KAD-X39 10 lõi",
+      },
+    ],
+    description: "Máy lọc nước RO nóng nguội lạnh Karofi KAD-X39 10 lõi",
+    category: {
+      id: "6565adca6efeaac585581a4d",
+      name: "Máy lọc nước",
+      createdAt: new Date("2023-11-28T09:07:22.099Z"),
+      updatedAt: new Date("2023-11-28T09:07:22.099Z"),
+    },
+    brand: "Karofi",
+    createdAt: new Date("2023-11-28T09:07:22.099Z"),
+    updatedAt: new Date("2023-12-04T10:28:07.904Z"),
+    quantity: 50,
+    unit: "cái",
   },
 ];
 
