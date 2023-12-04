@@ -35,6 +35,7 @@ function ViewCategoryPage() {
   const router = useRouter();
   const { id } = useParams();
   const [category, setCategory] = useState<ICategory | null>(null);
+  console.log("category", category);
   useEffect(() => {
     let mounted = true;
     fetchGetCategory({ access: accessToken }, { id }).then(
@@ -85,17 +86,18 @@ function ViewCategoryPage() {
           </Grid>
         </Grid>
         <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-          {category?.images?.map((item) => (
-            <ImageListItem key={item.url}>
-              <Image
-                src={renderImageCloudinary(item.url)}
-                alt={item?.alt || ""}
-                width={500}
-                height={450}
-                loading="lazy"
-              />
-            </ImageListItem>
-          ))}
+          {Array.isArray(category?.images) &&
+            category?.images?.map((item) => (
+              <ImageListItem key={item.url}>
+                <Image
+                  src={renderImageCloudinary(item.url)}
+                  alt={item?.alt || ""}
+                  width={500}
+                  height={450}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
         </ImageList>
       </div>
     </>

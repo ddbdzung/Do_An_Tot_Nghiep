@@ -13,6 +13,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     logger.info(`Listening to port ${config.port} on host ${config.host}`);
   });
 });
+mongoose.set('debug', true);
 
 const exitHandler = () => {
   if (server) {

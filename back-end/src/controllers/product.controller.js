@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { productService, categoryService } = require('../services');
 const responseEmitter = require('../utils/responseEmitter');
+const getAuthenticatedUser = require('../common/getAuthenticatedUser');
 
 const getProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.params;
@@ -12,6 +13,10 @@ const getProduct = catchAsync(async (req, res, next) => {
 });
 
 const getProducts = catchAsync(async (req, res, next) => {
+  const user = getAuthenticatedUser(req);
+  if (!user) {
+  }
+
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await productService.queryProducts(filter, options);

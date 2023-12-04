@@ -4,7 +4,7 @@ import React, { FC, useState } from "react";
 import LikeButton from "./LikeButton";
 import Prices from "./Prices";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product, PRODUCTS, REAL_PRODUCTS } from "@/data/data";
 import { StarIcon } from "@heroicons/react/24/solid";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
@@ -17,16 +17,18 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
+import { renderImageCloudinary } from "@/utils/renderImage";
+import { IProduct } from "@/api/product/dto/get-products.dto";
 
 export interface ProductCardProps {
   className?: string;
-  data?: Product;
+  data?: IProduct;
   isLiked?: boolean;
 }
 
 const ProductCard: FC<ProductCardProps> = ({
   className = "",
-  data = PRODUCTS[0],
+  data = REAL_PRODUCTS[0],
   isLiked,
 }) => {
   const {
@@ -38,6 +40,7 @@ const ProductCard: FC<ProductCardProps> = ({
     variantType,
     status,
     image,
+    images,
     rating,
     id,
     numberOfReviews,
@@ -270,7 +273,9 @@ const ProductCard: FC<ProductCardProps> = ({
           <Link href={"/product-detail"} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={image}
+              src={renderImageCloudinary(
+                Array.isArray(images) && images[0]?.url
+              )}
               className="object-cover w-full h-full drop-shadow-xl"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
@@ -294,7 +299,7 @@ const ProductCard: FC<ProductCardProps> = ({
           </div>
 
           <div className="flex justify-between items-end ">
-            <Prices price={price} />
+            <Prices price={price.lastValue} />
             <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">

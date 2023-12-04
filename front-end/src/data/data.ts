@@ -116,7 +116,7 @@ export const REAL_PRODUCTS: IProduct[] = [
     price: 7390000,
     images: [
       {
-        url: "http://res.cloudinary.com/dbbifu1w6/image/upload/v1701505337/products/pnfar9fdaefr8v7empyo.jpg",
+        url: "products/pnfar9fdaefr8v7empyo",
         pos: 0,
         alt: "Máy lọc nước RO nóng nguội lạnh Karofi KAD-X39 10 lõi",
       },

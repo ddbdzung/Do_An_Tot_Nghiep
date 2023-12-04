@@ -28,7 +28,7 @@ const request =
   (method: HTTPMethod) =>
   async (
     api: string,
-    data: null | { [key: string]: any },
+    data: null | { [key: string]: any } = null,
     tokens: any = {},
     _headers = null
   ) => {

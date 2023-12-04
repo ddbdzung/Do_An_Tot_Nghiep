@@ -1,6 +1,26 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-
+const imageCollectionSchema = mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    alt: {
+      type: String,
+      trim: true,
+    },
+    pos: {
+      type: Number,
+      required: true,
+    },
+  },
+  {
+    timestamps: false,
+    id: false,
+  },
+);
 const categorySchema = mongoose.Schema(
   {
     name: {
@@ -9,11 +29,7 @@ const categorySchema = mongoose.Schema(
       trim: true,
       text: true,
     },
-    image: {
-      type: String,
-      trim: true,
-      maxLength: 255,
-    },
+    images: [imageCollectionSchema],
     deletedAt: {
       type: Date,
       default: null,

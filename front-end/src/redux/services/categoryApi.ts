@@ -77,7 +77,6 @@ export async function fetchUpdateCategory(
     );
     return data;
   } catch (errorResponse: any) {
-    console.log("errorResponse", errorResponse);
     const { code, message, response } = errorResponse;
     if (code === AxiosError.ERR_NETWORK) {
       return { code, message };

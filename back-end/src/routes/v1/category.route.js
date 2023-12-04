@@ -38,4 +38,11 @@ router
     categoryController.softDeleteCategory,
   );
 
+router
+  .route('/with-meta')
+  .get(
+    validate(categoryValidation.getCategories),
+    categoryController.getCategoriesWithMetadata,
+  );
+
 module.exports = router;

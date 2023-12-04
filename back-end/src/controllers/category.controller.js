@@ -12,6 +12,16 @@ exports.getCategories = catchAsync(async (req, res, next) => {
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], categories);
 });
 
+exports.getCategoriesWithMetadata = catchAsync(async (req, res, next) => {
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const categories = await categoryService.queryCategoriesWithMetadata(
+    filter,
+    options,
+  );
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], categories);
+});
+
 exports.getCategory = catchAsync(async (req, res, next) => {
   const { categoryId } = req.params;
   const category = await categoryService.getCategoryById(categoryId, {
@@ -24,7 +34,7 @@ exports.getCategory = catchAsync(async (req, res, next) => {
 });
 
 exports.createCategory = catchAsync(async (req, res, next) => {
-  const createCategoryDto = pick(req.body, ['name']);
+  const createCategoryDto = pick(req.body, ['name', 'images']);
   const category = await categoryService.createCategory(createCategoryDto);
   responseEmitter(req, res, next)(
     httpStatus.CREATED,
@@ -35,7 +45,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
 
 exports.updateCategory = catchAsync(async (req, res, next) => {
   const { categoryId } = req.params;
-  const updateCategoryDto = pick(req.body, ['name']);
+  const updateCategoryDto = pick(req.body, ['name', 'images']);
   const category = await categoryService.updateCategoryById(
     categoryId,
     updateCategoryDto,

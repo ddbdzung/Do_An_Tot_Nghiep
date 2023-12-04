@@ -38,4 +38,8 @@ router
     productController.softDeleteProduct,
   );
 
+router
+  .route('/')
+  .get(validate(productValidation.getProducts), productController.getProducts);
+
 module.exports = router;

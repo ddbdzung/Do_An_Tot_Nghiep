@@ -14,6 +14,12 @@ exports.getCategories = {
 exports.createCategory = {
   body: joi.object().keys({
     name: joi.string().required().trim(),
+    images: joi.array().items(
+      joi.object().keys({
+        blob: joi.string().trim(),
+        pos: joi.number().integer(),
+      }),
+    ),
   }),
 };
 
@@ -23,6 +29,12 @@ exports.updateCategory = {
   }),
   body: joi.object().keys({
     name: joi.string().trim(),
+    images: joi.array().items(
+      joi.object().keys({
+        blob: joi.string().trim(),
+        pos: joi.number().integer(),
+      }),
+    ),
   }),
 };
 

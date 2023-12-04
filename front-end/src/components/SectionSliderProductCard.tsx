@@ -6,6 +6,8 @@ import Heading from "@/components/Heading/Heading";
 import Glide from "@glidejs/glide/dist/glide.esm";
 import ProductCard from "./ProductCard";
 import { Product, PRODUCTS } from "@/data/data";
+import { customAxios } from "@/http-service/fetchAPI";
+import { GET_PRODUCTS } from "@/api/product/endpoints";
 
 export interface SectionSliderProductCardProps {
   className?: string;
@@ -24,7 +26,8 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   headingClassName,
   heading,
   subHeading = "Water Purifier & Filter",
-  data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
+  data,
+  // data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
 }) => {
   const sliderRef = useRef(null);
 
@@ -81,12 +84,13 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
           {heading || `New Arrivals`}
         </Heading>
         <div className="glide__track" data-glide-el="track">
-          <ul className="glide__slides">
-            {data.map((item, index) => (
-              <li key={index} className={`glide__slide ${itemClassName}`}>
-                <ProductCard data={item} />
-              </li>
-            ))}
+          <ul className="glide__slides h-full">
+            {Array.isArray(data) &&
+              data?.map((item, index) => (
+                <li key={index} className={`glide__slide ${itemClassName}`}>
+                  <ProductCard data={item} />
+                </li>
+              ))}
           </ul>
         </div>
       </div>

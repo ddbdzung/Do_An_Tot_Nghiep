@@ -4,6 +4,7 @@ import explore1Svg from "@/images/collections/explore1.svg";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import { CateWithMeta } from "../SectionGridMoreExplore/SectionGridMoreExplore";
 
 export interface CardCategory4Props {
   className?: string;
@@ -15,14 +16,14 @@ export interface CardCategory4Props {
   count?: number;
 }
 
-const CardCategory4: FC<CardCategory4Props> = ({
+const CardCategory4: FC<CateWithMeta> = ({
   className = "",
-  featuredImage = ".",
+  featuredImage = "",
   bgSVG = explore1Svg,
   name,
   desc,
   color = "bg-rose-50",
-  count,
+  productCount,
 }) => {
   return (
     <div
@@ -43,7 +44,7 @@ const CardCategory4: FC<CardCategory4Props> = ({
               height={80}
             />
             <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
-              {count} products
+              {productCount} products
             </span>
           </div>
 
