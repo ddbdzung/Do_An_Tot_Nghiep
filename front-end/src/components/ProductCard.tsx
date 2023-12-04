@@ -277,13 +277,13 @@ const ProductCard: FC<ProductCardProps> = ({
               alt="product"
             />
           </Link>
-          <ProductStatus status={status} />
-          <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />
-          {sizes ? renderSizeList() : renderGroupButtons()}
+          {/* <ProductStatus status={status} /> */}
+          {/* <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" /> */}
+          {/* {sizes ? renderSizeList() : renderGroupButtons()} */}
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
-          {renderVariants()}
+          {/* {renderVariants()} */}
           <div>
             <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
               {name}
