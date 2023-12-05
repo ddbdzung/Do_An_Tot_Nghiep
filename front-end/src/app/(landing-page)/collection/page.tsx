@@ -21,11 +21,11 @@ const PageCollection = async ({}) => {
           {/* HEADING */}
           <div className="max-w-screen-sm">
             <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
-              Man collection
+              Products collection
             </h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
-              We not only help you design exceptional products, but also make it
-              easy for you to share your designs with more like-minded people.
+              We not only provide the best products, but also the best service
+              and warranty
             </span>
           </div>
 
@@ -41,8 +41,8 @@ const PageCollection = async ({}) => {
         {/* === SECTION 5 === */}
         <hr className="border-slate-200 dark:border-slate-700" />
 
-        <SectionSliderCollections />
-        <hr className="border-slate-200 dark:border-slate-700" />
+        {/* <SectionSliderCollections />
+        <hr className="border-slate-200 dark:border-slate-700" /> */}
 
         {/* SUBCRIBES */}
         <SectionPromo1 />
