@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Popover, Transition } from "@/app/(landing-page)/headlessui";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonThird from "@/shared/Button/ButtonThird";
@@ -10,6 +10,7 @@ import Slider from "rc-slider";
 import Radio from "@/shared/Radio/Radio";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import MySwitch from "@/components/MySwitch";
+import { ICategory } from "@/api/category/dto/category.dto";
 
 // DEMO DATA
 const DATA_categories = [
@@ -64,17 +65,23 @@ const DATA_sortOrderRadios = [
   { name: "Price Hight - Low", id: "Price-hight-low" },
 ];
 
-const PRICE_RANGE = [1, 500];
+export type cateType = ICategory & { productCount: number };
+
+const PRICE_RANGE = [1, 20000];
 //
-const TabFilters = () => {
+const TabFilters = ({ categories }: { categories: cateType[] }) => {
   const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
   //
   const [isOnSale, setIsIsOnSale] = useState(false);
   const [rangePrices, setRangePrices] = useState([100, 500]);
-  const [categoriesState, setCategoriesState] = useState<string[]>([]);
+  const [categoriesState, setCategoriesState] = useState<cateType[]>([]);
   const [colorsState, setColorsState] = useState<string[]>([]);
   const [sizesState, setSizesState] = useState<string[]>([]);
   const [sortOrderStates, setSortOrderStates] = useState<string>("");
+
+  useEffect(() => {
+    setCategoriesState(categories);
+  }, []);
 
   //
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
@@ -221,7 +228,7 @@ const TabFilters = () => {
                       }
                     />
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
-                    {DATA_categories.map((item) => (
+                    {categories.map((item) => (
                       <div key={item.name} className="">
                         <Checkbox
                           name={item.name}
@@ -696,7 +703,7 @@ const TabFilters = () => {
                         </label>
                         <div className="mt-1 relative rounded-md">
                           <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-neutral-500 sm:text-sm">
-                            $
+                            k VND
                           </span>
                           <input
                             type="text"
@@ -717,7 +724,7 @@ const TabFilters = () => {
                         </label>
                         <div className="mt-1 relative rounded-md">
                           <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-neutral-500 sm:text-sm">
-                            $
+                            k VND
                           </span>
                           <input
                             type="text"
@@ -1134,8 +1141,8 @@ const TabFilters = () => {
       <div className="hidden lg:flex flex-1 space-x-4">
         {renderTabsPriceRage()}
         {renderTabsCategories()}
-        {renderTabsColor()}
-        {renderTabsSize()}
+        {/* {renderTabsColor()} */}
+        {/* {renderTabsSize()} */}
         {renderTabIsOnsale()}
         <div className="!ml-auto">{renderTabsSortOrder()}</div>
       </div>
