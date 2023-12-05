@@ -8,8 +8,6 @@ exports.getProducts = {
     sortBy: joi.string(),
     limit: joi.number().integer(),
     page: joi.number().integer(),
-    categoryIds: joi.string().custom(categoryIds),
-    price: joi.string().custom(price),
   }),
 };
 
@@ -62,5 +60,16 @@ exports.softDeleteProduct = {
 exports.getProduct = {
   params: joi.object().keys({
     productId: joi.string().required().custom(objectId),
+  }),
+};
+
+exports.searchProducts = {
+  query: joi.object().keys({
+    limit: joi.number().integer(),
+    page: joi.number().integer(),
+    name: joi.string().trim(),
+    categoryIds: joi.string().custom(categoryIds),
+    price: joi.string().custom(price),
+    sort: joi.string(),
   }),
 };

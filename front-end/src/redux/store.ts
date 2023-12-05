@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./features/counterSlice";
 import authReducer from "./features/authSlice";
 import adminReducer from "./features/adminSlice";
+import productReducer from "./features/productSlice";
 
 export const store = configureStore({
   reducer: {
     counterReducer,
     authReducer,
     adminReducer,
+    productReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });

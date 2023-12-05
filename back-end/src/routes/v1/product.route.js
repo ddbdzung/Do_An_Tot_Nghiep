@@ -45,4 +45,11 @@ router
     productController.getProductsPublic,
   );
 
+router
+  .route('/search')
+  .get(
+    validate(productValidation.searchProducts),
+    productController.getProductsPublic,
+  );
+
 module.exports = router;

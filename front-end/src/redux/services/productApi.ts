@@ -5,6 +5,7 @@ import {
   IGetProductsQueryDto,
   IProduct,
 } from "@/api/product/dto/get-products.dto";
+import { ISearchProductsDto } from "@/api/product/dto/search-products.dto";
 import {
   IUpdateProductBodyDto,
   IUpdateProductDto,
@@ -14,6 +15,7 @@ import {
   ADMIN_DELETE_PRODUCT,
   ADMIN_GET_PRODUCTS,
   ADMIN_UPDATE_PRODUCT,
+  SEARCH_PRODUCTS,
 } from "@/api/product/endpoints";
 import { customAxios } from "@/http-service/fetchAPI";
 import { mapQueryToUrl } from "@/utils/mapQueryToUrl";
@@ -47,6 +49,24 @@ export async function fetchGetProducts(
     const { data } = await customAxios.get(url, null, token);
     return data;
   } catch (errorResponse: any) {
+    const { code, message, response } = errorResponse;
+    if (code === AxiosError.ERR_NETWORK) {
+      return { code, message };
+    }
+
+    return errorResponse.response.data;
+  }
+}
+
+export async function fetchSearchProducts(
+  token: string,
+  query: ISearchProductsDto
+) {
+  try {
+    const { data } = await customAxios.get(SEARCH_PRODUCTS(query), null, token);
+    return data;
+  } catch (errorResponse: any) {
+    console.log("errorResponse", errorResponse);
     const { code, message, response } = errorResponse;
     if (code === AxiosError.ERR_NETWORK) {
       return { code, message };
