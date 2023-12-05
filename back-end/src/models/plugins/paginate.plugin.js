@@ -22,7 +22,7 @@ const paginate = schema => {
   schema.statics.paginate = async function (
     filter,
     options,
-    { ignoreDeletedAt = true, lean = false } = {},
+    { ignoreDeletedAt = true, lean = false, price = {}, categoryIds = [] },
   ) {
     let sort = '';
     if (options.sortBy) {
@@ -49,6 +49,12 @@ const paginate = schema => {
     const countPromise = this.countDocuments(filter).exec();
     if (ignoreDeletedAt) {
       filter.deletedAt = { $eq: null };
+    }
+    if (price.min !== undefined && price.max !== undefined) {
+      filter['price.lastValue'] = { $gte: price.min, $lte: price.max };
+    }
+    if (categoryIds.length > 0) {
+      filter.category = { $in: categoryIds };
     }
     let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
     if (lean) {

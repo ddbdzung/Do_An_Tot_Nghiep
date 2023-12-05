@@ -40,6 +40,9 @@ router
 
 router
   .route('/')
-  .get(validate(productValidation.getProducts), productController.getProducts);
+  .get(
+    validate(productValidation.getProducts),
+    productController.getProductsPublic,
+  );
 
 module.exports = router;

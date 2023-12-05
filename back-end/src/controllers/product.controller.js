@@ -12,11 +12,20 @@ const getProduct = catchAsync(async (req, res, next) => {
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], product);
 });
 
-const getProducts = catchAsync(async (req, res, next) => {
-  const user = getAuthenticatedUser(req);
-  if (!user) {
-  }
+// http://localhost:8000/api/v1/products?price={"min":100,"max":10000}&categoryIds=["6565adca6efeaac585581a4d"]
+const getProductsPublic = catchAsync(async (req, res, next) => {
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const extendFilter = pick(req.query, ['categoryIds', 'price']);
+  const result = await productService.queryProducts(
+    filter,
+    options,
+    extendFilter,
+  );
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], result);
+});
 
+const getProducts = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await productService.queryProducts(filter, options);
@@ -82,4 +91,5 @@ module.exports = {
   createProduct,
   updateProduct,
   softDeleteProduct,
+  getProductsPublic,
 };

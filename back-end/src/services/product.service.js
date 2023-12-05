@@ -14,8 +14,12 @@ exports.getProductById = async id => {
   return product.populateOption('category');
 };
 
-exports.queryProducts = async (filter, options) => {
-  const products = await Product.paginate(filter, options);
+exports.queryProducts = async (
+  filter,
+  options,
+  extendFilter = { price: {}, categoryIds: [] },
+) => {
+  const products = await Product.paginate(filter, options, extendFilter);
   const { results, ...rest } = products;
   const resultsWithPopulate = await Promise.all(
     results.map(async product => {
