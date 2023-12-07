@@ -37,6 +37,8 @@ export const GET_PRODUCTS = (query: IGetProductsQueryDto) => {
   return url;
 };
 
+export const GET_PRODUCT = (productId) => `/v1/products/${productId}`;
+
 export const SEARCH_PRODUCTS = (query: ISearchProductsDto = {}) => {
   const { limit, page, name, categoryIds, sort, price } = query;
   let url = `/v1/products/search?`;
