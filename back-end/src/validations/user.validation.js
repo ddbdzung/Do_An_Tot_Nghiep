@@ -11,8 +11,8 @@ const createUser = {
     address: Joi.string(),
     gender: Joi.string()
       .valid(...Object.values(GENDER))
-      .required()
-  })
+      .required(),
+  }),
 };
 
 const getUsers = {
@@ -23,22 +23,28 @@ const getUsers = {
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
-    populate: Joi.string()
-  })
+    populate: Joi.string(),
+  }),
 };
 
 const getUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId)
+    userId: Joi.string().custom(objectId),
   }),
   query: Joi.object().keys({
-    populate: Joi.string()
-  })
+    populate: Joi.string(),
+  }),
+};
+
+const getMe = {
+  query: Joi.object().keys({
+    populate: Joi.string(),
+  }),
 };
 
 const updateUser = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId)
+    userId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
@@ -49,37 +55,61 @@ const updateUser = {
       gender: Joi.string()
         .valid(...Object.values(GENDER))
         .required(),
-      status: Joi.string().valid(...Object.values(STATUS))
+      status: Joi.string().valid(...Object.values(STATUS)),
     })
-    .min(1)
+    .min(1),
+};
+
+const updateMe = {
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+      address: Joi.string(),
+      gender: Joi.string()
+        .valid(...Object.values(GENDER))
+        .required(),
+      dateOfBirth: Joi.date(),
+      phoneNumber: Joi.string(),
+    })
+    .min(1),
 };
 
 const deleteUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId)
-  })
+    userId: Joi.string().custom(objectId),
+  }),
 };
 
 const changePassword = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId)
+    userId: Joi.string().custom(objectId),
   }),
   body: Joi.object()
     .keys({
       oldPassword: Joi.string().custom(password).required(),
-      newPassword: Joi.string().custom(password).required()
+      newPassword: Joi.string().custom(password).required(),
     })
-    .min(1)
+    .min(1),
 };
 
 const setPassword = {
   body: Joi.object()
     .keys({
       userId: Joi.string().custom(objectId).required(),
-      password: Joi.string().custom(password).required()
+      password: Joi.string().custom(password).required(),
     })
-    .min(1)
+    .min(1),
 };
+
+const toggleFavouriteProducts = {
+  params: Joi.object().keys({
+    productId: Joi.string().custom(objectId).required(),
+  }),
+  body: Joi.object().keys({
+    productIds: Joi.array().items(Joi.string().custom(objectId)).default([]),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -87,5 +117,8 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
-  setPassword
+  setPassword,
+  getMe,
+  updateMe,
+  toggleFavouriteProducts,
 };

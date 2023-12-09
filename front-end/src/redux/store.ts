@@ -3,6 +3,7 @@ import counterReducer from "./features/counterSlice";
 import authReducer from "./features/authSlice";
 import adminReducer from "./features/adminSlice";
 import productReducer from "./features/productSlice";
+import userReducer from "./features/userSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     authReducer,
     adminReducer,
     productReducer,
+    userReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });

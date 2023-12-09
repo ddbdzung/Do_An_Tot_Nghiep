@@ -9,7 +9,7 @@ export enum HTTPMethod {
   DELETE = "DELETE",
   PATCH = "PATCH",
 }
-const configHeaderRequest = (tokens: any) => {
+const configHeaderRequest = (tokens: { access: string; refresh?: string }) => {
   try {
     // if (!tokens?.access || !tokens?.refresh) {
     if (!tokens?.access) {

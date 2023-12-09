@@ -30,6 +30,7 @@ const auth =
         throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
       }
 
+      // Authorization
       if (requiredRights.length) {
         const requiredRightsClean = requiredRights.flat();
         const userWithPermissions = await user.populateOption('roleId');
@@ -43,7 +44,7 @@ const auth =
         }
 
         const userId = req.params?.userId;
-        if (userId && userId !== req.user._id.toString()) {
+        if (userId && userId !== user._id.toString()) {
           throw new ApiError(httpStatus.UNAUTHORIZED, httpStatus[401]);
         }
       }

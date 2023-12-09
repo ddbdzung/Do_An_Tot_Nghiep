@@ -5,10 +5,14 @@ const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
 const { uploadStream, deleteFiles } = require('./image.service');
 
-exports.getProductById = async id => {
-  const product = await Product.findById(id);
+exports.getProductById = async (id, { lean = false, populate = false }) => {
+  const product = await Product.findById(id, null, { lean });
   if (!product || product.deletedAt) {
     return null;
+  }
+
+  if (!populate) {
+    return product;
   }
 
   return product.populateOption('category');

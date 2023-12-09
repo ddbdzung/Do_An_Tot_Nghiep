@@ -3,6 +3,43 @@ const { STATUS } = require('../config/constant');
 const { User, Role } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { roles } = require('../config/roles');
+const { getProductById } = require('./product.service');
+
+/**
+ *
+ * @param {string} userId
+ * @param {string[]} productIds
+ */
+const toggleFavouriteProducts = async (userId, productIds) => {
+  const areExistingProducts = await Promise.all(
+    productIds.map(async productId => {
+      const product = await getProductById(productId, {
+        lean: true,
+      });
+      return product;
+    }),
+  );
+  if (areExistingProducts.includes(false)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Product not found');
+  }
+
+  const user = await getUserById(userId);
+  const favouriteProducts = user.favouriteProducts.map(i => i.toString());
+  const favouriteItemsToAdd = productIds.filter(
+    id => !favouriteProducts.includes(id),
+  );
+  const favouriteItemsToKeep = favouriteProducts.filter(
+    id => !productIds.includes(id),
+  );
+
+  user.favouriteProducts = [...favouriteItemsToKeep, ...favouriteItemsToAdd];
+  return user.save();
+};
+
+const getFavouriteProducts = async userId => {
+  const user = await getUserById(userId, 'favouriteProducts');
+  return user.favouriteProducts;
+};
 
 const getPermissions = async (roleId, options = { lean: false }) => {
   const role = await Role.findById(roleId, 'permission', options);
@@ -100,4 +137,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getPermissions,
+  toggleFavouriteProducts,
+  getFavouriteProducts,
 };

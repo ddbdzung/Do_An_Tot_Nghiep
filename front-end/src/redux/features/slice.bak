@@ -1,0 +1,30 @@
+import { loadState } from "@/utils/localStorage";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type UserState = {
+  dateOfBirth: string;
+  address: string;
+  phoneNumber: string;
+};
+
+const initialState = {
+  dateOfBirth: loadState("dateOfBirth") || "",
+  address: loadState("address") || "",
+  phoneNumber: loadState("phoneNumber") || "",
+} as UserState;
+
+export const userSlice = createSlice({
+  name: "userSlice",
+  initialState,
+  reducers: {
+    reset: () => initialState,
+  },
+  extraReducers: (builder) => {
+    builder.addCase("user/login/fulfilled", (state, action) => {
+      state.value = action.payload;
+    });
+  },
+});
+
+export const { reset } = userSlice.actions;
+export default userSlice.reducer;

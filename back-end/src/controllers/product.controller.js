@@ -4,11 +4,12 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { productService, categoryService } = require('../services');
 const responseEmitter = require('../utils/responseEmitter');
-const getAuthenticatedUser = require('../common/getAuthenticatedUser');
 
 const getProduct = catchAsync(async (req, res, next) => {
   const { productId } = req.params;
-  const product = await productService.getProductById(productId);
+  const product = await productService.getProductById(productId, {
+    populate: true,
+  });
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], product);
 });
 

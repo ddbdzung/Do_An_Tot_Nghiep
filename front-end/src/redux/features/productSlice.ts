@@ -53,7 +53,6 @@ export const productReducer = createSlice({
           if (!res) return state;
 
           if (!state.products) state.products = [];
-          console.log("res", res);
           state.products = res.data?.results;
           state.formStatus = "idle";
 

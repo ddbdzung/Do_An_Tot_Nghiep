@@ -1,6 +1,8 @@
 "use client";
 
+import { useAppSelector } from "@/redux/hooks";
 import { Route } from "@/routers/types";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -38,6 +40,7 @@ const pages: {
 
 const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
   const pathname = usePathname();
+  const { email, fullname } = useAppSelector((state) => state.authReducer);
 
   return (
     <div className="nc-AccountCommonLayout container">
@@ -47,9 +50,9 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
             <h2 className="text-3xl xl:text-4xl font-semibold">Account</h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
               <span className="text-slate-900 dark:text-slate-200 font-semibold">
-                Enrico Cole,
-              </span>{" "}
-              ciseco@gmail.com · Los Angeles, CA
+                {fullname}
+              </span>
+              {`, ${email} · ${new Date().toLocaleDateString()}`}
             </span>
           </div>
           <hr className="mt-10 border-slate-200 dark:border-slate-700"></hr>
@@ -81,4 +84,6 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
   );
 };
 
-export default CommonLayout;
+export default dynamic(() => Promise.resolve(CommonLayout), {
+  ssr: false,
+});

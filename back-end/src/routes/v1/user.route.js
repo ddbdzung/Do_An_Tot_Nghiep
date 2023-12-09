@@ -9,28 +9,64 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(permission.USER.MANAGE_USER), validate(userValidation.createUser), userController.createUser)
-  .get(auth(permission.USER.GET_USERS), validate(userValidation.getUsers), userController.getUsers);
+  .post(
+    auth(permission.USER.MANAGE_USER),
+    validate(userValidation.createUser),
+    userController.createUser,
+  )
+  .get(
+    auth(permission.USER.GET_USERS),
+    validate(userValidation.getUsers),
+    userController.getUsers,
+  );
 
 router.post(
   '/set-password',
   auth(permission.USER.MANAGE_USER),
   validate(userValidation.setPassword),
-  userController.setPassword
+  userController.setPassword,
 );
 
 router.post(
   '/change-password/:userId',
   auth(permission.USER.MANAGE_USER),
   validate(userValidation.changePassword),
-  userController.changePassword
+  userController.changePassword,
 );
 
 router
+  .route('/me')
+  .get(auth(), validate(userValidation.getMe), userController.getMe)
+  .patch(auth(), validate(userValidation.updateMe), userController.updateMe);
+
+router
+  .route('/favourite-items/:productId/toggle')
+  .patch(
+    auth(),
+    validate(userValidation.toggleFavouriteProducts),
+    userController.toggleFavouriteProducts,
+  );
+router
+  .route('/favourite-items')
+  .get(auth(), userController.getFavouriteProducts);
+
+router
   .route('/:userId')
-  .get(auth(permission.USER.GET_USERS), validate(userValidation.getUser), userController.getUser)
-  .patch(auth(permission.USER.MANAGE_USER), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth(permission.USER.DELETE_USER), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(
+    auth(permission.USER.GET_USERS),
+    validate(userValidation.getUser),
+    userController.getUser,
+  )
+  .patch(
+    auth(permission.USER.MANAGE_USER),
+    validate(userValidation.updateUser),
+    userController.updateUser,
+  )
+  .delete(
+    auth(permission.USER.DELETE_USER),
+    validate(userValidation.deleteUser),
+    userController.deleteUser,
+  );
 
 module.exports = router;
 

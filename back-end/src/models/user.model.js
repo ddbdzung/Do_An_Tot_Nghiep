@@ -39,9 +39,15 @@ const userSchema = mongoose.Schema(
       ref: 'Role',
     },
     address: { type: String },
+    dateOfBirth: { type: Date },
     gender: { type: String, enum: GENDER, required: true },
     isPasswordChange: { type: Boolean, default: false },
     status: { type: String, enum: STATUS, default: STATUS.Active },
+    favouriteProducts: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'Product',
+      default: [],
+    },
   },
   {
     timestamps: true,
