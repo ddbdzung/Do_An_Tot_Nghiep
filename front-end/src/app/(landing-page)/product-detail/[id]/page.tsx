@@ -388,7 +388,10 @@ const ProductDetailPage2 = ({}) => {
         {/*  */}
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         {/*  */}
-        <AccordionInfo panelClassName="p-4 pt-3.5 text-slate-600 text-base dark:text-slate-300 leading-7" />
+        <AccordionInfo
+          description={product?.description}
+          panelClassName="p-4 pt-3.5 text-slate-600 text-base dark:text-slate-300 leading-7"
+        />
       </div>
     );
   };
@@ -399,7 +402,7 @@ const ProductDetailPage2 = ({}) => {
         <h2 className="text-2xl font-semibold">Product details</h2>
         {/* <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div> */}
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl">
-          {product.description && product.description}
+          {product.details && product.details}
         </div>
         {/* ---------- 6 ----------  */}
         <Policy />
@@ -482,7 +485,7 @@ const ProductDetailPage2 = ({}) => {
               </div>
 
               {/*  */}
-              <div
+              {/* <div
                 className="col-span-1 row-span-2 relative rounded-md sm:rounded-xl overflow-hidden z-0 cursor-pointer"
                 onClick={handleOpenModalImageGallery}
               >
@@ -492,37 +495,42 @@ const ProductDetailPage2 = ({}) => {
                   sizes="(max-width: 640px) 100vw, 50vw"
                   containerClassName="absolute inset-0"
                   className="object-cover w-full h-full rounded-md sm:rounded-xl"
-                  src={LIST_IMAGES_GALLERY_DEMO[1]}
+                  src={renderImageCloudinary(product?.images?.at(1)?.url)}
                 />
                 <div className="absolute inset-0 bg-neutral-900/20 opacity-0 hover:opacity-40 transition-opacity"></div>
-              </div>
+              </div> */}
 
               {/*  */}
-              {[LIST_IMAGES_GALLERY_DEMO[2], LIST_IMAGES_GALLERY_DEMO[3]].map(
-                (item, index) => (
-                  <div
-                    key={index}
-                    className={`relative rounded-md sm:rounded-xl overflow-hidden z-0 ${
-                      index >= 2 ? "block" : ""
-                    }`}
-                  >
-                    <NcImage
-                      alt=""
-                      fill
-                      sizes="(max-width: 640px) 100vw, 33vw"
-                      containerClassName="aspect-w-6 aspect-h-5 lg:aspect-h-4"
-                      className="object-cover w-full h-full rounded-md sm:rounded-xl "
-                      src={item || ""}
-                    />
+              {Array.isArray(product.images) &&
+                product?.images?.map((item, index) => {
+                  if (item.pos === 0) {
+                    return null;
+                  }
 
-                    {/* OVERLAY */}
+                  return (
                     <div
-                      className="absolute inset-0 bg-slate-900/20 opacity-0 hover:opacity-60 transition-opacity cursor-pointer"
-                      onClick={handleOpenModalImageGallery}
-                    />
-                  </div>
-                )
-              )}
+                      key={index}
+                      className={`relative rounded-md sm:rounded-xl overflow-hidden z-0 ${
+                        index >= 2 ? "block" : ""
+                      }`}
+                    >
+                      <NcImage
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        containerClassName="aspect-w-6 aspect-h-5 lg:aspect-h-4"
+                        className="object-cover w-full h-full rounded-md sm:rounded-xl "
+                        src={renderImageCloudinary(item?.url)}
+                      />
+
+                      {/* OVERLAY */}
+                      <div
+                        className="absolute inset-0 bg-slate-900/20 opacity-0 hover:opacity-60 transition-opacity cursor-pointer"
+                        onClick={handleOpenModalImageGallery}
+                      />
+                    </div>
+                  );
+                })}
             </div>
             <div
               className="absolute hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-white text-slate-500 cursor-pointer hover:bg-slate-200 z-10"
@@ -591,10 +599,10 @@ const ProductDetailPage2 = ({}) => {
       <ListingImageGallery
         isShowModal={modal === "PHOTO_TOUR_SCROLLABLE"}
         onClose={handleCloseModalImageGallery}
-        images={LIST_IMAGES_GALLERY_DEMO.map((item, index) => {
+        images={product?.images?.map((item, index) => {
           return {
             id: index,
-            url: item,
+            url: renderImageCloudinary(item?.url),
           };
         })}
       />

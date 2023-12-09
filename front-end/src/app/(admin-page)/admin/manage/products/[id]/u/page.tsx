@@ -137,6 +137,7 @@ function UpdateProductPage() {
       categoryId: product?.category.id ?? "",
       unit: product?.unit ?? "",
       images: product?.image ?? [],
+      details: product?.details ?? "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required").trim(),
@@ -146,6 +147,7 @@ function UpdateProductPage() {
       categoryId: Yup.string().required("Required"),
       description: Yup.string().trim(),
       unit: Yup.string().required("Required").trim(),
+      details: Yup.string().trim(),
     }),
     onSubmit: (values, actions) => {
       let changedImage = {};
@@ -156,6 +158,17 @@ function UpdateProductPage() {
             pos: 0,
           },
         ];
+      }
+      if (previewImageList.length > 0) {
+        if (!changedImage.images) {
+          changedImage.images = [];
+        }
+        previewImageList.forEach((image, idx) => {
+          changedImage.images.push({
+            blob: image,
+            pos: idx + 1,
+          });
+        });
       }
       const changedValues = Object.assign(
         getChangedValues(values, formik.initialValues),
@@ -353,6 +366,31 @@ function UpdateProductPage() {
                 }}
               >
                 {formik.errors.unit}
+              </span>
+            )}
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              label="Details"
+              variant="outlined"
+              fullWidth
+              type="text"
+              id="details"
+              name="details"
+              multiline={true}
+              rows={3}
+              value={formik.values.details}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.details && formik.errors.details && (
+              <span
+                style={{
+                  fontSize: "1rem",
+                  lineHeight: "1.25rem",
+                  color: "rgb(239, 68, 68)",
+                }}
+              >
+                {formik.errors.details}
               </span>
             )}
           </Grid>

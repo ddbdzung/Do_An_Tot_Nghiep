@@ -46,6 +46,9 @@ const throttleCreate = throttle(
     if (values.description) {
       payload.description = values.description;
     }
+    if (values.details) {
+      payload.details = values.description;
+    }
 
     dispatch(createProductAsync(payload));
   },
@@ -106,7 +109,9 @@ function CreateProductPage() {
       description: "",
       categoryId: "",
       unit: "",
+      details: "",
       images: [],
+      details: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required").trim(),
@@ -116,17 +121,25 @@ function CreateProductPage() {
       categoryId: Yup.string().required("Required"),
       description: Yup.string().trim(),
       unit: Yup.string().required("Required").trim(),
+      details: Yup.string().trim(),
     }),
     onSubmit: (values, actions) => {
       if (previewImage) {
-        values.images = [
-          {
-            blob: previewImage,
-            pos: 0,
-          },
-        ];
+        values.images.push({
+          blob: previewImage,
+          pos: 0,
+        });
+      }
+      if (previewImageList?.length > 0) {
+        for (let i = 0; i < previewImageList.length; i++) {
+          values.images.push({
+            blob: previewImageList[i],
+            pos: i + 1,
+          });
+        }
       }
       throttleCreate(values, actions, dispatch);
+      router.push("/admin/manage/products");
     },
   });
   return (
@@ -309,6 +322,31 @@ function CreateProductPage() {
                 }}
               >
                 {formik.errors.unit}
+              </span>
+            )}
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <TextField
+              label="Details"
+              variant="outlined"
+              fullWidth
+              type="text"
+              id="details"
+              name="details"
+              multiline={true}
+              rows={3}
+              value={formik.values.details}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.details && formik.errors.details && (
+              <span
+                style={{
+                  fontSize: "1rem",
+                  lineHeight: "1.25rem",
+                  color: "rgb(239, 68, 68)",
+                }}
+              >
+                {formik.errors.details}
               </span>
             )}
           </Grid>

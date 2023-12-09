@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import withAuth from "@/shared/PrivateRoute";
+import { ICreateCategoryBodyDto } from "@/api/category/dto/create-category.dto";
 
 const throttleCreate = throttle(
   async function (
@@ -33,7 +34,7 @@ const throttleCreate = throttle(
     actions: FormikHelpers<any>,
     dispatch: (...arg: any) => any
   ) {
-    const payload: ICreateProductBodyDto = {
+    const payload: ICreateCategoryBodyDto = {
       name: values.name,
     };
     if (values.images) {

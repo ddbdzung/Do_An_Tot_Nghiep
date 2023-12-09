@@ -51,9 +51,9 @@ function Row(props: {
           </IconButton>
         </TableCell>
         <TableCell align="left">{row.name}</TableCell>
-        <TableCell align="left">{row.category.name}</TableCell>
+        <TableCell align="left">{row.category?.name}</TableCell>
         <TableCell align="left">{row.brand}</TableCell>
-        <TableCell align="right">{row.price.lastValue}</TableCell>
+        <TableCell align="right">{row.price?.lastValue}</TableCell>
         <TableCell align="right">{row.quantity}</TableCell>
         <TableCell align="left">{formatDateToLocale(row.updatedAt)}</TableCell>
         <TableCell align="center">

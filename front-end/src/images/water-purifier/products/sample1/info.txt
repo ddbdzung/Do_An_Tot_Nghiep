@@ -1,0 +1,32 @@
+{
+    deletedAt: null,
+    name: 'Máy lọc nước Karofi - N-e118 - 8 lõi lọc',
+    unit: 'cái',
+    brand: 'Karofi',
+    quantity: 20,
+    price: {
+      lastValue: 5720000,
+      history: [
+        {
+          _id: {
+            $oid: '656cc24f4ae7b8907ca1510b',
+          },
+          value: 5720000,
+          createdAt: {
+            $date: '2023-12-03T18:00:49.896Z',
+          },
+        },
+      ],
+    },
+    createdAt: {
+      $date: '2023-12-03T18:00:49.901Z',
+    },
+    updatedAt: {
+      $date: '2023-12-09T11:25:53.015Z',
+    },
+    __v: 0,
+    description:
+      'Máy lọc nước tiêu chuẩn 8 cấp lọc Thế hệ mới\nMáy lọc nước 8 cấp lọc thế hệ mới là sản phẩm máy lọc nước tiêu chuẩn của công ty cổ phần karofi Việt Nam. Máy lọc nước tiêu chuẩn Karofi sử dụng công nghệ lọc RO đảm bảo nguồn nước luôn tinh khiết an toàn cho bữa ăn tươi ngon tinh khiết, cả nhà nguồn sống mát lành, nước qua máy lọc nước Karofi đạt tiêu chuẩn của Bộ Y tế về chuẩn nước sạch nên bạn hoàn toàn yên tâm uống.\n\nKhông những thế Karofi đã thiết kế ra loại tủ mới với mẫu mã tinh tế, màu sắc ấn tượng phù hợp với mọi không gian gia đình. Đồng thời giảm tới 33% thể tích so với dòng tủ IQ Karofi trước đây.\n\nMáy lọc nước karofi tiêu chuẩn sử dụng công nghệ lọc RO có nhiều ưu điểm\nSử dụng công nghệ lọc RO có khả năng loại bỏ 99,9% Amip, Asen, các ion kim loại nặng, virus, vi khuẩn và các tạp chất khác cho nguồn nước hoàn toàn tinh khiết.\n\nMàng lọc RO Filmtec của máy lọc nước Karofi  nhập khẩu trực tiếp từ tập đoàn DOW-USA được NSF chứng nhận và khuyên dùng.',
+    details:
+      '1.1. Hệ thống lọc RO được cấu tạo bởi 3 bộ phận chính:\n\nNhóm lọc thô: Công nghệ lọc Smax Duo\nMàng RO: Công nghệ lọc Smax RO\nNhóm lọc chức năng: Công nghệ lọc Smax Nano\n1.2. Công nghệ lọc Smax Duo bao gồm:\n\nLõi Smax Duo 1 - Vi lọc: Loại bỏ các tạp chất, cặn bẩn, sạn, cát, bùn, tảo rêu có kích thước trên 5 micron lẫn trong nguồn nước sử dụng hàng ngày.\nLõi Smax Duo 3 Active carbon: Loại bỏ các chất hữu cơ, chất tạo màu, mùi khó chịu trong nước sinh hoạt, có kích thước nhỏ tới cỡ nanomet, đồng thời bảo vệ màng RO khỏi các tác nhân oxy hóa.\nLõi Smax Duo 3 - Vi lọc đa điểm: Loại bỏ các chất cặn bã, chất bẩn, cát, sạn, bùn, tảo rêu và các chất rắn có kích thước trên 1 micron trong nguồn nước sử dụng.\n1.3. Công nghệ lọc Smax RO: gồm lõi Smax RO Purifim là trái tim của máy lọc nước, giúp loại bỏ hơn 99% clo, dầu, virus, vi khuẩn, amip, asen, các ion kim loại và các chất độc hại trong nước.\n\n1.4. Công nghệ lọc Smax Nano bao gồm:\n\nLõi T33-GAC: Xử lý mùi khó, các chất hữu cơ… vượt trội và ổn định vị ngọt tự nhiên cho nước\nLõi Mineral (Khoáng đá): Bổ sung khoáng chất và giúp nâng cao pH, hỗ trợ trung hoà axit dư\nLõi Nano Silver Plus: Tiêu diệt vi khuẩn, chống tái nhiễm khuẩn sau khi nước đi qua màng RO.\nLõi ORP Alkaline: giảm ORP của nước và nâng cao pH nước, hỗ trợ trung hoà axit dư.\nBao lâu thì bạn nên thay lõi lọc?\n\nThời hạn sử dụng lõi lọc phụ thuộc vào chất lượng nguồn nước mỗi khu vực và công suất sử dụng:\n\nĐối với bộ lõi Smax Duo, thời gian sử dụng khuyến cáo tối đa 12 tháng.\n\nĐối với lõi Smax RO, thời gian sử dụng khuyến cáo 36 tháng.\n\nĐối với bộ lõi Smax Nano, thời gian sử dụng khuyến cáo tối đa 12 tháng.\n\nĐối với cụm lõi Smax hiệu suất cao, thời gian sử dụng khuyến cáo tối đa 12 tháng.',
+  },
