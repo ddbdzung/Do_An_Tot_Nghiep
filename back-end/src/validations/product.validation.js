@@ -14,6 +14,7 @@ exports.getProducts = {
 exports.createProduct = {
   body: joi.object().keys({
     name: joi.string().required().trim(),
+    details: joi.string().trim(),
     description: joi.string().trim(),
     unit: joi.string().trim(),
     brand: joi.string().trim(),
@@ -39,6 +40,7 @@ exports.updateProduct = {
     quantity: joi.number().min(0),
     name: joi.string().trim(),
     description: joi.string().trim(),
+    details: joi.string().trim(),
     unit: joi.string().trim(),
     brand: joi.string().trim(),
     categoryId: joi.string().custom(objectId),

@@ -3,7 +3,7 @@ const { Product } = require('../models/');
 const httpStatus = require('http-status');
 const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
-const { uploadStream } = require('./image.service');
+const { uploadStream, deleteFiles } = require('./image.service');
 
 exports.getProductById = async id => {
   const product = await Product.findById(id);
@@ -12,6 +12,21 @@ exports.getProductById = async id => {
   }
 
   return product.populateOption('category');
+};
+
+exports.exposePublicProduct = productWithPopulation => {
+  const { category, __v, _id, ...product } =
+    productWithPopulation?.toObject() || {};
+  if (!category) {
+    return product;
+  }
+
+  product.id = _id;
+  product.category = {
+    id: category?._id,
+    name: category?.name,
+  };
+  return product;
 };
 
 exports.queryProducts = async (
@@ -49,21 +64,27 @@ exports.createProduct = async createProductDto => {
     ],
   };
 
-  const imgs = [];
   if (images !== undefined && Array.isArray(images) && images.length > 0) {
-    const uploadedImg = await uploadStream(images[0].blob);
-    imgs.push({
-      pos: images[0].pos,
-      url: uploadedImg.public_id,
-    });
+    const pUploadedImgs = images.map(image =>
+      uploadStream(image.blob).then(res => {
+        return {
+          pos: image.pos,
+          public_id: res.public_id,
+        };
+      }),
+    );
+    const uploadedImgs = await Promise.all(pUploadedImgs);
+    const imgs = uploadedImgs.map(img => ({
+      pos: img.pos,
+      url: img.public_id,
+    }));
     productDto.images = imgs;
   }
 
   productDto.category = categoryId;
   productDto.price = priceBody;
-
   const product = await Product.create(productDto);
-  return product;
+  return product.populateOption('category');
 };
 
 exports.updateProductById = async (productId, updateProductDto) => {
@@ -82,6 +103,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
     brand,
     description,
     images,
+    details,
   } = updateProductDto;
 
   if (categoryId) {
@@ -98,13 +120,21 @@ exports.updateProductById = async (productId, updateProductDto) => {
     product.category = updateProductDto.categoryId;
   }
 
-  const imgs = [];
   if (images !== undefined && Array.isArray(images) && images.length > 0) {
-    const uploadedImg = await uploadStream(images[0].blob);
-    imgs.push({
-      pos: images[0].pos,
-      url: uploadedImg.public_id,
-    });
+    const imgsToDelete = product.images.map(img => img.url);
+    const pDeletedImgs = imgsToDelete.map(img => deleteFiles(img));
+    await Promise.all(pDeletedImgs);
+    const pUploadedImgs = images.map(image =>
+      uploadStream(image.blob).then(res => ({
+        pos: image.pos,
+        public_id: res.public_id,
+      })),
+    );
+    const uploadedImgs = await Promise.all(pUploadedImgs);
+    const imgs = uploadedImgs.map(img => ({
+      pos: img.pos,
+      url: img.public_id,
+    }));
     product.images = imgs;
   }
 
@@ -134,6 +164,7 @@ exports.updateProductById = async (productId, updateProductDto) => {
   product.unit = unit || product.unit;
   product.brand = brand || product.brand;
   product.description = description || product.description;
+  product.details = details || product.details;
 
   return product.save();
 };

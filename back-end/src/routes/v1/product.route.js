@@ -46,6 +46,13 @@ router
   );
 
 router
+  .route('/:productId')
+  .get(
+    validate(productValidation.getProduct),
+    productController.getProductPublic,
+  );
+
+router
   .route('/search')
   .get(
     validate(productValidation.searchProducts),

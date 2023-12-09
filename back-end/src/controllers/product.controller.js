@@ -25,6 +25,20 @@ const getProductsPublic = catchAsync(async (req, res, next) => {
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], result);
 });
 
+const getProductPublic = catchAsync(async (req, res, next) => {
+  const { productId } = req.params;
+  const product = await productService.getProductById(productId);
+  if (!product) {
+    return responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200]);
+  }
+
+  responseEmitter(req, res, next)(
+    httpStatus.OK,
+    httpStatus[200],
+    productService.exposePublicProduct(product),
+  );
+});
+
 const getProducts = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -43,6 +57,7 @@ const createProduct = catchAsync(async (req, res, next) => {
     'quantity',
     'unit',
     'images',
+    'details',
   ]);
   const category = await categoryService.getCategoryById(
     createProductDto.categoryId,
@@ -70,6 +85,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
     'categoryId',
     'description',
     'images',
+    'details',
   ]);
   const product = await productService.updateProductById(
     productId,
@@ -92,4 +108,5 @@ module.exports = {
   updateProduct,
   softDeleteProduct,
   getProductsPublic,
+  getProductPublic,
 };
