@@ -67,8 +67,8 @@ exports.getProduct = {
 
 exports.searchProducts = {
   query: joi.object().keys({
-    limit: joi.number().integer(),
-    page: joi.number().integer(),
+    limit: joi.number().integer().default(8),
+    page: joi.number().integer().default(1),
     name: joi.string().trim(),
     categoryIds: joi.string().custom(categoryIds),
     price: joi.string().custom(price),

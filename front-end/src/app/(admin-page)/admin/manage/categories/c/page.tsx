@@ -40,7 +40,6 @@ const throttleCreate = throttle(
     if (values.images) {
       payload.images = values.images;
     }
-    console.log("payload123", payload);
 
     dispatch(createCategoryAsync(payload));
   },

@@ -5,7 +5,11 @@ const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
 const { uploadStream, deleteFiles } = require('./image.service');
 
-exports.getProductById = async (id, { lean = false, populate = false }) => {
+exports.getProductById = async (
+  id,
+  options = { lean: false, populate: false },
+) => {
+  const { lean, populate } = options;
   const product = await Product.findById(id, null, { lean });
   if (!product || product.deletedAt) {
     return null;
@@ -38,20 +42,27 @@ exports.queryProducts = async (
   options,
   extendFilter = { price: {}, categoryIds: [] },
 ) => {
-  const products = await Product.paginate(filter, options, extendFilter);
-  const { results, ...rest } = products;
+  console.log('extendFilter', extendFilter);
+  const pProducts = Product.paginate(filter, options, extendFilter);
+  const pProductQuantity = Product.countDocuments({
+    deletedAt: null,
+  });
+  const [products, productQuantity] = await Promise.all([
+    pProducts,
+    pProductQuantity,
+  ]);
+  const { results, totalResults, ...rest } = products;
   const resultsWithPopulate = await Promise.all(
     results.map(async product => {
       const productPopulate = await product.populateOption('category');
       return productPopulate;
     }),
   );
-  const resultsNotDeleted = resultsWithPopulate.filter(
-    product => !product.deletedAt,
-  );
+
   return {
-    results: resultsNotDeleted,
+    results: resultsWithPopulate,
     ...rest,
+    totalResults: productQuantity,
   };
 };
 

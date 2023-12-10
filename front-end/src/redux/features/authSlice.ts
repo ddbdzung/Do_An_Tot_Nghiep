@@ -6,12 +6,17 @@ import {
   createAsyncThunk,
   Action,
 } from "@reduxjs/toolkit";
-import { fetchSignIn, fetchSignUp } from "../services/authApi";
+import {
+  fetchSignIn,
+  fetchSignUp,
+  fetchToggleFavouriteProduct,
+} from "../services/authApi";
 import { handleResponsePayload } from "@/http-service/response-handler";
 import { notifyError } from "@/utils/notify";
 import { HttpMessage } from "@/http-service/http-message";
-import { loadState, saveState } from "@/utils/localStorage";
+import { loadState, removeState, saveState } from "@/utils/localStorage";
 import { ISignInResponseDto } from "@/api/auth/dto/sign-in.dto";
+import { RootState } from "../store";
 
 export const signUpAsync = createAsyncThunk(
   "auth/signUpAsync",
@@ -34,6 +39,18 @@ export const signInAsync = createAsyncThunk(
 //   async (payload: )
 // )
 
+export const toggleFavouriteProductAsync = createAsyncThunk(
+  "auth/toggleFavouriteProductAsync",
+  async (payload: string, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchToggleFavouriteProduct(tokens, payload);
+    return data;
+  }
+);
+
 export enum AuthFormStatus {
   IDLE = "idle",
   LOADING = "loading",
@@ -45,6 +62,7 @@ export type AuthState = {
   fullname: string | null | undefined;
   email: string | null | undefined;
   permissions: string[];
+  favouriteProducts: string[];
 };
 
 const initialState = {
@@ -53,6 +71,7 @@ const initialState = {
   email: loadState("email") || null,
   permissions: loadState("permissions") || [],
   formStatus: AuthFormStatus.IDLE,
+  favouriteProducts: loadState("favouriteProducts") || [],
 } as AuthState;
 
 export const auth = createSlice({
@@ -65,11 +84,17 @@ export const auth = createSlice({
       state.email = null;
       state.fullname = null;
       state.permissions = [];
+      state.favouriteProducts = [];
 
-      saveState("accessToken", null);
-      saveState("permissions", []);
-      saveState("email", null);
-      saveState("fullname", null);
+      removeState("accessToken");
+      removeState("permissions");
+      removeState("email");
+      removeState("fullname");
+      removeState("favouriteProducts");
+      removeState("dateOfBirth");
+      removeState("gender");
+      removeState("address");
+      removeState("phoneNumber");
       return state;
     },
   },
@@ -90,11 +115,13 @@ export const auth = createSlice({
         state.permissions = res.data?.user.permissions;
         state.email = res.data?.user.email;
         state.fullname = res.data?.user.name;
+        state.favouriteProducts = res.data?.user.favouriteProducts;
 
         saveState("accessToken", res.data?.tokens.access.token);
         saveState("permissions", res.data?.user.permissions);
         saveState("email", res.data?.user.email);
         saveState("fullname", res.data?.user.name);
+        saveState("favouriteProducts", res.data?.user.favouriteProducts);
 
         return state;
       })
@@ -118,17 +145,35 @@ export const auth = createSlice({
         state.permissions = res.data?.user.permissions;
         state.email = res.data?.user.email;
         state.fullname = res.data?.user.name;
+        state.favouriteProducts = res.data?.user.favouriteProducts;
 
         saveState("accessToken", res.data?.tokens.access.token);
         saveState("permissions", res.data?.user.permissions);
         saveState("email", res.data?.user.email);
         saveState("fullname", res.data?.user.name);
+        saveState("favouriteProducts", res.data?.user.favouriteProducts);
 
         return state;
       })
       .addCase(signInAsync.rejected, (state, action) => {
         state.formStatus = AuthFormStatus.IDLE;
         notifyError(HttpMessage.INTERNAL_SERVER_ERROR);
+        return state;
+      })
+      .addCase(toggleFavouriteProductAsync.pending, (state) => {
+        return state;
+      })
+      .addCase(toggleFavouriteProductAsync.fulfilled, (state, action) => {
+        const res = handleResponsePayload<any>(action.payload);
+        if (!res) {
+          return state;
+        }
+
+        state.favouriteProducts = res.data?.favouriteProducts;
+        saveState("favouriteProducts", res.data?.favouriteProducts);
+        return state;
+      })
+      .addCase(toggleFavouriteProductAsync.rejected, (state, action) => {
         return state;
       });
   },

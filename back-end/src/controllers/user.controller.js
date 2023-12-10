@@ -117,7 +117,7 @@ const toggleFavouriteProducts = catchAsync(async (req, res, next) => {
   const user = await userService.toggleFavouriteProducts(id, productIds);
   responseEmitter(req, res, next)(
     httpStatus.OK,
-    'Add favourite products successfully',
+    'Toggle favourite products successfully',
     user,
   );
 });

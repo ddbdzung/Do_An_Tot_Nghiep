@@ -29,7 +29,7 @@ const request =
   async (
     api: string,
     data: null | { [key: string]: any } = null,
-    tokens: any = {},
+    tokens: { access: string; refresh?: string } = {},
     _headers = null
   ) => {
     const headers = _headers || configHeaderRequest(tokens);

@@ -163,7 +163,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
     <div className={`nc-SectionGridMoreExplore relative ${className}`}>
       {renderHeading()}
       <div className={`grid gap-4 md:gap-7 ${gridClassName}`}>
-        {cates.map((item) => renderCard(item))}
+        {cates?.map((item) => renderCard(item))}
       </div>
     </div>
   );

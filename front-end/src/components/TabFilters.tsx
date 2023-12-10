@@ -260,7 +260,7 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                       }}
                     />
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
-                    {categories.map((item) => (
+                    {categories?.map((item) => (
                       <div key={item.name} className="">
                         <Checkbox
                           name={item.name}

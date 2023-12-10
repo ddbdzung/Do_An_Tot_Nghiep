@@ -69,7 +69,6 @@ export const userSlice = createSlice({
             notifySuccessMessage: false,
           });
           if (!res) return state;
-          console.log("res", res);
 
           const data = res?.data;
 

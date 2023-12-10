@@ -3,7 +3,6 @@ import Pagination from "@/shared/Pagination/Pagination";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import SectionSliderCollections from "@/components/SectionSliderLargeProduct";
 import SectionPromo1 from "@/components/SectionPromo1";
-import ProductCard from "@/components/ProductCard";
 import { PRODUCTS } from "@/data/data";
 import TabFilters from "@/components/TabFilters";
 import { customAxios } from "@/http-service/fetchAPI";

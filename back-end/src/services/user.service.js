@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const { STATUS } = require('../config/constant');
-const { User, Role } = require('../models');
+const { User, Role, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { roles } = require('../config/roles');
 const { getProductById } = require('./product.service');
@@ -37,8 +37,11 @@ const toggleFavouriteProducts = async (userId, productIds) => {
 };
 
 const getFavouriteProducts = async userId => {
-  const user = await getUserById(userId, 'favouriteProducts');
-  return user.favouriteProducts;
+  const user = await getUserById(userId);
+  const favItems = await Product.find({
+    _id: { $in: user.favouriteProducts },
+  });
+  return favItems;
 };
 
 const getPermissions = async (roleId, options = { lean: false }) => {

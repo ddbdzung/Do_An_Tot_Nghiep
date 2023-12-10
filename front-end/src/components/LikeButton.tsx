@@ -1,27 +1,33 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 
 export interface LikeButtonProps {
   className?: string;
   liked?: boolean;
+  toggleLike: (id: string) => void;
+  itemId: string;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
   className = "",
   liked = false,
+  toggleLike,
+  itemId,
 }) => {
   const [isLiked, setIsLiked] = useState(liked);
-
-  // make random for demo
-  useEffect(() => {
-    setIsLiked(Math.random() > 0.5);
-  }, []);
+  const handleToggleLike = (id) => {
+    toggleLike(id);
+  };
 
   return (
     <button
       className={`w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 text-neutral-700 dark:text-slate-200 nc-shadow-lg ${className}`}
-      onClick={() => setIsLiked(!isLiked)}
+      onClick={() => {
+        setIsLiked(!isLiked);
+        handleToggleLike(itemId);
+      }}
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
         <path
@@ -37,4 +43,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   );
 };
 
-export default LikeButton;
+export default dynamic(() => Promise.resolve(LikeButton), {
+  ssr: false,
+});

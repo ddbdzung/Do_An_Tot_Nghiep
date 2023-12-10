@@ -40,14 +40,14 @@ router
   .patch(auth(), validate(userValidation.updateMe), userController.updateMe);
 
 router
-  .route('/favourite-items/:productId/toggle')
+  .route('/me/favourite-items/:productId/toggle')
   .patch(
     auth(),
     validate(userValidation.toggleFavouriteProducts),
     userController.toggleFavouriteProducts,
   );
 router
-  .route('/favourite-items')
+  .route('/me/favourite-items')
   .get(auth(), userController.getFavouriteProducts);
 
 router

@@ -8,6 +8,10 @@ import ProductCard from "./ProductCard";
 import { Product, PRODUCTS } from "@/data/data";
 import { customAxios } from "@/http-service/fetchAPI";
 import { GET_PRODUCTS } from "@/api/product/endpoints";
+import { TOGGLE_FAVORITE_PRODUCT } from "@/api/user/endpoints";
+import { loadState } from "@/utils/localStorage";
+import { toggleFavouriteProductAsync } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 export interface SectionSliderProductCardProps {
   className?: string;
@@ -27,10 +31,12 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   heading,
   subHeading = "Water Purifier & Filter",
   data,
-  // data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
 }) => {
+  const dispatch = useAppDispatch();
   const sliderRef = useRef(null);
-
+  const toggleLikeAsync = async (id: string) => {
+    dispatch(toggleFavouriteProductAsync(id));
+  };
   //
   const [isShow, setIsShow] = useState(false);
 
@@ -88,7 +94,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
             {Array.isArray(data) &&
               data?.map((item, index) => (
                 <li key={index} className={`glide__slide ${itemClassName}`}>
-                  <ProductCard data={item} />
+                  <ProductCard data={item} toggleLike={toggleLikeAsync} />
                 </li>
               ))}
           </ul>

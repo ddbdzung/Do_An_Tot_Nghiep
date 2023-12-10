@@ -35,7 +35,6 @@ function ViewCategoryPage() {
   const router = useRouter();
   const { id } = useParams();
   const [category, setCategory] = useState<ICategory | null>(null);
-  console.log("category", category);
   useEffect(() => {
     let mounted = true;
     fetchGetCategory({ access: accessToken }, { id }).then(

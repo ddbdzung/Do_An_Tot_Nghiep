@@ -38,7 +38,6 @@ export async function fetchCreateCategory(
     const { data } = await customAxios.post(CREATE_CATEGORY, payload, token);
     return data;
   } catch (errorResponse: any) {
-    console.log("errorResponse", errorResponse);
     const { code, message, response } = errorResponse;
     if (code === AxiosError.ERR_NETWORK) {
       return { code, message };
@@ -98,7 +97,6 @@ export async function fetchDeleteCategory(
     );
     return data;
   } catch (errorResponse: any) {
-    console.log("errorResponse", errorResponse);
     const { code, message, response } = errorResponse;
     if (code === AxiosError.ERR_NETWORK) {
       return { code, message };

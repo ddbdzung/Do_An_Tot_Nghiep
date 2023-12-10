@@ -1,8 +1,12 @@
 "use client";
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
-const LikeSaveBtns = () => {
-  const [isLiked, setIsLiked] = useState(false);
+const LikeSaveBtns = ({ toggleLike, itemId, liked }) => {
+  const [isLiked, setIsLiked] = useState(liked);
+  const handleToggleLike = (id) => {
+    toggleLike(id);
+  };
 
   return (
     <div className="flow-root">
@@ -26,7 +30,10 @@ const LikeSaveBtns = () => {
         </span>
         <span
           className={`py-1.5 px-3 flex rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer `}
-          onClick={() => setIsLiked(!isLiked)}
+          onClick={() => {
+            setIsLiked(!isLiked);
+            itemId && handleToggleLike(itemId);
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,4 +56,6 @@ const LikeSaveBtns = () => {
   );
 };
 
-export default LikeSaveBtns;
+export default dynamic(() => Promise.resolve(LikeSaveBtns), {
+  ssr: false,
+});

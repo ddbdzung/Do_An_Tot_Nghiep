@@ -125,7 +125,6 @@ export const createCategoryAsync = createAsyncThunk(
     const tokens = {
       access: states.authReducer.accessToken,
     };
-    console.log("payload456", payload);
     const data = await fetchCreateCategory(tokens, payload);
     return data;
   }

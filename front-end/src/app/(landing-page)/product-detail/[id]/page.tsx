@@ -41,6 +41,8 @@ import { notifyError } from "@/utils/notify";
 import { IGetProductResponseDto } from "@/api/product/dto/get-product.dto";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import { renderImageCloudinary } from "@/utils/renderImage";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { toggleFavouriteProductAsync } from "@/redux/features/authSlice";
 
 const LIST_IMAGES_GALLERY_DEMO: (string | StaticImageData)[] = [
   detail21JPG,
@@ -61,9 +63,11 @@ const ProductDetailPage2 = ({}) => {
   const { sizes, variants, status, allOfSizes, image } = PRODUCTS[0];
   //
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const thisPathname = usePathname();
   const searchParams = useSearchParams();
   const { id } = useParams();
+  const { favouriteProducts } = useAppSelector((state) => state.authReducer);
   const modal = searchParams?.get("modal");
   //
   const [variantActive, setVariantActive] = useState(0);
@@ -72,8 +76,13 @@ const ProductDetailPage2 = ({}) => {
   const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
     useState(false);
   const [product, setProduct] = useState({} as IGetProductResponseDto);
-
+  const isItemFavourite = (id: string) => {
+    return !!favouriteProducts?.includes(id);
+  };
   //
+  const toggleLikeAsync = async (id: string) => {
+    dispatch(toggleFavouriteProductAsync(id));
+  };
   useEffect(() => {
     let mounted = false;
     customAxios
@@ -378,7 +387,11 @@ const ProductDetailPage2 = ({}) => {
             {renderStatus()}
 
             <div className="ml-auto">
-              <LikeSaveBtns />
+              <LikeSaveBtns
+                itemId={id}
+                liked={isItemFavourite(id)}
+                toggleLike={toggleLikeAsync}
+              />
             </div>
           </div>
         </div>

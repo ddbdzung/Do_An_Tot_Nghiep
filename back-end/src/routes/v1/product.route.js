@@ -39,9 +39,9 @@ router
   );
 
 router
-  .route('/')
+  .route('/search')
   .get(
-    validate(productValidation.getProducts),
+    validate(productValidation.searchProducts),
     productController.getProductsPublic,
   );
 
@@ -53,9 +53,9 @@ router
   );
 
 router
-  .route('/search')
+  .route('/')
   .get(
-    validate(productValidation.searchProducts),
+    validate(productValidation.getProducts),
     productController.getProductsPublic,
   );
 

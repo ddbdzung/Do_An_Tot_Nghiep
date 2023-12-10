@@ -19,18 +19,26 @@ import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
 import { renderImageCloudinary } from "@/utils/renderImage";
 import { IProduct } from "@/api/product/dto/get-products.dto";
+import { TOGGLE_FAVORITE_PRODUCT } from "@/api/user/endpoints";
+import { customAxios } from "@/http-service/fetchAPI";
+import { loadState } from "@/utils/localStorage";
+import { useAppSelector } from "@/redux/hooks";
 
 export interface ProductCardProps {
   className?: string;
   data?: IProduct;
-  isLiked?: boolean;
+  toggleLike: (id: string) => void;
 }
 
 const ProductCard: FC<ProductCardProps> = ({
   className = "",
   data = REAL_PRODUCTS[0],
-  isLiked,
+  toggleLike,
 }) => {
+  const { favouriteProducts } = useAppSelector((state) => state.authReducer);
+  const isItemFavourite = (id: string) => {
+    return !!favouriteProducts?.includes(id);
+  };
   const {
     name,
     price,
@@ -267,10 +275,13 @@ const ProductCard: FC<ProductCardProps> = ({
       <div
         className={`nc-ProductCard relative flex flex-col bg-transparent ${className}`}
       >
-        <Link href={"/product-detail"} className="absolute inset-0"></Link>
+        <Link
+          href={`/product-detail/${data.id}`}
+          className="absolute inset-0"
+        ></Link>
 
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
-          <Link href={"/product-detail"} className="block">
+          <Link href={`/product-detail/${data.id}`} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
               src={renderImageCloudinary(
@@ -283,7 +294,12 @@ const ProductCard: FC<ProductCardProps> = ({
             />
           </Link>
           {/* <ProductStatus status={status} /> */}
-          {/* <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" /> */}
+          <LikeButton
+            liked={isItemFavourite(id)}
+            toggleLike={toggleLike}
+            itemId={id}
+            className="absolute top-3 end-3 z-10"
+          />
           {/* {sizes ? renderSizeList() : renderGroupButtons()} */}
         </div>
 

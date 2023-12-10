@@ -66,7 +66,6 @@ export async function fetchSearchProducts(
     const { data } = await customAxios.get(SEARCH_PRODUCTS(query), null, token);
     return data;
   } catch (errorResponse: any) {
-    console.log("errorResponse", errorResponse);
     const { code, message, response } = errorResponse;
     if (code === AxiosError.ERR_NETWORK) {
       return { code, message };
