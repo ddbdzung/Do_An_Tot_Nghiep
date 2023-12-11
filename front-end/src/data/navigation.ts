@@ -180,37 +180,22 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
 export const NAVIGATION_DEMO_2: NavItemType[] = [
   {
     id: ncNanoId(),
-    href: "/collection",
-    name: "Men",
-  },
-  {
-    id: ncNanoId(),
-    href: "/collection-2",
-    name: "Women",
+    href: "/",
+    name: "Home",
   },
   {
     id: ncNanoId(),
     href: "/collection",
-    name: "Beauty",
-  },
-
-  {
-    id: ncNanoId(),
-    href: "/collection-2",
-    name: "Sport",
+    name: "Collection",
   },
   {
     id: ncNanoId(),
-    href: "/collection",
-    name: "Templates",
-    type: "megaMenu",
-    children: MEGAMENU_TEMPLATES,
+    href: "/blog",
+    name: "Blog",
   },
   {
     id: ncNanoId(),
-    href: "/search",
-    name: "Explore",
-    type: "dropdown",
-    children: OTHER_PAGE_CHILD,
+    href: "/about",
+    name: "About",
   },
 ];
