@@ -58,6 +58,13 @@ const permission = {
     UPDATE_CATEGORY: 'update_category',
     DELETE_CATEGORY: 'delete_category',
   },
+
+  CART: {
+    GET_CART: 'get_cart',
+    CREATE_CART: 'create_cart',
+    UPDATE_CART: 'update_cart',
+    DELETE_CART: 'delete_cart',
+  },
 };
 const permissionArr = Object.values(permission).reduce((pNow, pCurrent) => {
   let pNowTemp = pNow;

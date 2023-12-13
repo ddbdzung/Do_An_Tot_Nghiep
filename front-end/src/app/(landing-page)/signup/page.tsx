@@ -50,7 +50,9 @@ const throttleSubmit = throttle(
       name: values.name,
       password: values.password,
     };
-    dispatch(signUpAsync(payload));
+    dispatch(signUpAsync(payload)).then((result) => {
+      console.log(result);
+    });
   },
   1000,
   { trailing: false }

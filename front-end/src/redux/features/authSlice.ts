@@ -62,6 +62,7 @@ export type AuthState = {
   fullname: string | null | undefined;
   email: string | null | undefined;
   permissions: string[];
+  uid: string | null | undefined;
   favouriteProducts: string[];
 };
 
@@ -72,6 +73,7 @@ const initialState = {
   permissions: loadState("permissions") || [],
   formStatus: AuthFormStatus.IDLE,
   favouriteProducts: loadState("favouriteProducts") || [],
+  uid: loadState("uid") || null,
 } as AuthState;
 
 export const auth = createSlice({
@@ -85,6 +87,7 @@ export const auth = createSlice({
       state.fullname = null;
       state.permissions = [];
       state.favouriteProducts = [];
+      state.uid = null;
 
       removeState("accessToken");
       removeState("permissions");
@@ -95,6 +98,7 @@ export const auth = createSlice({
       removeState("gender");
       removeState("address");
       removeState("phoneNumber");
+      removeState("uid");
       return state;
     },
   },
@@ -116,12 +120,14 @@ export const auth = createSlice({
         state.email = res.data?.user.email;
         state.fullname = res.data?.user.name;
         state.favouriteProducts = res.data?.user.favouriteProducts;
+        state.uid = res.data?.user.id;
 
         saveState("accessToken", res.data?.tokens.access.token);
         saveState("permissions", res.data?.user.permissions);
         saveState("email", res.data?.user.email);
         saveState("fullname", res.data?.user.name);
         saveState("favouriteProducts", res.data?.user.favouriteProducts);
+        saveState("uid", res.data?.user._id);
 
         return state;
       })
@@ -146,12 +152,14 @@ export const auth = createSlice({
         state.email = res.data?.user.email;
         state.fullname = res.data?.user.name;
         state.favouriteProducts = res.data?.user.favouriteProducts;
+        state.uid = res.data?.user.id;
 
         saveState("accessToken", res.data?.tokens.access.token);
         saveState("permissions", res.data?.user.permissions);
         saveState("email", res.data?.user.email);
         saveState("fullname", res.data?.user.name);
         saveState("favouriteProducts", res.data?.user.favouriteProducts);
+        saveState("uid", res.data?.user._id);
 
         return state;
       })

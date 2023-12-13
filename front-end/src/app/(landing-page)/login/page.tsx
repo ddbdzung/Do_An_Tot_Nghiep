@@ -16,6 +16,7 @@ import { useFormik } from "formik";
 import { ISignInBodyDto } from "@/api/auth/dto/sign-in.dto";
 import { AuthFormStatus, signInAsync } from "@/redux/features/authSlice";
 import { throttle } from "lodash";
+import { getCartAsync } from "@/redux/features/cartSlice";
 
 const loginSocials = [
   {
@@ -45,7 +46,12 @@ const throttleSubmit = throttle(
       email: values.email,
       password: values.password,
     };
-    dispatch(signInAsync(payload));
+    dispatch(signInAsync(payload)).then((result) => {
+      if (!result?.meta.arg.requestStatus === "fulfilled") return;
+
+      const uid = result?.payload.data.user._id;
+      dispatch(getCartAsync(uid));
+    });
   },
   1000,
   { trailing: false }

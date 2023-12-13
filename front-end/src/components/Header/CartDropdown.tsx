@@ -3,21 +3,60 @@
 import { Popover, Transition } from "@/app/(landing-page)/headlessui";
 import Prices from "@/components/Prices";
 import { Product, PRODUCTS } from "@/data/data";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { ICart, ICartItem } from "@/interfaces/ICart";
+import { getCartAsync } from "@/redux/features/cartSlice";
+import { renderImageCloudinary } from "@/utils/renderImage";
+import formatVnCurrency from "@/utils/formatVnCurrency";
 
 export default function CartDropdown() {
-  const renderProduct = (item: Product, index: number, close: () => void) => {
-    const { name, price, image } = item;
+  const { items, id } = useAppSelector((state) => state.cartReducer);
+  const { uid } = useAppSelector((state) => state.authReducer);
+  const [total, setTotal] = useState(0);
+  useEffect(() => {
+    let mounted = false;
+    if (!mounted) {
+      if (Array.isArray(items)) {
+        let total = 0;
+        items.forEach((item) => {
+          total += item.amount * item.product.price?.lastValue;
+        });
+        setTotal(total);
+      }
+    }
+
+    return () => {
+      mounted = true;
+    };
+  }, [items]);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    let mounted = false;
+    if (!mounted) {
+      if (uid) {
+        dispatch(getCartAsync(uid));
+      }
+    }
+
+    return () => {
+      mounted = true;
+    };
+  }, []);
+
+  const renderProduct = (item: any, index: number, close: () => void) => {
+    const { name, price, images } = item.product;
+    const amount = item.amount;
     return (
       <div key={index} className="flex py-5 last:pb-0">
         <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
-            src={image}
+            src={renderImageCloudinary(images?.at(0).url)}
             alt={name}
             className="h-full w-full object-contain object-center"
           />
@@ -38,16 +77,16 @@ export default function CartDropdown() {
                   </Link>
                 </h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  <span>{`Natural`}</span>
+                  {/* <span>{`Natural`}</span>
                   <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{"XL"}</span>
+                  <span>{"XL"}</span> */}
                 </p>
               </div>
-              <Prices price={price} className="mt-0.5" />
+              <Prices price={price?.lastValue} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-500 dark:text-slate-400">{`Qty 1`}</p>
+            <p className="text-gray-500 dark:text-slate-400">{`Qty ${amount}`}</p>
 
             <div className="flex">
               <button
@@ -132,9 +171,10 @@ export default function CartDropdown() {
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
                     <h3 className="text-xl font-semibold">Shopping cart</h3>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700">
-                      {[PRODUCTS[0], PRODUCTS[1], PRODUCTS[2]].map(
-                        (item, index) => renderProduct(item, index, close)
-                      )}
+                      {Array.isArray(items) &&
+                        items.map((item, index) =>
+                          renderProduct(item, index, close)
+                        )}
                     </div>
                   </div>
                   <div className="bg-neutral-50 dark:bg-slate-900 p-5">
@@ -145,7 +185,7 @@ export default function CartDropdown() {
                           Shipping and taxes calculated at checkout.
                         </span>
                       </span>
-                      <span className="">$299.00</span>
+                      <span className="">{formatVnCurrency(total)}</span>
                     </p>
                     <div className="flex space-x-2 mt-5">
                       <ButtonSecondary

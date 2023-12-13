@@ -7,6 +7,7 @@ const transactionRoute = require('./transaction.route');
 const packServiceRoute = require('./pack-service.route');
 const productRoute = require('./product.route');
 const categoriesRoute = require('./category.route');
+const cartRoute = require('./cart.route');
 // New Route import go here
 
 const config = require('../../config/config');
@@ -34,6 +35,10 @@ const defaultRoutes = [
   {
     path: '/transactions',
     route: transactionRoute,
+  },
+  {
+    path: '/carts',
+    route: cartRoute,
   },
   {
     path: '/products',

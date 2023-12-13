@@ -22,6 +22,7 @@ import BallotIcon from "@mui/icons-material/Ballot";
 import { useAppDispatch } from "@/redux/hooks";
 import { signOut } from "@/redux/features/authSlice";
 import { notifySuccess } from "@/utils/notify";
+import { clearCart } from "@/redux/features/cartSlice";
 
 const DRAWER_WIDTH = 240;
 
@@ -59,6 +60,7 @@ export default function AdminNavbar() {
       icon: LogoutIcon,
       onClick: () => {
         dispatch(signOut());
+        dispatch(clearCart());
         notifySuccess("Sign out success!");
       },
     },

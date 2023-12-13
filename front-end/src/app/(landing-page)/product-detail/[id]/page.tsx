@@ -43,6 +43,7 @@ import formatVnCurrency from "@/utils/formatVnCurrency";
 import { renderImageCloudinary } from "@/utils/renderImage";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { toggleFavouriteProductAsync } from "@/redux/features/authSlice";
+import { addToCartAsync } from "@/redux/features/cartSlice";
 
 const LIST_IMAGES_GALLERY_DEMO: (string | StaticImageData)[] = [
   detail21JPG,
@@ -174,6 +175,14 @@ const ProductDetailPage2 = ({}) => {
         />
       ),
       { position: "top-right", id: "nc-product-notify", duration: 3000 }
+    );
+  };
+  const handleAddToCart = () => {
+    dispatch(
+      addToCartAsync({
+        productId: product.id,
+        quantity: qualitySelected,
+      })
     );
   };
 
@@ -323,7 +332,7 @@ const ProductDetailPage2 = ({}) => {
             </div>
             <ButtonPrimary
               className="flex-1 flex-shrink-0"
-              onClick={notifyAddTocart}
+              onClick={handleAddToCart}
             >
               <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
               <span className="ml-3">Add to cart</span>

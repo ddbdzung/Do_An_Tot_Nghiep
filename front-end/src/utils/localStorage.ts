@@ -3,7 +3,7 @@
  * @param {string} state state name
  * @returns {object|undefined} { state_key: state_value }
  */
-export const loadState = (state) => {
+export const loadState = <T>(state): T => {
   try {
     const serializedState = localStorage.getItem(state);
     if (serializedState === null) {
