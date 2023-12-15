@@ -5,6 +5,20 @@ const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
 const { uploadStream, deleteFiles } = require('./image.service');
 
+exports.getProductsByIds = async (ids, options = { lean: false }) => {
+  const { lean } = options;
+  const products = await Product.find(
+    {
+      _id: {
+        $in: ids,
+      },
+    },
+    null,
+    { lean },
+  );
+  return products;
+};
+
 exports.getProductById = async (
   id,
   options = { lean: false, populate: false },

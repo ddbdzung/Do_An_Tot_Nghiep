@@ -1,7 +1,11 @@
 import { ICart } from "@/interfaces/ICart";
 import { loadState, removeState, saveState } from "@/utils/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchAddToCart, fetchGetCart } from "../services/cartApi";
+import {
+  fetchAddToCart,
+  fetchGetCart,
+  fetchRemoveProductFromCart,
+} from "../services/cartApi";
 import {
   IAddToCartBodyDto,
   IAddToCartResponseDto,
@@ -15,6 +19,7 @@ import { IGetCartResponseDto } from "@/api/cart/dto/IGetCart.dto";
 export const addToCartAsync = createAsyncThunk(
   "cart/addToCartAsync",
   async (payload: IAddToCartBodyDto, { getState }) => {
+    console.log("payload", payload);
     const states: RootState = getState();
     const tokens = {
       access: states.authReducer.accessToken,
@@ -32,6 +37,18 @@ export const getCartAsync = createAsyncThunk(
       access: states.authReducer.accessToken,
     };
     const data = await fetchGetCart(tokens, id);
+    return data;
+  }
+);
+
+export const removeProductFromCartAsync = createAsyncThunk(
+  "cart/removeProductFromCartAsync",
+  async (id: string, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchRemoveProductFromCart(tokens, id);
     return data;
   }
 );
@@ -134,6 +151,34 @@ export const cartSlice = createSlice({
         return state;
       })
       .addCase(getCartAsync.rejected, (state, action) => {
+        state.formStatus = FormStatus.IDLE;
+        return state;
+      })
+      .addCase(removeProductFromCartAsync.pending, (state, action) => {
+        state.formStatus = FormStatus.LOADING;
+        return state;
+      })
+      .addCase(removeProductFromCartAsync.fulfilled, (state, action) => {
+        const res = handleResponsePayload<
+          IResponsePayload<IGetCartResponseDto>
+        >(action.payload, {
+          notifySuccessMessage: false,
+        });
+        if (!res) {
+          state.formStatus = FormStatus.IDLE;
+          return state;
+        }
+        state.items = res.data.products;
+        state.formStatus = FormStatus.SUCCEEDED;
+        state.id = res.data._id;
+        saveState("cart", {
+          id: res.data._id,
+          items: res.data.products,
+        });
+        return state;
+      })
+      .addCase(removeProductFromCartAsync.rejected, (state, action) => {
+        console.log("🚀 ~ file: cartSlice.ts:177 ~ .addCase ~ action:", action);
         state.formStatus = FormStatus.IDLE;
         return state;
       });

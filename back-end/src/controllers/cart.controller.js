@@ -8,15 +8,29 @@ exports.addToCart = catchAsync(async (req, res, next) => {
   const { _id: userId } = getAuthenticatedUser(req);
   const { productId, quantity } = req.body;
   const cart = await cartService.addToCart(userId, productId, quantity);
-
-  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], cart);
-});
-
-exports.getCart = catchAsync(async (req, res, next) => {
-  const { _id: userId } = getAuthenticatedUser(req);
+  const cartWithProduct = await cartService.getCartByUserId(userId);
   responseEmitter(req, res, next)(
     httpStatus.OK,
     httpStatus[200],
-    await cartService.getCartByUserId(userId),
+    cartWithProduct,
+  );
+});
+
+exports.getCart = catchAsync(async (req, res, next) => {
+  const { _id } = getAuthenticatedUser(req);
+  responseEmitter(req, res, next)(
+    httpStatus.OK,
+    httpStatus[200],
+    await cartService.getCartByUserId(_id),
+  );
+});
+
+exports.removeProductFromCart = catchAsync(async (req, res, next) => {
+  const { _id } = getAuthenticatedUser(req);
+  const { productId } = req.params;
+  responseEmitter(req, res, next)(
+    httpStatus.OK,
+    httpStatus[200],
+    await cartService.removeProductFromCart(_id, productId),
   );
 });

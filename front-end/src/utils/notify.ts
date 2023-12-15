@@ -1,16 +1,26 @@
 import toast from "react-hot-toast";
 
-export const notifyError = (message: string) => {
+export const notifyError = (
+  message: string,
+  options = {
+    duration: 1000,
+  }
+) => {
   toast.error(message, {
     position: "top-right",
-    duration: 1000,
+    duration: options.duration,
   });
 };
 
-export const notifySuccess = (message: string) => {
+export const notifySuccess = (
+  message: string,
+  options = {
+    duration: 1000,
+  }
+) => {
   toast.success(message, {
     position: "top-right",
-    duration: 1000,
+    duration: options.duration,
   });
 };
 

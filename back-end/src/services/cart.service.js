@@ -58,6 +58,7 @@ exports.addToCart = async (userId, productId, quantity) => {
 
   userCart.products[productIndex].amount += quantity;
   userCart.products[productIndex].updatedAt = Date.now();
+
   return userCart.save();
 };
 
@@ -81,4 +82,23 @@ exports.getCartByUserId = async (userId, options) => {
   }
 
   return cart;
+};
+
+exports.removeProductFromCart = async (userId, productId) => {
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const productIndex = cart.products.findIndex(
+    item => item.product.toString() === productId.toString(),
+  );
+  if (productIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  cart.products = cart.products.filter(
+    item => item.product.toString() !== productId.toString(),
+  );
+  return cart.save();
 };

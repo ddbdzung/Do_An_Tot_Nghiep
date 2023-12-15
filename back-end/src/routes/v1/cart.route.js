@@ -23,4 +23,12 @@ router
     cartController.getCart,
   );
 
+router
+  .route('/item/:productId')
+  .delete(
+    auth(permission.CART.DELETE_CART),
+    validate(cartValidation.removeProductFromCart),
+    cartController.removeProductFromCart,
+  );
+
 module.exports = router;
