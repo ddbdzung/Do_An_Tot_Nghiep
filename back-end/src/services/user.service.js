@@ -85,8 +85,8 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id, populate) => {
-  return User.findByIdAndPopulate(id, populate);
+const getUserById = async (id, populate, options = { lean: false }) => {
+  return User.findByIdAndPopulate(id, populate, options);
 };
 
 /**

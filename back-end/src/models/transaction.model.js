@@ -1,33 +1,63 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate, findByIdAndPopulate } = require('./plugins');
+const {
+  TRANSACTION_STATUS,
+  TRANSCTION_METHODS,
+} = require('../config/constant');
 
-const productTransactionSchema = mongoose.Schema({
-  product: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Product',
+const productTransactionSchema = mongoose.Schema(
+  {
+    product: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Product',
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    price: {
+      type: mongoose.SchemaTypes.ObjectId,
+      required: true,
+    },
   },
-  amount: {
-    type: Number,
-    required: true,
+  {
+    timestamps: false,
+    id: false,
   },
-  price: {
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true,
-  },
-}, {
-  timestamps: false,
-  id: false,
-});
+);
 
 const transactionSchema = mongoose.Schema(
   {
     customer: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
+      default: null,
+    },
+    status: {
+      type: String,
+      enum: TRANSACTION_STATUS,
+      default: TRANSACTION_STATUS.PREPARING,
+    },
+    method: {
+      type: String,
+      enum: TRANSCTION_METHODS,
+      required: true,
+    },
+    guest: {
+      name: {
+        type: String,
+      },
+      phoneNumber: {
+        type: String,
+      },
+      address: {
+        type: String,
+      },
     },
     packService: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'PackService',
+      default: null,
     },
     products: [productTransactionSchema],
   },

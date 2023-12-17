@@ -10,9 +10,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICart, ICartItem } from "@/interfaces/ICart";
-import { getCartAsync } from "@/redux/features/cartSlice";
+import {
+  getCartAsync,
+  removeProductFromCartAsync,
+} from "@/redux/features/cartSlice";
 import { renderImageCloudinary } from "@/utils/renderImage";
 import formatVnCurrency from "@/utils/formatVnCurrency";
+import { notifySuccess } from "@/utils/notify";
 
 export default function CartDropdown() {
   const { items, id } = useAppSelector((state) => state.cartReducer);
@@ -47,9 +51,15 @@ export default function CartDropdown() {
       mounted = true;
     };
   }, []);
+  const handleRemoveItem = (productId: string) => {
+    dispatch(removeProductFromCartAsync(productId)).then((res) => {
+      dispatch(getCartAsync(uid));
+      notifySuccess("Remove item from cart successfully");
+    });
+  };
 
   const renderProduct = (item: any, index: number, close: () => void) => {
-    const { name, price, images } = item.product;
+    const { name, price, images, id: productId } = item.product;
     const amount = item.amount;
     return (
       <div key={index} className="flex py-5 last:pb-0">
@@ -91,6 +101,7 @@ export default function CartDropdown() {
             <div className="flex">
               <button
                 type="button"
+                onClick={(e) => handleRemoveItem(productId)}
                 className="font-medium text-primary-6000 dark:text-primary-500 "
               >
                 Remove

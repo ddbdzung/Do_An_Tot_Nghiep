@@ -1,21 +1,46 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
+const { TRANSCTION_METHODS } = require('../config/constant');
 
-const createTransaction = {
-  params: Joi.object().keys({
-    packServiceId: Joi.string().required().custom(objectId),
-  }),
+const createTransactionByUser = {
   body: Joi.object().keys({
-    products: Joi.array().items(
-      Joi.object().keys({
-        product: Joi.string().required().custom(objectId),
-        amount: Joi.number().integer().required().min(0),
-        price: Joi.number().integer().required().min(0),
-      }),
-    ),
+    order: Joi.array()
+      .items(
+        Joi.object().keys({
+          productId: Joi.string().required().custom(objectId),
+          quantity: Joi.number().min(1).required(),
+        }),
+      )
+      .required()
+      .min(1),
+    method: Joi.string()
+      .valid(
+        TRANSCTION_METHODS.BANK_TRANSFER,
+        TRANSCTION_METHODS.COD,
+        TRANSCTION_METHODS.MOMO,
+      )
+      .required(),
   }),
 };
 
+// userInfo: Joi.object().keys({
+//   name: Joi.string().required(),
+//   phoneNumber: Joi.string().required(),
+//   address: Joi.string().required(),
+// }),
+// {
+//   "order": [
+//       {
+//           "productId": "657ed6074e6777469c7ffa62",
+//           "quantity": 1
+//       }
+//   ],
+//   "userInfo": {
+//       "name": "Dzung Dang",
+//       "phoneNumber": "0987654321",
+//       "address": "Nha o Vuon cay su hao"
+//   }
+// }
 module.exports = {
-  createTransaction,
+  createTransactionByUser,
 };

@@ -207,3 +207,16 @@ exports.softDeleteProductById = async productId => {
   product.deletedAt = Date.now();
   return product.save();
 };
+
+// Substract quantity of product
+exports.atomicUpdateProductQuantity = async (productId, quantity) => {
+  console.log(
+    '🚀 ~ file: product.service.js:213 ~ exports.atomicUpdateProductQuantity= ~ quantity:',
+    quantity,
+  );
+  return Product.findByIdAndUpdate(productId, {
+    $inc: {
+      quantity,
+    },
+  });
+};
