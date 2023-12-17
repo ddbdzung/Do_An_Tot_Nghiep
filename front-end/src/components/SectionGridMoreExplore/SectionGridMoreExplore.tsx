@@ -95,7 +95,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
     return (
       <CardCategory4
         bgSVG={randomExploreSvg()}
-        featuredImage={renderImageCloudinary(item.images?.at(0).url) || ""}
+        featuredImage={renderImageCloudinary(item.images?.at(0)?.url) || ""}
         key={item.id}
         color="bg-orange-50"
         {...item}
