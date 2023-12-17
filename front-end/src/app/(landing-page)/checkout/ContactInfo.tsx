@@ -1,9 +1,18 @@
+"use client";
+
 import Label from "@/components/Label/Label";
 import React, { FC } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Checkbox from "@/shared/Checkbox/Checkbox";
 import Input from "@/shared/Input/Input";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import useAuthCheck from "@/hooks/useAuthCheck";
+import {
+  reset,
+  setEmail,
+  setPhoneNumber,
+} from "@/redux/features/checkoutSlice";
 
 interface Props {
   isActive: boolean;
@@ -12,6 +21,26 @@ interface Props {
 }
 
 const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
+  const dispatch = useAppDispatch();
+  const { fullname, email } = useAppSelector((state) => state.authReducer);
+  const { phoneNumber } = useAppSelector((state) => state.userReducer);
+  const { email: guestEmail, phoneNumber: guestPhoneNumber } = useAppSelector(
+    (state) => state.checkoutSlice
+  );
+
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setEmail(e.target.value));
+  };
+  const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPhoneNumber(e.target.value));
+  };
+  const handleCancel = () => {
+    onCloseActive();
+    dispatch(reset());
+  };
+
+  const isAuth = useAuthCheck();
+
   const renderAccount = () => {
     return (
       <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden z-0">
@@ -64,8 +93,8 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">Enrico Smith</span>
-              <span className="ml-3 tracking-tighter">+855 - 666 - 7744</span>
+              <span className="">{fullname}</span>
+              <span className="ml-3 tracking-tighter">{phoneNumber || ""}</span>
             </div>
           </div>
           <button
@@ -80,23 +109,63 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             isActive ? "block" : "hidden"
           }`}
         >
-          <div className="flex justify-between flex-wrap items-baseline">
-            <h3 className="text-lg font-semibold">Contact infomation</h3>
-            <span className="block text-sm my-1 md:my-0">
-              Do not have an account?{` `}
-              <a href="##" className="text-primary-500 font-medium">
-                Log in
-              </a>
-            </span>
-          </div>
-          <div className="max-w-lg">
-            <Label className="text-sm">Your phone number</Label>
-            <Input className="mt-1.5" defaultValue={"+808 xxx"} type={"tel"} />
-          </div>
-          <div className="max-w-lg">
-            <Label className="text-sm">Email address</Label>
-            <Input className="mt-1.5" type={"email"} />
-          </div>
+          {isAuth ? null : (
+            <div className="flex justify-between flex-wrap items-baseline">
+              <h3 className="text-lg font-semibold">Contact infomation</h3>
+              <span className="block text-sm my-1 md:my-0">
+                Do not have an account?{` `}
+                <a href="/login" className="text-primary-500 font-medium">
+                  Log in
+                </a>
+              </span>
+            </div>
+          )}
+
+          {isAuth ? (
+            <>
+              <div className="max-w-lg">
+                <Label className="text-sm">Your phone number</Label>
+                <Input
+                  className="mt-1.5"
+                  value={phoneNumber}
+                  placeholder={"+808 xxx"}
+                  type={"tel"}
+                  disabled
+                />
+              </div>
+              <div className="max-w-lg">
+                <Label className="text-sm">Email address</Label>
+                <Input
+                  className="mt-1.5"
+                  value={email}
+                  type={"email"}
+                  disabled
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="max-w-lg">
+                <Label className="text-sm">Your phone number</Label>
+                <Input
+                  className="mt-1.5"
+                  value={guestPhoneNumber}
+                  onChange={handleChangePhoneNumber}
+                  placeholder={"+808 xxx"}
+                  type={"tel"}
+                />
+              </div>
+              <div className="max-w-lg">
+                <Label className="text-sm">Email address</Label>
+                <Input
+                  className="mt-1.5"
+                  value={guestEmail}
+                  onChange={handleChangeEmail}
+                  type={"email"}
+                />
+              </div>
+            </>
+          )}
           <div>
             <Checkbox
               className="!text-sm"
@@ -116,7 +185,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             </ButtonPrimary>
             <ButtonSecondary
               className="mt-3 sm:mt-0 sm:ml-3"
-              onClick={() => onCloseActive()}
+              onClick={handleCancel}
             >
               Cancel
             </ButtonSecondary>

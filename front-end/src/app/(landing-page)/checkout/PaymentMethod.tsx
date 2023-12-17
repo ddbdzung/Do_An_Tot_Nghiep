@@ -18,12 +18,12 @@ const PaymentMethod: FC<Props> = ({
   onCloseActive,
   onOpenActive,
 }) => {
-  const [mothodActive, setMethodActive] = useState<
+  const [methodActive, setMethodActive] = useState<
     "Credit-Card" | "Internet-banking" | "Wallet"
   >("Credit-Card");
 
   const renderDebitCredit = () => {
-    const active = mothodActive === "Credit-Card";
+    const active = methodActive === "Credit-Card";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -131,7 +131,7 @@ const PaymentMethod: FC<Props> = ({
   };
 
   const renderInterNetBanking = () => {
-    const active = mothodActive === "Internet-banking";
+    const active = methodActive === "Internet-banking";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -205,14 +205,14 @@ const PaymentMethod: FC<Props> = ({
             <ul className="mt-3.5 text-sm text-slate-500 dark:text-slate-400 space-y-2">
               <li>
                 <h3 className="text-base text-slate-800 dark:text-slate-200 font-semibold mb-1">
-                  ChisNghiax
+                  Dung Dang
                 </h3>
               </li>
               <li>
                 {" "}
                 Bank name:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  Example Bank Name
+                  Vietcombank
                 </span>
               </li>
               <li>
@@ -251,7 +251,7 @@ const PaymentMethod: FC<Props> = ({
   };
 
   const renderWallet = () => {
-    const active = mothodActive === "Wallet";
+    const active = methodActive === "Wallet";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -411,7 +411,7 @@ const PaymentMethod: FC<Props> = ({
           }`}
         >
           {/* ==================== */}
-          <div>{renderDebitCredit()}</div>
+          {/* <div>{renderDebitCredit()}</div> */}
 
           {/* ==================== */}
           <div>{renderInterNetBanking()}</div>

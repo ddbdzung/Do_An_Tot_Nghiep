@@ -4,7 +4,7 @@ import Label from "@/components/Label/Label";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
 import { Product, PRODUCTS } from "@/data/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Input from "@/shared/Input/Input";
 import ContactInfo from "./ContactInfo";
@@ -12,8 +12,75 @@ import PaymentMethod from "./PaymentMethod";
 import ShippingAddress from "./ShippingAddress";
 import Image from "next/image";
 import Link from "next/link";
+import { IProduct } from "@/api/product/dto/get-products.dto";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  addToCartAsync,
+  getCartAsync,
+  removeProductFromCartAsync,
+} from "@/redux/features/cartSlice";
+import dynamic from "next/dynamic";
+import { ICartItem, ICartItemNotRedux } from "@/interfaces/ICart";
+import { renderImageCloudinary } from "@/utils/renderImage";
+import formatVnCurrency from "@/utils/formatVnCurrency";
+import { throttle } from "lodash";
+import { notifySuccess } from "@/utils/notify";
+import useAuthCheck from "@/hooks/useAuthCheck";
 
+const SHIPPING_FEE = 20000;
 const CheckoutPage = () => {
+  const { items } = useAppSelector((state) => state.cartReducer);
+  const { uid } = useAppSelector((state) => state.authReducer);
+  const [cart, setCart] = useState<IProduct[]>(items);
+  const dispatch = useAppDispatch();
+  const isAuth = useAuthCheck();
+  useEffect(() => {
+    let mounted = false;
+    if (!mounted) {
+      if (isAuth) {
+        dispatch(getCartAsync(uid));
+      }
+    }
+
+    return () => {
+      mounted = true;
+    };
+  }, []);
+  useEffect(() => {
+    setSubTotal(calcSubTotal(items));
+  }, [items]);
+  const handleUpdateCart = throttle(
+    async (amount, product) => {
+      dispatch(
+        addToCartAsync({
+          productId: product.id,
+          quantity: amount,
+        })
+      ).then((res) => {
+        dispatch(getCartAsync(uid));
+      });
+    },
+    2000,
+    { trailing: false }
+  );
+  const handleRemoveItem = (productId: string) => {
+    dispatch(removeProductFromCartAsync(productId)).then((res) => {
+      dispatch(getCartAsync(uid));
+      setCart(
+        cart.filter((item) => {
+          return item.id !== productId;
+        })
+      );
+      notifySuccess("Remove item from cart successfully");
+    });
+  };
+  const calcSubTotal = (items) =>
+    Array.isArray(items) &&
+    items.reduce(
+      (acc, item) => acc + item.amount * item.product?.price?.lastValue,
+      0
+    );
+
   const [tabActive, setTabActive] = useState<
     "ContactInfo" | "ShippingAddress" | "PaymentMethod"
   >("ShippingAddress");
@@ -24,15 +91,17 @@ const CheckoutPage = () => {
       element?.scrollIntoView({ behavior: "smooth" });
     }, 80);
   };
+  const [subTotal, setSubTotal] = useState(0);
 
-  const renderProduct = (item: Product, index: number) => {
-    const { image, price, name } = item;
+  const renderProduct = (item: ICartItemNotRedux, index: number) => {
+    const { product, amount } = item;
+    const { images, price, name } = product;
 
     return (
       <div key={index} className="relative flex py-7 first:pt-0 last:pb-0">
         <div className="relative h-36 w-24 sm:w-28 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
-            src={image}
+            src={renderImageCloudinary(images?.at(0)?.url)}
             fill
             alt={name}
             className="h-full w-full object-contain object-center"
@@ -126,8 +195,6 @@ const CheckoutPage = () => {
                         strokeLinejoin="round"
                       />
                     </svg>
-
-                    <span>{`2XL`}</span>
                   </div>
                 </div>
 
@@ -147,27 +214,40 @@ const CheckoutPage = () => {
                   </select>
                   <Prices
                     contentClass="py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium h-full"
-                    price={price}
+                    price={price?.lastValue}
                   />
                 </div>
               </div>
 
               <div className="hidden flex-1 sm:flex justify-end">
-                <Prices price={price} className="mt-0.5" />
+                <Prices price={price?.lastValue} className="mt-0.5" />
               </div>
             </div>
           </div>
 
           <div className="flex mt-auto pt-4 items-end justify-between text-sm">
             <div className="hidden sm:block text-center relative">
-              <NcInputNumber className="relative z-10" />
+              <NcInputNumber
+                onChange={(newAmount) =>
+                  handleUpdateCart(newAmount - amount, product)
+                }
+                defaultValue={amount}
+                className="relative z-10"
+              />
             </div>
 
             <a
               href="##"
               className="relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
             >
-              <span>Remove</span>
+              <span>
+                <button
+                  onClick={(e) => handleRemoveItem(product.id)}
+                  style={{ display: "inline" }}
+                >
+                  Remove
+                </button>
+              </span>
             </a>
           </div>
         </div>
@@ -233,7 +313,7 @@ const CheckoutPage = () => {
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <Link href={"/collection-2"} className="">
-              Clothing Categories
+              Categories
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <span className="underline">Checkout</span>
@@ -248,7 +328,7 @@ const CheckoutPage = () => {
           <div className="w-full lg:w-[36%] ">
             <h3 className="text-lg font-semibold">Order summary</h3>
             <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
-              {[PRODUCTS[0], PRODUCTS[2], PRODUCTS[3]].map(renderProduct)}
+              {Array.isArray(cart) && cart?.map(renderProduct)}
             </div>
 
             <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
@@ -265,24 +345,26 @@ const CheckoutPage = () => {
               <div className="mt-4 flex justify-between py-2.5">
                 <span>Subtotal</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  $249.00
+                  {formatVnCurrency(subTotal)}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
                 <span>Shipping estimate</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  $5.00
+                  {formatVnCurrency(SHIPPING_FEE)}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span>Tax estimate</span>
+                <span>Tax estimate 8%</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  $24.90
+                  {formatVnCurrency(subTotal * 0.08)}
                 </span>
               </div>
               <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
                 <span>Order total</span>
-                <span>$276.00</span>
+                <span>
+                  {formatVnCurrency(subTotal + SHIPPING_FEE + subTotal * 0.08)}
+                </span>
               </div>
             </div>
             <ButtonPrimary className="mt-8 w-full">Confirm order</ButtonPrimary>
@@ -345,4 +427,6 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default dynamic(() => Promise.resolve(CheckoutPage), {
+  ssr: false,
+});

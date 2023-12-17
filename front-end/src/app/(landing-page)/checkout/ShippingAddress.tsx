@@ -7,6 +7,9 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import Radio from "@/shared/Radio/Radio";
 import Select from "@/shared/Select/Select";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { reset, setAddress, setFullname } from "@/redux/features/checkoutSlice";
+import useAuthCheck from "@/hooks/useAuthCheck";
 
 interface Props {
   isActive: boolean;
@@ -19,6 +22,23 @@ const ShippingAddress: FC<Props> = ({
   onCloseActive,
   onOpenActive,
 }) => {
+  const dispatch = useAppDispatch();
+  const isAuth = useAuthCheck();
+  const { fullname } = useAppSelector((state) => state.authReducer);
+  const { address } = useAppSelector((state) => state.userReducer);
+  const { fullname: guestFullname, address: guestAddress } = useAppSelector(
+    (state) => state.checkoutSlice
+  );
+  const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setAddress(e.target.value));
+  };
+  const handleChangeFullname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFullname(e.target.value));
+  };
+  const handleCancel = () => {
+    onCloseActive();
+    dispatch(reset());
+  };
   const renderShippingAddress = () => {
     return (
       <div className="border border-slate-200 dark:border-slate-700 rounded-xl ">
@@ -86,9 +106,7 @@ const ShippingAddress: FC<Props> = ({
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">
-                {`St. Paul's Road, Norris, SD 57560, Dakota, USA`}
-              </span>
+              <span className="">{address || ""}</span>
             </div>
           </div>
           <button
@@ -103,85 +121,60 @@ const ShippingAddress: FC<Props> = ({
             isActive ? "block" : "hidden"
           }`}
         >
-          {/* ============ */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <Label className="text-sm">First name</Label>
-              <Input className="mt-1.5" defaultValue="Cole" />
-            </div>
-            <div>
-              <Label className="text-sm">Last name</Label>
-              <Input className="mt-1.5" defaultValue="Enrico " />
-            </div>
-          </div>
+          {isAuth ? (
+            <>
+              {/* ============ */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
+                <div>
+                  <Label className="text-sm">Full name</Label>
+                  <Input className="mt-1.5" defaultValue={fullname} disabled />
+                </div>
+              </div>
 
-          {/* ============ */}
-          <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
-            <div className="flex-1">
-              <Label className="text-sm">Address</Label>
-              <Input
-                className="mt-1.5"
-                placeholder=""
-                defaultValue={"123, Dream Avenue, USA"}
-                type={"text"}
-              />
-            </div>
-            <div className="sm:w-1/3">
-              <Label className="text-sm">Apt, Suite *</Label>
-              <Input className="mt-1.5" defaultValue="55U - DD5 " />
-            </div>
-          </div>
+              {/* ============ */}
+              <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
+                <div className="flex-1">
+                  <Label className="text-sm">Address</Label>
+                  <Input
+                    className="mt-1.5"
+                    placeholder=""
+                    defaultValue={address}
+                    type={"text"}
+                    disabled
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* ============ */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
+                <div>
+                  <Label className="text-sm">Full name</Label>
+                  <Input
+                    placeholder="Cole"
+                    className="mt-1.5"
+                    onChange={handleChangeFullname}
+                    value={guestFullname}
+                  />
+                </div>
+              </div>
 
-          {/* ============ */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <Label className="text-sm">City</Label>
-              <Input className="mt-1.5" defaultValue="Norris" />
-            </div>
-            <div>
-              <Label className="text-sm">Country</Label>
-              <Select className="mt-1.5" defaultValue="United States ">
-                <option value="United States">United States</option>
-                <option value="United States">Canada</option>
-                <option value="United States">Mexico</option>
-                <option value="United States">Israel</option>
-                <option value="United States">France</option>
-                <option value="United States">England</option>
-                <option value="United States">Laos</option>
-                <option value="United States">China</option>
-              </Select>
-            </div>
-          </div>
-
-          {/* ============ */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-            <div>
-              <Label className="text-sm">State/Province</Label>
-              <Input className="mt-1.5" defaultValue="Texas" />
-            </div>
-            <div>
-              <Label className="text-sm">Postal code</Label>
-              <Input className="mt-1.5" defaultValue="2500 " />
-            </div>
-          </div>
-
-          {/* ============ */}
-          <div>
-            <Label className="text-sm">Address type</Label>
-            <div className="mt-1.5 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              <Radio
-                label={`<span class="text-sm font-medium">Home <span class="font-light">(All Day Delivery)</span></span>`}
-                id="Address-type-home"
-                name="Address-type"
-                defaultChecked
-              />
-              <Radio
-                label={`<span class="text-sm font-medium">Office <span class="font-light">(Delivery <span class="font-medium">9 AM - 5 PM</span>)</span> </span>`}
-                id="Address-type-office"
-                name="Address-type"
-              />
-            </div>
-          </div>
+              {/* ============ */}
+              <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
+                <div className="flex-1">
+                  <Label className="text-sm">Address</Label>
+                  <Input
+                    className="mt-1.5"
+                    placeholder="St. Paul's Road, Norris, SD 57560, Dakota, USA"
+                    onChange={handleChangeAddress}
+                    value={guestAddress}
+                    type={"text"}
+                  />
+                </div>
+              </div>
+            </>
+          )}
 
           {/* ============ */}
           <div className="flex flex-col sm:flex-row pt-6">
@@ -193,7 +186,7 @@ const ShippingAddress: FC<Props> = ({
             </ButtonPrimary>
             <ButtonSecondary
               className="mt-3 sm:mt-0 sm:ml-3"
-              onClick={onCloseActive}
+              onClick={handleCancel}
             >
               Cancel
             </ButtonSecondary>

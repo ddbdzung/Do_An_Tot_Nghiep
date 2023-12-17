@@ -141,12 +141,12 @@ export const cartSlice = createSlice({
           state.formStatus = FormStatus.IDLE;
           return state;
         }
-        state.items = res.data.products;
+        state.items = res.data?.products || [];
         state.formStatus = FormStatus.IDLE;
-        state.id = res.data._id;
+        state.id = res.data?._id || "";
         saveState("cart", {
-          id: res.data._id,
-          items: res.data.products,
+          id: res.data?._id,
+          items: res.data?.products,
         });
         return state;
       })

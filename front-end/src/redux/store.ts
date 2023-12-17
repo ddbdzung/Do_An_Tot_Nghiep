@@ -5,6 +5,7 @@ import adminReducer from "./features/adminSlice";
 import productReducer from "./features/productSlice";
 import userReducer from "./features/userSlice";
 import cartReducer from "./features/cartSlice";
+import checkoutSlice from "./features/checkoutSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     productReducer,
     userReducer,
     cartReducer,
+    checkoutSlice,
   },
   devTools: process.env.NODE_ENV !== "production",
 });
