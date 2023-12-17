@@ -108,12 +108,12 @@ export const cartSlice = createSlice({
           });
         }
         if (
-          currentCart?.items.length === 0 ||
-          currentCart?.items.findIndex((i) => i.product._id !== res.data._id)
+          currentCart?.items?.length === 0 ||
+          currentCart?.items.findIndex((i) => i.product?._id !== res.data?._id)
         ) {
           saveState("cart", {
-            id: res.data._id,
-            items: res.data.products,
+            id: res.data?._id,
+            items: res.data?.products,
           });
           return state;
         }
@@ -178,7 +178,6 @@ export const cartSlice = createSlice({
         return state;
       })
       .addCase(removeProductFromCartAsync.rejected, (state, action) => {
-        console.log("🚀 ~ file: cartSlice.ts:177 ~ .addCase ~ action:", action);
         state.formStatus = FormStatus.IDLE;
         return state;
       });
