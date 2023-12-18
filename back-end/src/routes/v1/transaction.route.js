@@ -9,10 +9,22 @@ const router = express.Router();
 
 router
   .route('/')
+  .get(
+    auth(permission.TRANSACTION.GET_TRANSACTIONS),
+    validate(transactionValidation.getTransactions),
+    transactionController.getTransactions,
+  )
   .post(
     auth(permission.TRANSACTION.CREATE_TRANSACTION),
     validate(transactionValidation.createTransactionByUser),
     transactionController.createTransactionByUser,
+  );
+
+router
+  .route('/guest')
+  .post(
+    validate(transactionValidation.createTransactionByGuest),
+    transactionController.createTransactionByGuest,
   );
 
 module.exports = router;

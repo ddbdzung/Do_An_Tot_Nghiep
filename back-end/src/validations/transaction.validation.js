@@ -23,11 +23,42 @@ const createTransactionByUser = {
   }),
 };
 
-// userInfo: Joi.object().keys({
-//   name: Joi.string().required(),
-//   phoneNumber: Joi.string().required(),
-//   address: Joi.string().required(),
-// }),
+exports.createTransactionByGuest = {
+  body: Joi.object().keys({
+    order: Joi.array()
+      .items(
+        Joi.object().keys({
+          productId: Joi.string().required().custom(objectId),
+          quantity: Joi.number().min(1).required(),
+        }),
+      )
+      .required()
+      .min(1),
+    userInfo: Joi.object().keys({
+      name: Joi.string().required(),
+      phoneNumber: Joi.string().required(),
+      address: Joi.string().required(),
+    }),
+    method: Joi.string()
+      .valid(
+        TRANSCTION_METHODS.BANK_TRANSFER,
+        TRANSCTION_METHODS.COD,
+        TRANSCTION_METHODS.MOMO,
+      )
+      .required(),
+  }),
+};
+
+exports.getTransactions = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    role: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 // {
 //   "order": [
 //       {

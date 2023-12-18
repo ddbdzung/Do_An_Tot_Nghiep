@@ -33,6 +33,31 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   );
 });
 
+exports.createTransactionByGuest = catchAsync(async (req, res, next) => {
+  const { order, method, userInfo } = req.body;
+  const createTransactionDto = {
+    order,
+    customerId: null,
+    guest: userInfo,
+    method,
+  };
+
+  const transaction = await transactionService.createTransaction(
+    createTransactionDto,
+  );
+  responseEmitter(req, res, next)(
+    httpStatus.CREATED,
+    httpStatus[201],
+    transaction,
+  );
+});
+
+exports.getTransactionsByIds = catchAsync(async (req, res, next) => {
+  const { _id: userId } = getAuthenticatedUser(req);
+  const transactions = await transactionService.getTransactionsByUser(userId);
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], transactions);
+});
+
 exports.updateTransaction = catchAsync(async (req, res) => {
   const { transactionId } = req.params;
   const updateTransactionDto = pick(req.body, ['name']);
