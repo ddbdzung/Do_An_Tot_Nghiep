@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 const { TRANSCTION_METHODS } = require('../config/constant');
 
-const createTransactionByUser = {
+exports.createTransactionByUser = {
   body: Joi.object().keys({
     order: Joi.array()
       .items(
@@ -72,6 +72,3 @@ exports.getTransactions = {
 //       "address": "Nha o Vuon cay su hao"
 //   }
 // }
-module.exports = {
-  createTransactionByUser,
-};

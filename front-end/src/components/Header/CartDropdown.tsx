@@ -18,7 +18,7 @@ import { renderImageCloudinary } from "@/utils/renderImage";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import { notifySuccess } from "@/utils/notify";
 
-export default function CartDropdown() {
+export default function CartDropdown({ cartLength }: { cartLength: number }) {
   const { items, id } = useAppSelector((state) => state.cartReducer);
   const { uid } = useAppSelector((state) => state.authReducer);
   const [total, setTotal] = useState(0);
@@ -123,7 +123,7 @@ export default function CartDropdown() {
                  group w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 relative`}
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-              <span className="mt-[1px]">3</span>
+              <span className="mt-[1px]">{cartLength || 0}</span>
             </div>
             <svg
               className="w-6 h-6"

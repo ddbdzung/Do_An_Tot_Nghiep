@@ -29,6 +29,13 @@ exports.createTransaction = async createTransactionDto => {
     method,
   };
   if (guest) {
+    if (!guest.name || !guest.phoneNumber || !guest.address) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Guest name, phone number and address are required',
+      );
+    }
+
     transactionSchema.guest = {
       name: guest.name,
       phoneNumber: guest.phoneNumber,

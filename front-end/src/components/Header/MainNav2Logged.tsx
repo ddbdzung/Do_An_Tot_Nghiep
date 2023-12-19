@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createRef, FC, useState } from "react";
+import React, { createRef, FC, useEffect, useState } from "react";
 import Logo from "@/shared/Logo/Logo";
 import MenuBar from "@/shared/MenuBar/MenuBar";
 import AvatarDropdown from "./AvatarDropdown";
@@ -8,6 +8,8 @@ import Navigation from "@/shared/Navigation/Navigation";
 import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
+import useAuthCheck from "@/hooks/useAuthCheck";
 
 export interface MainNav2LoggedProps {}
 
@@ -15,6 +17,12 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const inputRef = createRef<HTMLInputElement>();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
+  const { items } = useAppSelector((state) => state.cartReducer);
+  const isAuth = useAuthCheck();
+  const [cartLength, setCartLength] = useState<number>(items?.length || 0);
+  useEffect(() => {
+    setCartLength(items?.length || 0);
+  }, [items]);
 
   const renderMagnifyingGlassIcon = () => {
     return (
@@ -96,7 +104,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             </button>
           )}
           <AvatarDropdown />
-          <CartDropdown />
+          <CartDropdown cartLength={cartLength} />
         </div>
       </div>
     );

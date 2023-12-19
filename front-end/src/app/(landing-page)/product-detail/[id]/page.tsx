@@ -354,15 +354,17 @@ const ProductDetailPage2 = ({}) => {
                 )}`}</span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                <span>Tax estimate</span>
-                <span>0</span>
+                <span>Tax estimate 8%</span>
+                <span>
+                  {formatVnCurrency(product?.price?.lastValue * 0.08)}
+                </span>
               </div>
             </div>
             <div className="border-b border-slate-200 dark:border-slate-700"></div>
             <div className="flex justify-between font-semibold">
               <span>Total</span>
               <span>{`${formatVnCurrency(
-                product.price?.lastValue * qualitySelected
+                product.price?.lastValue * qualitySelected * 1.08
               )}`}</span>
             </div>
           </div>
