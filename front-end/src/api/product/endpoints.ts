@@ -14,8 +14,12 @@ export const ADMIN_DELETE_PRODUCT = (productId) =>
 export const ADMIN_GET_PRODUCT = "/v1/products/a";
 
 export const GET_PRODUCTS = (query: IGetProductsQueryDto) => {
-  const { limit, page, search, category, sort, order } = query;
+  const { limit, page, search, category, sort, order, ids } = query;
   let url = `/v1/products?`;
+  if (Array.isArray(ids)) {
+    url += `ids=${JSON.stringify(ids)}&`;
+  }
+
   if (limit) {
     url += `limit=${limit}&`;
   }

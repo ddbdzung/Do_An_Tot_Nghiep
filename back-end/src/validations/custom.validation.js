@@ -10,7 +10,9 @@ const password = (value, helpers) => {
     return helpers.message('password must be at least 8 characters');
   }
   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-    return helpers.message('password must contain at least 1 letter and 1 number');
+    return helpers.message(
+      'password must contain at least 1 letter and 1 number',
+    );
   }
   return value;
 };
@@ -69,9 +71,35 @@ const categoryIds = (value, helpers) => {
   return deSerializeValue;
 };
 
+const stringifyObjectIds = (value, helpers) => {
+  let deSerializeValue;
+  try {
+    deSerializeValue = JSON.parse(value);
+  } catch (err) {
+    return helpers.message('categoryIds must be a valid json type array');
+  }
+
+  if (!Array.isArray(deSerializeValue)) {
+    return helpers.message('categoryIds must be a valid json type array');
+  }
+
+  if (deSerializeValue.length === 0) {
+    return [];
+  }
+
+  for (let i = 0; i < deSerializeValue.length; i++) {
+    if (!deSerializeValue.at(i).match(/^[0-9a-fA-F]{24}$/)) {
+      return helpers.message('"{{#label}}" must be a valid mongo id');
+    }
+  }
+
+  return deSerializeValue;
+};
+
 module.exports = {
   objectId,
   password,
   price,
   categoryIds,
+  stringifyObjectIds,
 };

@@ -1,5 +1,10 @@
 const joi = require('joi');
-const { objectId, price, categoryIds } = require('./custom.validation');
+const {
+  objectId,
+  price,
+  categoryIds,
+  stringifyObjectIds,
+} = require('./custom.validation');
 
 exports.getProducts = {
   query: joi.object().keys({
@@ -8,6 +13,7 @@ exports.getProducts = {
     sortBy: joi.string(),
     limit: joi.number().integer(),
     page: joi.number().integer(),
+    ids: joi.string().custom(stringifyObjectIds),
   }),
 };
 

@@ -27,9 +27,10 @@ const paginate = schema => {
       lean: false,
       price: {},
       categoryIds: [],
+      ids: [],
     },
   ) {
-    const { ignoreDeletedAt, lean, price, categoryIds } = extendFilter;
+    const { ignoreDeletedAt, lean, price, categoryIds, ids } = extendFilter;
     let sort = '';
     if (options.sortBy) {
       const sortingCriteria = [];
@@ -61,6 +62,9 @@ const paginate = schema => {
     }
     if (Array.isArray(categoryIds) && categoryIds.length > 0) {
       filter.category = { $in: categoryIds };
+    }
+    if (Array.isArray(ids) && ids.length > 0) {
+      filter._id = { $in: ids };
     }
     let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
     if (lean) {

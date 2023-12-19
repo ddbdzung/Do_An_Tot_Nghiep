@@ -18,7 +18,7 @@ const getProduct = catchAsync(async (req, res, next) => {
 const getProductsPublic = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const extendFilter = pick(req.query, ['categoryIds', 'price']);
+  const extendFilter = pick(req.query, ['categoryIds', 'price', 'ids']);
   extendFilter.ignoreDeletedAt = true;
   const result = await productService.queryProducts(
     filter,

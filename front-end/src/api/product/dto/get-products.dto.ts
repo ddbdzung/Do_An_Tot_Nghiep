@@ -5,6 +5,7 @@ export interface IGetProductsQueryDto {
   category?: string;
   sort?: string;
   order?: string;
+  ids?: string[];
 }
 
 export interface IGetProductsResponseDto {
