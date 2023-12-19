@@ -2,9 +2,14 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { transactionService } = require('../services');
+const {
+  transactionService,
+  productService,
+  emailService,
+} = require('../services');
 const responseEmitter = require('../utils/responseEmitter');
 const getAuthenticatedUser = require('../common/getAuthenticatedUser');
+const _ = require('lodash');
 
 exports.getTransactions = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role']);
@@ -14,23 +19,32 @@ exports.getTransactions = catchAsync(async (req, res) => {
 });
 
 exports.createTransactionByUser = catchAsync(async (req, res, next) => {
-  const { _id: userId } = getAuthenticatedUser(req);
-  const { order, method } = req.body;
+  const { _id: userId, email } = getAuthenticatedUser(req);
+  const { order, method, extraCustomerInfo } = req.body;
   const createTransactionDto = {
     order,
     customerId: userId,
     guest: null,
     method,
+    extraCustomerInfo,
   };
 
   const transaction = await transactionService.createTransaction(
     createTransactionDto,
   );
-  responseEmitter(req, res, next)(
-    httpStatus.CREATED,
-    httpStatus[201],
-    transaction,
-  );
+  const serializedProductsWithPrice =
+    await transactionService.serializeProductInTransaction(transaction);
+
+  responseEmitter(
+    req,
+    res,
+    next,
+  )(httpStatus.CREATED, 'Transaction created successfully');
+  // await emailService.sendBillingEmail(
+  //   email,
+  //   transaction,
+  //   serializedProductsWithPrice,
+  // );
 });
 
 exports.createTransactionByGuest = catchAsync(async (req, res, next) => {

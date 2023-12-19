@@ -17,7 +17,8 @@ exports.queryTransactions = async (filter, options) => {
 };
 
 exports.createTransaction = async createTransactionDto => {
-  const { customerId, order, guest, method } = createTransactionDto;
+  const { customerId, order, guest, method, extraCustomerInfo } =
+    createTransactionDto;
   if (method !== TRANSCTION_METHODS.COD) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -27,6 +28,7 @@ exports.createTransaction = async createTransactionDto => {
 
   const transactionSchema = {
     method,
+    customerInfo: {},
   };
   if (guest) {
     if (!guest.name || !guest.phoneNumber || !guest.address) {
@@ -46,6 +48,36 @@ exports.createTransaction = async createTransactionDto => {
     if (!user) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User not found');
     }
+
+    transactionSchema.customerInfo.name = user.name;
+    const validationErrorMessages = [];
+    if (!user.phoneNumber) {
+      if (!extraCustomerInfo?.phoneNumber) {
+        validationErrorMessages.push('Phone number is required');
+      } else {
+        transactionSchema.customerInfo.phoneNumber =
+          extraCustomerInfo.phoneNumber;
+      }
+    } else {
+      transactionSchema.customerInfo.phoneNumber = user.phoneNumber;
+    }
+
+    if (!user.address) {
+      if (!extraCustomerInfo?.address) {
+        validationErrorMessages.push('Address is required');
+      } else {
+        transactionSchema.customerInfo.address = extraCustomerInfo.address;
+      }
+    } else {
+      transactionSchema.customerInfo.address = user.address;
+    }
+    if (validationErrorMessages.length > 0) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        validationErrorMessages.join(', '),
+      );
+    }
+
     transactionSchema.customer = new Mongoose.Types.ObjectId(
       customerId.toString(),
     );
@@ -103,4 +135,40 @@ exports.createTransaction = async createTransactionDto => {
   );
 
   return transaction.save();
+};
+
+exports.serializeProductInTransaction = async transactionDocument => {
+  const serializedProductsInTransaction = _.keyBy(
+    transactionDocument.products.map(i => ({
+      product: i.product,
+      amount: i.amount,
+      price: i.price,
+    })),
+    'product',
+  );
+  const productsInDB = await getProductsByIds(
+    _.map(transactionDocument.products, 'product'),
+    {
+      lean: true,
+    },
+  );
+  const productsWithPrice = productsInDB.map(item => {
+    const { _id, name, unit, price } = item || {};
+    if (!_id) return {};
+
+    const exactPrice = price?.history?.find(
+      i =>
+        i._id.toString() ===
+        serializedProductsInTransaction[_id.toString()].price.toString(),
+    );
+    if (!exactPrice) return {};
+    return {
+      _id,
+      name,
+      unit,
+      price: exactPrice.value,
+      amount: serializedProductsInTransaction[_id.toString()].amount,
+    };
+  });
+  return _.keyBy(productsWithPrice, '_id');
 };

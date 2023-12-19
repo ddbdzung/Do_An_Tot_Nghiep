@@ -4,19 +4,43 @@ const httpStatus = require('http-status');
 const { categoryService } = require('../services');
 const Mongoose = require('mongoose');
 const { uploadStream, deleteFiles } = require('./image.service');
+const assureOptionalParams = require('../utils/optionalParams');
 
-exports.getProductsByIds = async (ids, options = { lean: false }) => {
-  const { lean } = options;
-  const products = await Product.find(
-    {
-      _id: {
-        $in: ids,
-      },
+exports.getProductsByIds = async (
+  ids,
+  options = { lean: false, populate: '', withDeletedItem: false },
+) => {
+  const defaultOptions = {
+    lean: false,
+    populate: '',
+    withDeletedItem: false,
+  };
+  options = assureOptionalParams(options, defaultOptions);
+  const { lean, withDeletedItem } = options;
+  let { populate } = options;
+  if (lean) {
+    populate = '';
+  }
+  const filter = {
+    _id: {
+      $in: ids,
     },
-    null,
-    { lean },
+  };
+  if (!withDeletedItem) {
+    filter.deletedAt = null;
+  }
+
+  const products = await Product.find(filter, null, { lean });
+
+  if (!populate) return products;
+
+  const productsWithPopulation = await Promise.all(
+    products.map(async product => {
+      const productPopulate = await product.populateOption(populate);
+      return productPopulate;
+    }),
   );
-  return products;
+  return productsWithPopulation;
 };
 
 exports.getProductById = async (

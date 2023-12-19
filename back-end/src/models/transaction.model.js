@@ -54,6 +54,19 @@ const transactionSchema = mongoose.Schema(
         type: String,
       },
     },
+    //To save customer info in present, in case customer update info
+    //Used to be official info
+    customerInfo: {
+      name: {
+        type: String,
+      },
+      phoneNumber: {
+        type: String,
+      },
+      address: {
+        type: String,
+      },
+    },
     packService: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'PackService',

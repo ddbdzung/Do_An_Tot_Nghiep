@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const billMailer = require('../common/billMailer');
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -8,7 +9,11 @@ if (config.env !== 'test') {
   transport
     .verify()
     .then(() => logger.info('Connected to email server'))
-    .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
+    .catch(() =>
+      logger.warn(
+        'Unable to connect to email server. Make sure you have configured the SMTP options in .env',
+      ),
+    );
 }
 
 /**
@@ -18,8 +23,8 @@ if (config.env !== 'test') {
  * @param {string} text
  * @returns {Promise}
  */
-const sendEmail = async (to, subject, text) => {
-  const msg = { from: config.email.from, to, subject, text };
+const sendEmail = async (to, subject, text, html = `<html></html>`) => {
+  const msg = { from: config.email.from, to, subject, text, html };
   await transport.sendMail(msg);
 };
 
@@ -53,9 +58,29 @@ If you did not request any password resets, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
 
+/**
+ * Send billing email after create transaction
+ * @param {string} to
+ * @param {string} token
+ * @returns {Promise}
+ */
+const sendBillingEmail = async (
+  to,
+  transactionDocument,
+  serializedProductsInTransaction,
+) => {
+  const subject = 'Bill';
+  const text = `Dear ${transactionDocument?.customerInfo?.name},
+  Your order has been created, please check the bill in the content below.
+  Thank you for using our service.`;
+  const html = billMailer(transactionDocument, serializedProductsInTransaction);
+  await sendEmail(to, subject, text, html);
+};
+
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
-  sendPasswordEmailWhenCreate
+  sendPasswordEmailWhenCreate,
+  sendBillingEmail,
 };

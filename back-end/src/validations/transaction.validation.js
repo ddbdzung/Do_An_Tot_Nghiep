@@ -20,6 +20,10 @@ exports.createTransactionByUser = {
         TRANSCTION_METHODS.MOMO,
       )
       .required(),
+    extraCustomerInfo: Joi.object().keys({
+      phoneNumber: Joi.string(),
+      address: Joi.string(),
+    }),
   }),
 };
 

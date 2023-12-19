@@ -20,11 +20,4 @@ router
     transactionController.createTransactionByUser,
   );
 
-router
-  .route('/guest')
-  .post(
-    validate(transactionValidation.createTransactionByGuest),
-    transactionController.createTransactionByGuest,
-  );
-
 module.exports = router;
