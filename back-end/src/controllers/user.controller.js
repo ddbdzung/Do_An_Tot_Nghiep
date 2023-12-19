@@ -98,7 +98,6 @@ const updateMe = catchAsync(async (req, res, next) => {
     'dateOfBirth',
     'phoneNumber',
   ]);
-  console.log('updateMeBody', updateMeBody);
   const user = await userService.updateUserById(id, updateMeBody);
   responseEmitter(req, res, next)(
     httpStatus.OK,

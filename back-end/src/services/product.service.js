@@ -56,7 +56,6 @@ exports.queryProducts = async (
   options,
   extendFilter = { price: {}, categoryIds: [] },
 ) => {
-  console.log('extendFilter', extendFilter);
   const pProducts = Product.paginate(filter, options, extendFilter);
   const pProductQuantity = Product.countDocuments({
     deletedAt: null,
@@ -210,10 +209,6 @@ exports.softDeleteProductById = async productId => {
 
 // Substract quantity of product
 exports.atomicUpdateProductQuantity = async (productId, quantity) => {
-  console.log(
-    '🚀 ~ file: product.service.js:213 ~ exports.atomicUpdateProductQuantity= ~ quantity:',
-    quantity,
-  );
   return Product.findByIdAndUpdate(productId, {
     $inc: {
       quantity,

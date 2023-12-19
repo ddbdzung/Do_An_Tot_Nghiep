@@ -20,10 +20,6 @@ const getProductsPublic = catchAsync(async (req, res, next) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const extendFilter = pick(req.query, ['categoryIds', 'price']);
   extendFilter.ignoreDeletedAt = true;
-  console.log(
-    '🚀 ~ file: product.controller.js:22 ~ getProductsPublic ~ extendFilter:',
-    extendFilter,
-  );
   const result = await productService.queryProducts(
     filter,
     options,

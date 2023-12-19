@@ -152,7 +152,7 @@ export const auth = createSlice({
         state.email = res.data?.user.email;
         state.fullname = res.data?.user.name;
         state.favouriteProducts = res.data?.user.favouriteProducts;
-        state.uid = res.data?.user.id;
+        state.uid = res.data?.user._id;
 
         saveState("accessToken", res.data?.tokens.access.token);
         saveState("permissions", res.data?.user.permissions);

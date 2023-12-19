@@ -1,4 +1,4 @@
-import { ICart } from "@/interfaces/ICart";
+import { ICart, IGuestCart } from "@/interfaces/ICart";
 import { loadState, removeState, saveState } from "@/utils/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
@@ -15,11 +15,11 @@ import {
   IResponsePayload,
 } from "@/http-service/response-handler";
 import { IGetCartResponseDto } from "@/api/cart/dto/IGetCart.dto";
+import _ from "lodash";
 
 export const addToCartAsync = createAsyncThunk(
   "cart/addToCartAsync",
   async (payload: IAddToCartBodyDto, { getState }) => {
-    console.log("payload", payload);
     const states: RootState = getState();
     const tokens = {
       access: states.authReducer.accessToken,
@@ -64,6 +64,7 @@ const initialState = {
   id: loadState<ICart>("cart")?.id || "",
   items: loadState<ICart>("cart")?.items || [],
   formStatus: FormStatus.IDLE,
+  guestCart: loadState<IGuestCart>("guestCart") || { items: [] },
 } as ICart & { formStatus: FormStatus };
 
 export const cartSlice = createSlice({
@@ -76,6 +77,34 @@ export const cartSlice = createSlice({
       state.items = [];
 
       removeState("cart");
+      return state;
+    },
+    createEmptyGuestCart: (state, action) => {
+      const emptyGuestCart = { items: [] };
+      state.guestCart = emptyGuestCart;
+      saveState("guestCart", emptyGuestCart);
+      return state;
+    },
+    updateProductInGuestCart: (state, action) => {
+      const { product, amount } = action.payload;
+      const items = state.guestCart?.items as IGuestCartItem[];
+      const serializedGuestCartItems = _.keyBy(items, (i) => i.product.id);
+
+      if (!serializedGuestCartItems[product.id]) {
+        const newItems = [...items, { product, amount }];
+        state.guestCart = {
+          items: newItems,
+        };
+        saveState("guestCart", state.guestCart);
+        return state;
+      }
+
+      // Update instead of calculate amount
+      serializedGuestCartItems[product.id].amount = amount;
+      const newItems = Object.values(serializedGuestCartItems);
+      const newGuestCart = { items: newItems };
+      state.guestCart = newGuestCart;
+      saveState("guestCart", newGuestCart);
       return state;
     },
   },

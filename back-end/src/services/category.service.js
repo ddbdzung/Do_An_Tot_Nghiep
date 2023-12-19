@@ -81,7 +81,6 @@ exports.createCategory = async createCategoryDto => {
 };
 
 exports.updateCategoryById = async (categoryId, updateCategoryDto) => {
-  console.log('updateCategoryDto', updateCategoryDto);
   const { images, ...categoryDto } = updateCategoryDto;
   const imgs = [];
   if (images !== undefined && Array.isArray(images) && images.length > 0) {
