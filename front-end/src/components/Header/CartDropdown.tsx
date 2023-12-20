@@ -17,8 +17,9 @@ import {
 import { renderImageCloudinary } from "@/utils/renderImage";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import { notifySuccess } from "@/utils/notify";
+import dynamic from "next/dynamic";
 
-export default function CartDropdown({ cartLength }: { cartLength: number }) {
+function CartDropdown({ cartLength }: { cartLength: number }) {
   const { items, id } = useAppSelector((state) => state.cartReducer);
   const { uid } = useAppSelector((state) => state.authReducer);
   const [total, setTotal] = useState(0);
@@ -224,3 +225,7 @@ export default function CartDropdown({ cartLength }: { cartLength: number }) {
     </Popover>
   );
 }
+
+export default dynamic(() => Promise.resolve(CartDropdown), {
+  ssr: false,
+});

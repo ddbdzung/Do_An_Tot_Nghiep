@@ -10,6 +10,7 @@ import Select from "@/shared/Select/Select";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { reset, setAddress, setFullname } from "@/redux/features/checkoutSlice";
 import useAuthCheck from "@/hooks/useAuthCheck";
+import dynamic from "next/dynamic";
 
 interface Props {
   isActive: boolean;
@@ -23,17 +24,13 @@ const ShippingAddress: FC<Props> = ({
   onOpenActive,
 }) => {
   const dispatch = useAppDispatch();
-  const isAuth = useAuthCheck();
   const { fullname } = useAppSelector((state) => state.authReducer);
   const { address } = useAppSelector((state) => state.userReducer);
-  const { fullname: guestFullname, address: guestAddress } = useAppSelector(
+  const { address: guestAddress } = useAppSelector(
     (state) => state.checkoutSlice
   );
   const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setAddress(e.target.value));
-  };
-  const handleChangeFullname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setFullname(e.target.value));
   };
   const handleCancel = () => {
     onCloseActive();
@@ -121,60 +118,28 @@ const ShippingAddress: FC<Props> = ({
             isActive ? "block" : "hidden"
           }`}
         >
-          {isAuth ? (
-            <>
-              {/* ============ */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-                <div>
-                  <Label className="text-sm">Full name</Label>
-                  <Input className="mt-1.5" defaultValue={fullname} disabled />
-                </div>
+          <>
+            {/* ============ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
+              <div>
+                <Label className="text-sm">Full name</Label>
+                <Input className="mt-1.5" defaultValue={fullname} disabled />
               </div>
+            </div>
 
-              {/* ============ */}
-              <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
-                <div className="flex-1">
-                  <Label className="text-sm">Address</Label>
-                  <Input
-                    className="mt-1.5"
-                    placeholder=""
-                    defaultValue={address}
-                    type={"text"}
-                    disabled
-                  />
-                </div>
+            {/* ============ */}
+            <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
+              <div className="flex-1">
+                <Label className="text-sm">Address</Label>
+                <Input
+                  className="mt-1.5"
+                  value={guestAddress}
+                  onChange={handleChangeAddress}
+                  type={"text"}
+                />
               </div>
-            </>
-          ) : (
-            <>
-              {/* ============ */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
-                <div>
-                  <Label className="text-sm">Full name</Label>
-                  <Input
-                    placeholder="Cole"
-                    className="mt-1.5"
-                    onChange={handleChangeFullname}
-                    value={guestFullname}
-                  />
-                </div>
-              </div>
-
-              {/* ============ */}
-              <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
-                <div className="flex-1">
-                  <Label className="text-sm">Address</Label>
-                  <Input
-                    className="mt-1.5"
-                    placeholder="St. Paul's Road, Norris, SD 57560, Dakota, USA"
-                    onChange={handleChangeAddress}
-                    value={guestAddress}
-                    type={"text"}
-                  />
-                </div>
-              </div>
-            </>
-          )}
+            </div>
+          </>
 
           {/* ============ */}
           <div className="flex flex-col sm:flex-row pt-6">
@@ -198,4 +163,6 @@ const ShippingAddress: FC<Props> = ({
   return renderShippingAddress();
 };
 
-export default ShippingAddress;
+export default dynamic(() => Promise.resolve(ShippingAddress), {
+  ssr: false,
+});

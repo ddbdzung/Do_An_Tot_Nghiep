@@ -1,11 +1,14 @@
 "use client";
 
 import Label from "@/components/Label/Label";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import Radio from "@/shared/Radio/Radio";
+import { setPaymentMethod } from "@/redux/features/checkoutSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import dynamic from "next/dynamic";
 
 interface Props {
   isActive: boolean;
@@ -19,8 +22,13 @@ const PaymentMethod: FC<Props> = ({
   onOpenActive,
 }) => {
   const [methodActive, setMethodActive] = useState<
-    "Credit-Card" | "Internet-banking" | "Wallet"
-  >("Credit-Card");
+    "Credit-Card" | "Internet-banking" | "Wallet" | "COD"
+  >("COD");
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(setPaymentMethod(methodActive));
+  }, [methodActive]);
 
   const renderDebitCredit = () => {
     const active = methodActive === "Credit-Card";
@@ -313,9 +321,61 @@ const PaymentMethod: FC<Props> = ({
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque
-                dolore quod quas fugit perspiciatis architecto, temporibus quos
-                ducimus libero explicabo?
+                You will be redirected to Google / Apple Pay to complete your
+                payment. Please check your order details before confirming.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const renderCashOnDelivery = () => {
+    const active = methodActive === "COD";
+    return (
+      <div className="flex items-start space-x-4 sm:space-x-6">
+        <Radio
+          className="pt-3.5"
+          name="payment-method"
+          id="COD"
+          defaultChecked={active}
+          onChange={(e) => setMethodActive(e as any)}
+        />
+        <div className="flex-1">
+          <label
+            htmlFor="COD"
+            className="flex items-center space-x-4 sm:space-x-6 "
+          >
+            <div
+              className={`p-2.5 rounded-xl border-2 ${
+                active
+                  ? "border-slate-600 dark:border-slate-300"
+                  : "border-gray-200 dark:border-slate-600"
+              }`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                dataSlot="icon"
+                className="w-6 h-6 sm:w-7 sm:h-7"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z"
+                />
+              </svg>
+            </div>
+            <p className="font-medium">COD</p>
+          </label>
+          <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
+            <div className="text-sm prose dark:prose-invert">
+              <p>
+                Your order will be delivered to you and you will pay cash on
+                delivery. Please check your order details before confirming.
               </p>
             </div>
           </div>
@@ -393,8 +453,7 @@ const PaymentMethod: FC<Props> = ({
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">Google / Apple Wallet</span>
-              <span className="ml-3">xxx-xxx-xx55</span>
+              <span className="">{methodActive}</span>
             </div>
           </div>
           <button
@@ -419,6 +478,9 @@ const PaymentMethod: FC<Props> = ({
           {/* ==================== */}
           <div>{renderWallet()}</div>
 
+          {/* ==================== */}
+          <div>{renderCashOnDelivery()}</div>
+
           <div className="flex pt-6">
             <ButtonPrimary
               className="w-full max-w-[240px]"
@@ -438,4 +500,6 @@ const PaymentMethod: FC<Props> = ({
   return renderPaymentMethod();
 };
 
-export default PaymentMethod;
+export default dynamic(() => Promise.resolve(PaymentMethod), {
+  ssr: false,
+});

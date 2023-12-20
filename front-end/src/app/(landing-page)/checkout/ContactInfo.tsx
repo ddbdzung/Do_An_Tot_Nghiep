@@ -13,6 +13,7 @@ import {
   setEmail,
   setPhoneNumber,
 } from "@/redux/features/checkoutSlice";
+import dynamic from "next/dynamic";
 
 interface Props {
   isActive: boolean;
@@ -24,13 +25,10 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
   const dispatch = useAppDispatch();
   const { fullname, email } = useAppSelector((state) => state.authReducer);
   const { phoneNumber } = useAppSelector((state) => state.userReducer);
-  const { email: guestEmail, phoneNumber: guestPhoneNumber } = useAppSelector(
+  const { phoneNumber: guestPhoneNumber } = useAppSelector(
     (state) => state.checkoutSlice
   );
 
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setEmail(e.target.value));
-  };
   const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPhoneNumber(e.target.value));
   };
@@ -121,51 +119,25 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             </div>
           )}
 
-          {isAuth ? (
-            <>
-              <div className="max-w-lg">
-                <Label className="text-sm">Your phone number</Label>
-                <Input
-                  className="mt-1.5"
-                  value={phoneNumber}
-                  placeholder={"+808 xxx"}
-                  type={"tel"}
-                  disabled
-                />
-              </div>
-              <div className="max-w-lg">
-                <Label className="text-sm">Email address</Label>
-                <Input
-                  className="mt-1.5"
-                  value={email}
-                  type={"email"}
-                  disabled
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="max-w-lg">
-                <Label className="text-sm">Your phone number</Label>
-                <Input
-                  className="mt-1.5"
-                  value={guestPhoneNumber}
-                  onChange={handleChangePhoneNumber}
-                  placeholder={"+808 xxx"}
-                  type={"tel"}
-                />
-              </div>
-              <div className="max-w-lg">
-                <Label className="text-sm">Email address</Label>
-                <Input
-                  className="mt-1.5"
-                  value={guestEmail}
-                  onChange={handleChangeEmail}
-                  type={"email"}
-                />
-              </div>
-            </>
-          )}
+          <div className="max-w-lg">
+            <Label className="text-sm">Your phone number</Label>
+            <Input
+              className="mt-1.5"
+              value={guestPhoneNumber}
+              onChange={handleChangePhoneNumber}
+              placeholder={"+808 xxx"}
+              type={"tel"}
+            />
+          </div>
+          <div className="max-w-lg">
+            <Label className="text-sm">Email address</Label>
+            <Input
+              className="mt-1.5"
+              defaultValue={email}
+              disabled
+              type={"email"}
+            />
+          </div>
           <div>
             <Checkbox
               className="!text-sm"
@@ -198,4 +170,6 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
   return renderAccount();
 };
 
-export default ContactInfo;
+export default dynamic(() => Promise.resolve(ContactInfo), {
+  ssr: false,
+});

@@ -6,13 +6,22 @@ type CheckoutState = {
   address: string;
   phoneNumber: string;
   fullname: string;
+  paymentMethod: PaymentMethod;
 };
+
+enum PaymentMethod {
+  COD = "cod",
+  MOMO = "momo",
+  INTERNET_BANKING = "Internet-banking",
+  WALLET = "Wallet",
+}
 
 const initialState = {
   email: "",
   address: "",
   phoneNumber: "",
   fullname: "",
+  paymentMethod: PaymentMethod.COD,
 } as CheckoutState;
 
 export const checkoutSlice = createSlice({
@@ -36,9 +45,19 @@ export const checkoutSlice = createSlice({
       ...state,
       fullname: action.payload,
     }),
+    setPaymentMethod: (state, action: PayloadAction<PaymentMethod>) => ({
+      ...state,
+      paymentMethod: action.payload,
+    }),
   },
 });
 
-export const { reset, setAddress, setEmail, setPhoneNumber, setFullname } =
-  checkoutSlice.actions;
+export const {
+  reset,
+  setAddress,
+  setEmail,
+  setPhoneNumber,
+  setFullname,
+  setPaymentMethod,
+} = checkoutSlice.actions;
 export default checkoutSlice.reducer;
