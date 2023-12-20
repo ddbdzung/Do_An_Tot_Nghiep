@@ -19,10 +19,11 @@ import formatVnCurrency from "@/utils/formatVnCurrency";
 import { notifySuccess } from "@/utils/notify";
 import dynamic from "next/dynamic";
 
-function CartDropdown({ cartLength }: { cartLength: number }) {
+function CartDropdown() {
   const { items, id } = useAppSelector((state) => state.cartReducer);
   const { uid } = useAppSelector((state) => state.authReducer);
   const [total, setTotal] = useState(0);
+  const [cartLength, setCartLength] = useState(0);
   useEffect(() => {
     let mounted = false;
     if (!mounted) {
@@ -32,6 +33,22 @@ function CartDropdown({ cartLength }: { cartLength: number }) {
           total += item.amount * item.product.price?.lastValue;
         });
         setTotal(total);
+      }
+    }
+
+    return () => {
+      mounted = true;
+    };
+  }, [items]);
+  useEffect(() => {
+    let mounted = false;
+    if (!mounted) {
+      if (Array.isArray(items)) {
+        let length = 0;
+        items.forEach((item) => {
+          length += item.amount;
+        });
+        setCartLength(length);
       }
     }
 

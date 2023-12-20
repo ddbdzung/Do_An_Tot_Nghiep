@@ -1,5 +1,21 @@
-import { loadState } from "@/utils/localStorage";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ICreateTransactionDto } from "@/api/checkout/dto/create-transaction.dto";
+import { loadState, removeState } from "@/utils/localStorage";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { fetchCreateTransaction } from "../services/checkoutApi";
+import { handleResponsePayload } from "@/http-service/response-handler";
+
+export const createTransactionAsync = createAsyncThunk(
+  "checkout/createTransaction",
+  async (payload: ICreateTransactionDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchCreateTransaction(tokens, payload);
+    return data;
+  }
+);
 
 type CheckoutState = {
   email: string;
@@ -9,18 +25,19 @@ type CheckoutState = {
   paymentMethod: PaymentMethod;
 };
 
-enum PaymentMethod {
+export enum PaymentMethod {
   COD = "cod",
   MOMO = "momo",
+  PAYPAL = "paypal",
   INTERNET_BANKING = "Internet-banking",
-  WALLET = "Wallet",
 }
 
 const initialState = {
   email: "",
-  address: "",
-  phoneNumber: "",
   fullname: "",
+
+  address: loadState("address") || "",
+  phoneNumber: loadState("phoneNumber") || "",
   paymentMethod: PaymentMethod.COD,
 } as CheckoutState;
 
@@ -49,6 +66,36 @@ export const checkoutSlice = createSlice({
       ...state,
       paymentMethod: action.payload,
     }),
+    clearCheckout: (state) => {
+      state.email = "";
+      state.address = "";
+      state.phoneNumber = "";
+      state.fullname = "";
+      state.paymentMethod = PaymentMethod.COD;
+      return state;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createTransactionAsync.pending, (state) => {
+        return state;
+      })
+      .addCase(
+        createTransactionAsync.fulfilled,
+        (state, action: PayloadAction<ICreateTransactionDto>) => {
+          const res = handleResponsePayload(action.payload, {
+            notifyErrorMessage: true,
+            notifySuccessMessage: true,
+          });
+          if (!res) return state;
+
+          return state;
+        }
+      )
+      .addCase(createTransactionAsync.rejected, (state, action) => {
+        console.log("action", action);
+        return state;
+      });
   },
 });
 
@@ -59,5 +106,6 @@ export const {
   setPhoneNumber,
   setFullname,
   setPaymentMethod,
+  clearCheckout,
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

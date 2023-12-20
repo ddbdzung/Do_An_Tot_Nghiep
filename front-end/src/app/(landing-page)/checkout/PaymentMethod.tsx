@@ -6,7 +6,10 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import Radio from "@/shared/Radio/Radio";
-import { setPaymentMethod } from "@/redux/features/checkoutSlice";
+import {
+  PaymentMethod,
+  setPaymentMethod,
+} from "@/redux/features/checkoutSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import dynamic from "next/dynamic";
 
@@ -22,8 +25,8 @@ const PaymentMethod: FC<Props> = ({
   onOpenActive,
 }) => {
   const [methodActive, setMethodActive] = useState<
-    "Credit-Card" | "Internet-banking" | "Wallet" | "COD"
-  >("COD");
+    PaymentMethod.INTERNET_BANKING | PaymentMethod.COD | PaymentMethod.MOMO
+  >("cod");
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -259,7 +262,7 @@ const PaymentMethod: FC<Props> = ({
   };
 
   const renderWallet = () => {
-    const active = methodActive === "Wallet";
+    const active = methodActive === "momo";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -316,7 +319,7 @@ const PaymentMethod: FC<Props> = ({
                 />
               </svg>
             </div>
-            <p className="font-medium">Google / Apple Wallet</p>
+            <p className="font-medium">Momo</p>
           </label>
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
@@ -331,7 +334,7 @@ const PaymentMethod: FC<Props> = ({
     );
   };
   const renderCashOnDelivery = () => {
-    const active = methodActive === "COD";
+    const active = methodActive === "cod";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio

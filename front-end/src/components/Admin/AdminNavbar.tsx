@@ -23,6 +23,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { signOut } from "@/redux/features/authSlice";
 import { notifySuccess } from "@/utils/notify";
 import { clearCart } from "@/redux/features/cartSlice";
+import { clearCheckout } from "@/redux/features/checkoutSlice";
 
 const DRAWER_WIDTH = 240;
 
@@ -61,6 +62,7 @@ export default function AdminNavbar() {
       onClick: () => {
         dispatch(signOut());
         dispatch(clearCart());
+        dispatch(clearCheckout());
         notifySuccess("Sign out success!");
       },
     },

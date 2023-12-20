@@ -19,10 +19,9 @@ const GRADE_TYPE = {
 };
 const TRANSCTION_METHODS = {
   COD: 'cod', // cash on delivery
-  BANK_TRANSFER: 'bank_transfer',
   PAYPAL: 'paypal',
   MOMO: 'momo',
-  ZALOPAY: 'zalopay',
+  INTERNET_BANKING: 'internet-banking',
 };
 const TRANSACTION_STATUS = {
   PREPARING: 'preparing',

@@ -20,12 +20,12 @@ exports.getTransactions = catchAsync(async (req, res) => {
 
 exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   const { _id: userId, email } = getAuthenticatedUser(req);
-  const { order, method, extraCustomerInfo } = req.body;
+  const { order, paymentMethod, extraCustomerInfo } = req.body;
   const createTransactionDto = {
     order,
     customerId: userId,
     guest: null,
-    method,
+    paymentMethod,
     extraCustomerInfo,
   };
 
@@ -35,35 +35,18 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   const serializedProductsWithPrice =
     await transactionService.serializeProductInTransaction(transaction);
 
-  responseEmitter(
-    req,
-    res,
-    next,
-  )(httpStatus.CREATED, 'Transaction created successfully');
+  responseEmitter(req, res, next)(
+    httpStatus.CREATED,
+    'Transaction created successfully',
+    {
+      transaction,
+    },
+  );
   // await emailService.sendBillingEmail(
   //   email,
   //   transaction,
   //   serializedProductsWithPrice,
   // );
-});
-
-exports.createTransactionByGuest = catchAsync(async (req, res, next) => {
-  const { order, method, userInfo } = req.body;
-  const createTransactionDto = {
-    order,
-    customerId: null,
-    guest: userInfo,
-    method,
-  };
-
-  const transaction = await transactionService.createTransaction(
-    createTransactionDto,
-  );
-  responseEmitter(req, res, next)(
-    httpStatus.CREATED,
-    httpStatus[201],
-    transaction,
-  );
 });
 
 exports.getTransactionsByIds = catchAsync(async (req, res, next) => {

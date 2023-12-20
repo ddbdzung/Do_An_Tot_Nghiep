@@ -11,6 +11,7 @@ import { notifySuccess } from "@/utils/notify";
 import { SIGN_OUT } from "@/api/auth/endpoints";
 import { signOut } from "@/redux/features/authSlice";
 import { clearCart } from "@/redux/features/cartSlice";
+import { clearCheckout } from "@/redux/features/checkoutSlice";
 
 function AvatarDropdown() {
   const { accessToken, permissions } = useAppSelector(
@@ -33,6 +34,7 @@ function AvatarDropdown() {
     close();
     dispatch(signOut());
     dispatch(clearCart());
+    dispatch(clearCheckout());
     notifySuccess("Sign out success!");
   };
 

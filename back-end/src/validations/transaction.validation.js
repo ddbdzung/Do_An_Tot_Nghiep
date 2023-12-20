@@ -13,43 +13,18 @@ exports.createTransactionByUser = {
       )
       .required()
       .min(1),
-    method: Joi.string()
+    paymentMethod: Joi.string()
       .valid(
-        TRANSCTION_METHODS.BANK_TRANSFER,
         TRANSCTION_METHODS.COD,
         TRANSCTION_METHODS.MOMO,
+        TRANSCTION_METHODS.PAYPAL,
+        TRANSCTION_METHODS.INTERNET_BANKING,
       )
       .required(),
     extraCustomerInfo: Joi.object().keys({
       phoneNumber: Joi.string(),
       address: Joi.string(),
     }),
-  }),
-};
-
-exports.createTransactionByGuest = {
-  body: Joi.object().keys({
-    order: Joi.array()
-      .items(
-        Joi.object().keys({
-          productId: Joi.string().required().custom(objectId),
-          quantity: Joi.number().min(1).required(),
-        }),
-      )
-      .required()
-      .min(1),
-    userInfo: Joi.object().keys({
-      name: Joi.string().required(),
-      phoneNumber: Joi.string().required(),
-      address: Joi.string().required(),
-    }),
-    method: Joi.string()
-      .valid(
-        TRANSCTION_METHODS.BANK_TRANSFER,
-        TRANSCTION_METHODS.COD,
-        TRANSCTION_METHODS.MOMO,
-      )
-      .required(),
   }),
 };
 

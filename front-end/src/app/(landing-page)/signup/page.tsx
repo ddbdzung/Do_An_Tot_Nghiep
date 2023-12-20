@@ -20,6 +20,7 @@ import { ISignUpBodyDto } from "@/api/auth/dto/sign-up.dto";
 import { throttle } from "lodash";
 import withoutAuth from "@/shared/PublicRoute";
 import { useRouter } from "next/navigation";
+import { getMeAsync } from "@/redux/features/userSlice";
 
 const loginSocials = [
   {
@@ -50,7 +51,14 @@ const throttleSubmit = throttle(
       name: values.name,
       password: values.password,
     };
-    dispatch(signUpAsync(payload));
+    dispatch(signUpAsync(payload)).then((res) => {
+      if (
+        res?.meta?.requestStatus === "fulfilled" &&
+        res?.payload?.statusCode === 200
+      ) {
+        dispatch(getMeAsync());
+      }
+    });
   },
   1000,
   { trailing: false }

@@ -65,9 +65,7 @@ const updateMe = {
     .keys({
       name: Joi.string(),
       address: Joi.string(),
-      gender: Joi.string()
-        .valid(...Object.values(GENDER))
-        .required(),
+      gender: Joi.string().valid(...Object.values(GENDER)),
       dateOfBirth: Joi.date(),
       phoneNumber: Joi.string(),
     })

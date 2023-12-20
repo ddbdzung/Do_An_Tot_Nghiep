@@ -17,6 +17,7 @@ import { ISignInBodyDto } from "@/api/auth/dto/sign-in.dto";
 import { AuthFormStatus, signInAsync } from "@/redux/features/authSlice";
 import { throttle } from "lodash";
 import { getCartAsync } from "@/redux/features/cartSlice";
+import { getMeAsync } from "@/redux/features/userSlice";
 
 const loginSocials = [
   {
@@ -47,9 +48,12 @@ const throttleSubmit = throttle(
       password: values.password,
     };
     dispatch(signInAsync(payload)).then((result) => {
-      if (!result?.meta.arg.requestStatus === "fulfilled") return;
+      if (!result?.meta?.requestStatus === "fulfilled") return;
 
       const uid = result?.payload.data.user._id;
+      if (result?.payload?.statusCode === 200) {
+        dispatch(getMeAsync());
+      }
       dispatch(getCartAsync(uid));
     });
   },

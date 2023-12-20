@@ -17,9 +17,9 @@ exports.queryTransactions = async (filter, options) => {
 };
 
 exports.createTransaction = async createTransactionDto => {
-  const { customerId, order, guest, method, extraCustomerInfo } =
+  const { customerId, order, guest, paymentMethod, extraCustomerInfo } =
     createTransactionDto;
-  if (method !== TRANSCTION_METHODS.COD) {
+  if (paymentMethod !== TRANSCTION_METHODS.COD) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       'Only COD method is supported now',
@@ -27,7 +27,7 @@ exports.createTransaction = async createTransactionDto => {
   }
 
   const transactionSchema = {
-    method,
+    paymentMethod,
     customerInfo: {},
   };
   if (guest) {

@@ -16,6 +16,7 @@ import { IProduct } from "@/api/product/dto/get-products.dto";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   addToCartAsync,
+  clearCart,
   getCartAsync,
   removeProductFromCartAsync,
 } from "@/redux/features/cartSlice";
@@ -24,14 +25,22 @@ import { ICartItem, ICartItemNotRedux } from "@/interfaces/ICart";
 import { renderImageCloudinary } from "@/utils/renderImage";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import { throttle } from "lodash";
-import { notifySuccess } from "@/utils/notify";
+import { notifyError, notifySuccess } from "@/utils/notify";
 import useAuthCheck from "@/hooks/useAuthCheck";
+import { ICreateTransactionDto } from "@/api/checkout/dto/create-transaction.dto";
+import {
+  clearCheckout,
+  createTransactionAsync,
+} from "@/redux/features/checkoutSlice";
 
 const SHIPPING_FEE = 20000;
 const CheckoutPage = () => {
   const { items } = useAppSelector((state) => state.cartReducer);
   const { uid } = useAppSelector((state) => state.authReducer);
-  const [cart, setCart] = useState<IProduct[]>(items);
+  const { paymentMethod, phoneNumber, address } = useAppSelector(
+    (state) => state.checkoutSlice
+  );
+  const [cart, setCart] = useState(items);
   const dispatch = useAppDispatch();
   const isAuth = useAuthCheck();
   useEffect(() => {
@@ -49,6 +58,40 @@ const CheckoutPage = () => {
   useEffect(() => {
     setSubTotal(calcSubTotal(items));
   }, [items]);
+  const handleCheckout = () => {
+    if (Array.isArray(cart) && cart?.length === 0) {
+      notifyError("Your cart is empty");
+      return;
+    }
+    if (phoneNumber === "") {
+      if (phoneNumber !== loadState("phoneNumber")) {
+      }
+    }
+    const payload: ICreateTransactionDto = {
+      paymentMethod,
+      order: cart.map((i) => ({
+        productId: i?.product?.id,
+        quantity: i?.amount,
+      })),
+      extraCustomerInfo: {
+        phoneNumber:
+          phoneNumber === "" && phoneNumber !== loadState("phoneNumber")
+            ? loadState("phoneNumber")
+            : phoneNumber,
+        address,
+      },
+    };
+    dispatch(createTransactionAsync(payload)).then((res) => {
+      if (
+        res?.meta?.requestStatus === "fulfilled" &&
+        res?.payload?.statusCode === 201
+      ) {
+        dispatch(clearCart());
+        dispatch(clearCheckout());
+        setCart([]);
+      }
+    });
+  };
   const handleUpdateCart = throttle(
     async (amount, product) => {
       dispatch(
@@ -367,7 +410,9 @@ const CheckoutPage = () => {
                 </span>
               </div>
             </div>
-            <ButtonPrimary className="mt-8 w-full">Confirm order</ButtonPrimary>
+            <ButtonPrimary onClick={handleCheckout} className="mt-8 w-full">
+              Confirm order
+            </ButtonPrimary>
             <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
               <p className="block relative pl-5">
                 <svg

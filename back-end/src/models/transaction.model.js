@@ -38,7 +38,7 @@ const transactionSchema = mongoose.Schema(
       enum: TRANSACTION_STATUS,
       default: TRANSACTION_STATUS.PREPARING,
     },
-    method: {
+    paymentMethod: {
       type: String,
       enum: TRANSCTION_METHODS,
       required: true,

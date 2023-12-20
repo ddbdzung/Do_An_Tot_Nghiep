@@ -40,6 +40,7 @@ const userSchema = mongoose.Schema(
     },
     address: { type: String },
     dateOfBirth: { type: Date },
+    phoneNumber: { type: String },
     gender: { type: String, enum: GENDER, required: true },
     isPasswordChange: { type: Boolean, default: false },
     status: { type: String, enum: STATUS, default: STATUS.Active },
