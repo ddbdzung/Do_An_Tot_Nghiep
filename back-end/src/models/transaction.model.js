@@ -15,6 +15,20 @@ const productTransactionSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    productDetail: {
+      name: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      image: {
+        type: String,
+        default: null,
+      },
+    },
     price: {
       type: mongoose.SchemaTypes.ObjectId,
       required: true,

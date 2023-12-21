@@ -17,7 +17,6 @@ export interface IGetProductResponseDto {
   };
   description: string;
   image: string;
-  category: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: null;

@@ -8,11 +8,11 @@ const { transactionValidation } = require('../../validations');
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/me')
   .get(
     auth(permission.TRANSACTION.GET_TRANSACTIONS),
     validate(transactionValidation.getTransactions),
-    transactionController.getTransactions,
+    transactionController.getTransactionsOfMe,
   )
   .post(
     auth(permission.TRANSACTION.CREATE_TRANSACTION),

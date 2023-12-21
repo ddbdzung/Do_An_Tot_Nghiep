@@ -49,9 +49,9 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   // );
 });
 
-exports.getTransactionsByIds = catchAsync(async (req, res, next) => {
+exports.getTransactionsOfMe = catchAsync(async (req, res, next) => {
   const { _id: userId } = getAuthenticatedUser(req);
-  const transactions = await transactionService.getTransactionsByUser(userId);
+  const transactions = await transactionService.getTransactionsByUserId(userId);
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], transactions);
 });
 

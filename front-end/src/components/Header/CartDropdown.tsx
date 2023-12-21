@@ -44,11 +44,7 @@ function CartDropdown() {
     let mounted = false;
     if (!mounted) {
       if (Array.isArray(items)) {
-        let length = 0;
-        items.forEach((item) => {
-          length += item.amount;
-        });
-        setCartLength(length);
+        setCartLength(items?.length || 0);
       }
     }
 
@@ -84,7 +80,7 @@ function CartDropdown() {
         <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
-            src={renderImageCloudinary(images?.at(0).url)}
+            src={renderImageCloudinary(images?.at(0)?.url)}
             alt={name}
             className="h-full w-full object-contain object-center"
           />

@@ -2,7 +2,10 @@ import { ICreateTransactionDto } from "@/api/checkout/dto/create-transaction.dto
 import { loadState, removeState } from "@/utils/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { fetchCreateTransaction } from "../services/checkoutApi";
+import {
+  fetchCreateTransaction,
+  fetchGetTransactionOfMe,
+} from "../services/checkoutApi";
 import { handleResponsePayload } from "@/http-service/response-handler";
 
 export const createTransactionAsync = createAsyncThunk(
@@ -13,6 +16,18 @@ export const createTransactionAsync = createAsyncThunk(
       access: states.authReducer.accessToken,
     };
     const data = await fetchCreateTransaction(tokens, payload);
+    return data;
+  }
+);
+
+export const getTransactionsOfMeAsync = createAsyncThunk(
+  "checkout/getTransactionsOfMe",
+  async (_: any, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchGetTransactionOfMe(tokens);
     return data;
   }
 );
@@ -94,6 +109,15 @@ export const checkoutSlice = createSlice({
       )
       .addCase(createTransactionAsync.rejected, (state, action) => {
         console.log("action", action);
+        return state;
+      })
+      .addCase(getTransactionsOfMeAsync.pending, (state) => {
+        return state;
+      })
+      .addCase(getTransactionsOfMeAsync.fulfilled, (state, action) => {
+        return state;
+      })
+      .addCase(getTransactionsOfMeAsync.rejected, (state, action) => {
         return state;
       });
   },

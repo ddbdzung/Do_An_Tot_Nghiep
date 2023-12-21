@@ -80,7 +80,7 @@ export enum FILTER_TYPE {
 }
 const PRICE_RANGE = [1, 20000];
 //
-const TabFilters = ({ categories }: { categories: cateType[] }) => {
+const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
   const dispatch = useAppDispatch();
   const { formStatus } = useAppSelector((state) => state.productReducer);
   const handleApplyFilter = (close: () => void, filterType: FILTER_TYPE) => {
@@ -91,7 +91,7 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
     const categoryIds =
       categoriesState.length > 0 && categoriesState.includes("all-categories")
         ? categories.map((i) => i.id)
-        : undefined;
+        : categoriesState;
     const payload: ISearchProductsDto = {
       categoryIds,
       price: {
@@ -279,13 +279,13 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         close();
                         // setCategoriesState([]);
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
                     {formStatus && formStatus === "idle" ? (
                       <ButtonPrimary
-                        sizeClass="px-4 py-2 sm:px-5"
+                        className="px-4 py-2 sm:px-5"
                         type="button"
                         onClick={() =>
                           handleApplyFilter(close, FILTER_TYPE.CATEGORY)
@@ -298,8 +298,7 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         <span className="mx-2">Loading</span>
                         <svg
                           role="status"
-                          className="inline mr-3 w-4 h-4 text-white animate-spin"
-                          sizeClass="px-4 py-2 sm:px-5"
+                          className="inline mr-3 w-4 h-4 text-white animate-spin px-4 py-2 sm:px-5"
                           viewBox="0 0 100 101"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -427,13 +426,13 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         close();
                         setSortOrderStates("");
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
                       onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Apply
                     </ButtonPrimary>
@@ -548,13 +547,13 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         close();
                         setColorsState([]);
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
                       onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Apply
                     </ButtonPrimary>
@@ -658,13 +657,13 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         close();
                         setSizesState([]);
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
                       onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Apply
                     </ButtonPrimary>
@@ -802,7 +801,7 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         setRangePrices(PRICE_RANGE);
                         close();
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
@@ -810,7 +809,7 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                       onClick={() =>
                         handleApplyFilter(close, FILTER_TYPE.PRICE)
                       }
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Apply
                     </ButtonPrimary>
@@ -1175,13 +1174,13 @@ const TabFilters = ({ categories }: { categories: cateType[] }) => {
                         setSortOrderStates("");
                         closeModalMoreFilter();
                       }}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
                       onClick={closeModalMoreFilter}
-                      sizeClass="px-4 py-2 sm:px-5"
+                      className="px-4 py-2 sm:px-5"
                     >
                       Apply
                     </ButtonPrimary>

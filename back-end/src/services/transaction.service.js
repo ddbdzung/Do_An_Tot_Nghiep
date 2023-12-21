@@ -120,8 +120,15 @@ exports.createTransaction = async createTransactionDto => {
   transactionSchema.products = order.map(item => {
     const history = serializedProductsInDb[item.productId].price.history;
     const priceId = history[history.length - 1]._id;
+    const priceValue = serializedProductsInDb[item.productId].price.lastValue;
     return {
       product: item.productId,
+      productDetail: {
+        name: serializedProductsInDb[item.productId].name,
+        price: priceValue,
+        image:
+          serializedProductsInDb[item.productId].images?.at(0)?.url || null,
+      },
       amount: item.quantity,
       price: priceId,
     };
@@ -172,3 +179,13 @@ exports.serializeProductInTransaction = async transactionDocument => {
   });
   return _.keyBy(productsWithPrice, '_id');
 };
+
+exports.getTransactionsByUserId = async userId => {
+  const transactions = await Transaction.find({
+    customer: userId,
+  });
+
+  if (transactions.length === 0) return [];
+
+  return transactions;
+};   

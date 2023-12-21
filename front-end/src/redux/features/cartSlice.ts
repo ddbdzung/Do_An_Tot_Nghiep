@@ -149,7 +149,7 @@ export const cartSlice = createSlice({
 
         saveState("cart", {
           id: res.data._id,
-          items: currentCart.items?.push(res.data.products) || currentCart,
+          items: currentCart?.items?.push(res.data.products) || currentCart,
         });
         return state;
       })
