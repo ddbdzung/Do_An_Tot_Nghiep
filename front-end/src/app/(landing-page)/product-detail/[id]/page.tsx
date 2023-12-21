@@ -310,7 +310,7 @@ const ProductDetailPage2 = ({}) => {
                   <span>4.9 </span>
                   <span className="mx-1.5">·</span>
                   <span className="text-slate-700 dark:text-slate-400 underline">
-                    142 reviews
+                    142 nhận xét
                   </span>
                 </span>
               </a>
@@ -390,7 +390,7 @@ const ProductDetailPage2 = ({}) => {
                 <span>4.9</span>
                 <span className="mx-1.5">·</span>
                 <span className="text-slate-700 dark:text-slate-400 underline">
-                  142 reviews
+                  142 nhận xét
                 </span>
               </span>
             </a>
@@ -440,7 +440,7 @@ const ProductDetailPage2 = ({}) => {
         {/* HEADING */}
         <h2 className="text-2xl font-semibold flex items-center">
           <StarIcon className="w-7 h-7 mb-0.5" />
-          <span className="ml-1.5"> 4,87 · 142 Reviews</span>
+          <span className="ml-1.5"> 4,87 · 142 nhận xét</span>
         </h2>
 
         {/* comment */}
@@ -480,7 +480,7 @@ const ProductDetailPage2 = ({}) => {
             onClick={() => setIsOpenModalViewAllReviews(true)}
             className="mt-10 border border-slate-300 dark:border-slate-700 "
           >
-            Show me all 142 reviews
+            Xem tất cả 142 nhận xét
           </ButtonSecondary>
         </div>
       </div>

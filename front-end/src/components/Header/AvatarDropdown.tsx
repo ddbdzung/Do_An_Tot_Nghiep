@@ -14,9 +14,10 @@ import { clearCart } from "@/redux/features/cartSlice";
 import { clearCheckout } from "@/redux/features/checkoutSlice";
 
 function AvatarDropdown() {
-  const { accessToken, permissions } = useAppSelector(
+  const { accessToken, permissions, fullname, email } = useAppSelector(
     (store) => store.authReducer
   );
+  const { address } = useAppSelector((store) => store.userReducer);
   const [isAuth, setAuth] = useState<boolean>(
     !accessToken || permissions.length === 0 ? false : true
   );
@@ -90,8 +91,8 @@ function AvatarDropdown() {
                           />
 
                           <div className="flex-grow">
-                            <h4 className="font-semibold">Eden Smith</h4>
-                            <p className="text-xs mt-0.5">Los Angeles, CA</p>
+                            <h4 className="font-semibold">{fullname}</h4>
+                            <p className="text-xs mt-0.5">{email}</p>
                           </div>
                         </div>
                         <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
@@ -132,7 +133,7 @@ function AvatarDropdown() {
                           </div>
                           <div className="ml-4">
                             <p className="text-sm font-medium ">
-                              {"My Account"}
+                              {"Tài khoản của tôi"}
                             </p>
                           </div>
                         </Link>
@@ -185,7 +186,9 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"My Order"}</p>
+                            <p className="text-sm font-medium ">
+                              {"Đơn hàng của tôi"}
+                            </p>
                           </div>
                         </Link>
 
@@ -212,7 +215,9 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"Wishlist"}</p>
+                            <p className="text-sm font-medium ">
+                              {"Danh sách yêu thích"}
+                            </p>
                           </div>
                         </Link>
 
@@ -254,7 +259,7 @@ function AvatarDropdown() {
                             </div>
                             <div className="ml-4">
                               <p className="text-sm font-medium ">
-                                {"Dark theme"}
+                                {"Chủ đề tối"}
                               </p>
                             </div>
                           </div>
@@ -320,7 +325,7 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"Help"}</p>
+                            <p className="text-sm font-medium ">{"Trợ giúp"}</p>
                           </div>
                         </Link>
 
@@ -361,7 +366,9 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"Log out"}</p>
+                            <p className="text-sm font-medium ">
+                              {"Đăng xuất"}
+                            </p>
                           </div>
                         </a>
                       </>

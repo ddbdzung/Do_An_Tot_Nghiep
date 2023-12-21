@@ -219,7 +219,7 @@ const ProductQuickView2: FC<ProductQuickView2Props> = ({ className = "" }) => {
                   <span>4.9</span>
                   <span className="block mx-2">·</span>
                   <span className="text-slate-600 dark:text-slate-400 underline">
-                    142 reviews
+                    142 nhận xét
                   </span>
                 </div>
               </a>

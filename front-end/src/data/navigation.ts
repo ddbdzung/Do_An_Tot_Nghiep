@@ -181,21 +181,21 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/",
-    name: "Home",
+    name: "Trang chủ",
   },
   {
     id: ncNanoId(),
     href: "/collection",
-    name: "Collection",
+    name: "Sản phẩm",
   },
   {
     id: ncNanoId(),
     href: "/blog",
-    name: "Blog",
+    name: "Bài viết",
   },
   {
     id: ncNanoId(),
     href: "/about",
-    name: "About",
+    name: "Về chúng tôi",
   },
 ];

@@ -226,7 +226,7 @@ const ProductDetailPage = () => {
                   <span>4.9</span>
                   <span className="block mx-2">·</span>
                   <span className="text-slate-600 dark:text-slate-400 underline">
-                    142 reviews
+                    142 nhận xét
                   </span>
                 </div>
               </a>
@@ -351,7 +351,7 @@ const ProductDetailPage = () => {
             onClick={() => setIsOpenModalViewAllReviews(true)}
             className="mt-10 border border-slate-300 dark:border-slate-700 "
           >
-            Show me all 142 reviews
+            Xem tất cả 142 nhận xét
           </ButtonSecondary>
         </div>
       </div>

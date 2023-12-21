@@ -111,7 +111,7 @@ const SectionSliderLargeProduct: FC<SectionSliderLargeProductProps> = ({
                         />
                       </svg>
                     </div>
-                    <span className="text-sm mt-1">Show me more</span>
+                    <span className="text-sm mt-1">Xem thêm</span>
                   </div>
                 </div>
               </Link>

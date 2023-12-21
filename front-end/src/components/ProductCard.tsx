@@ -319,7 +319,7 @@ const ProductCard: FC<ProductCardProps> = ({
             <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
-                {rating || ""} ({numberOfReviews || 0} reviews)
+                {rating || ""} ({numberOfReviews || 0} nhận xét)
               </span>
             </div>
           </div>

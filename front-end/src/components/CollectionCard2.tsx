@@ -68,7 +68,7 @@ const CollectionCard2: FC<CollectionCard2Props> = ({
             <span className="h-5 mx-1 sm:mx-2 border-l border-slate-200 dark:border-slate-700"></span>
             <StarIcon className="w-4 h-4 text-orange-400" />
             <span className="text-sm ml-1 ">
-              <span className="line-clamp-1">4.9 (269 reviews)</span>
+              <span className="line-clamp-1">4.9 (269 nhận xét)</span>
             </span>
           </div>
         </div>

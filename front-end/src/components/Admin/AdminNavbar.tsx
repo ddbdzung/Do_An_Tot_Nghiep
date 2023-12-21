@@ -28,25 +28,25 @@ import { clearCheckout } from "@/redux/features/checkoutSlice";
 const DRAWER_WIDTH = 240;
 
 const LINKS = [
-  { text: "Home Page", href: "/admin", icon: HomeIcon },
-  { text: "Manage Users", href: "/admin/manage/users", icon: PeopleIcon },
+  { text: "Trang chủ", href: "/admin", icon: HomeIcon },
+  { text: "Quản lý người dùng", href: "/admin/manage/users", icon: PeopleIcon },
   {
-    text: "Manage Orders",
+    text: "Quản lý đơn hàng",
     href: "/admin/manage/orders",
     icon: ReceiptLongIcon,
   },
   {
-    text: "Manage Products",
+    text: "Quản lý sản phẩm",
     href: "/admin/manage/products",
     icon: BallotIcon,
   },
   {
-    text: "Manage Categories",
+    text: "Quản lý danh mục",
     href: "/admin/manage/categories",
     icon: LocalOfferIcon,
   },
   {
-    text: "Services",
+    text: "Lắp đặt - Bảo trì",
     href: "/admin/servicing",
     icon: PlumbingIcon,
   },
@@ -54,16 +54,16 @@ const LINKS = [
 
 export default function AdminNavbar() {
   const PLACEHOLDER_LINKS = [
-    { text: "Settings", icon: SettingsIcon },
-    { text: "Support", icon: SupportIcon },
+    { text: "Thiết lập", icon: SettingsIcon },
+    { text: "Hỗ trợ", icon: SupportIcon },
     {
-      text: "Logout",
+      text: "Đăng xuất",
       icon: LogoutIcon,
       onClick: () => {
         dispatch(signOut());
         dispatch(clearCart());
         dispatch(clearCheckout());
-        notifySuccess("Sign out success!");
+        notifySuccess("Đăng xuất thành công!");
       },
     },
   ];

@@ -29,7 +29,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   headingFontClassName,
   headingClassName,
   heading,
-  subHeading = "Water Purifier & Filter",
+  subHeading = "Máy lọc nước và phụ kiện",
   data,
 }) => {
   const dispatch = useAppDispatch();
@@ -87,7 +87,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
           rightDescText={subHeading}
           hasNextPrev
         >
-          {heading || `New Arrivals`}
+          {heading || `Sản phẩm mới cập bến`}
         </Heading>
         <div className="glide__track" data-glide-el="track">
           <ul className="glide__slides h-full">

@@ -288,7 +288,7 @@ const CheckoutPage = () => {
                   onClick={(e) => handleRemoveItem(product.id)}
                   style={{ display: "inline" }}
                 >
-                  Remove
+                  Xóa
                 </button>
               </span>
             </a>
@@ -369,49 +369,49 @@ const CheckoutPage = () => {
           <div className="flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16 "></div>
 
           <div className="w-full lg:w-[36%] ">
-            <h3 className="text-lg font-semibold">Order summary</h3>
+            <h3 className="text-lg font-semibold">Đơn hàng của bạn</h3>
             <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
               {Array.isArray(cart) && cart?.map(renderProduct)}
             </div>
 
             <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
               <div>
-                <Label className="text-sm">Discount code</Label>
+                <Label className="text-sm">Mã giảm giá</Label>
                 <div className="flex mt-1.5">
                   <Input sizeClass="h-10 px-4 py-3" className="flex-1" />
                   <button className="text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 rounded-2xl px-4 ml-3 font-medium text-sm bg-neutral-200/70 dark:bg-neutral-700 dark:hover:bg-neutral-800 w-24 flex justify-center items-center transition-colors">
-                    Apply
+                    Áp dụng
                   </button>
                 </div>
               </div>
 
               <div className="mt-4 flex justify-between py-2.5">
-                <span>Subtotal</span>
+                <span>Tổng tiền hàng</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(subTotal)}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span>Shipping estimate</span>
+                <span>Phí vận chuyển</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(SHIPPING_FEE)}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span>Tax estimate 8%</span>
+                <span>Thuế VAT 8%</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(subTotal * 0.08)}
                 </span>
               </div>
               <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
-                <span>Order total</span>
+                <span>Thành tiền</span>
                 <span>
                   {formatVnCurrency(subTotal + SHIPPING_FEE + subTotal * 0.08)}
                 </span>
               </div>
             </div>
             <ButtonPrimary onClick={handleCheckout} className="mt-8 w-full">
-              Confirm order
+              Xác nhận thanh toán
             </ButtonPrimary>
             <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
               <p className="block relative pl-5">

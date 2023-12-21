@@ -91,10 +91,10 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
       data-nc-id="SectionClientSay"
     >
       <Heading
-        desc="Let's see what people think of Hoang Duong Company"
+        desc="Cùng xem người khác nói gì về Công ty Hoàng Dương"
         isCenter
       >
-        Good news from far away 🥇
+        Cập nhật tin tức mọi nơi 🥇
       </Heading>
       <div className="relative md:mb-16 max-w-2xl mx-auto">
         {renderBg()}

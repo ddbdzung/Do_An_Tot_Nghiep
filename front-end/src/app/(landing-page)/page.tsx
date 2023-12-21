@@ -68,8 +68,8 @@ async function PageHome() {
         </div>
 
         <SectionSliderProductCard
-          heading="Best Sellers"
-          subHeading="Best selling of the month"
+          heading="Các sản phẩm bán chạy nhất"
+          subHeading="Hấp dẫn nhất trong tháng này"
         />
 
         <SectionPromo2 />

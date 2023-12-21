@@ -17,23 +17,23 @@ const pages: {
   link: Route;
 }[] = [
   {
-    name: "Account info",
+    name: "Tài khoản",
     link: "/account",
   },
   {
-    name: "Save lists",
+    name: "Danh sách yêu thích",
     link: "/account-savelists",
   },
   {
-    name: " My order",
+    name: "Đơn hàng",
     link: "/account-order",
   },
   {
-    name: "Change password",
+    name: "Đổi mật khẩu",
     link: "/account-password",
   },
   {
-    name: "Change Billing",
+    name: "Đổi gói dịch vụ",
     link: "/account-billing",
   },
 ];
@@ -47,7 +47,7 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
       <div className="mt-14 sm:mt-20">
         <div className="max-w-4xl mx-auto">
           <div className="max-w-2xl">
-            <h2 className="text-3xl xl:text-4xl font-semibold">Account</h2>
+            <h2 className="text-3xl xl:text-4xl font-semibold">Tài khoản</h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
               <span className="text-slate-900 dark:text-slate-200 font-semibold">
                 {fullname}

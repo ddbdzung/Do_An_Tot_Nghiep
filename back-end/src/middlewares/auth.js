@@ -10,7 +10,8 @@ const auth =
     const authHeader = req.headers?.authorization;
     try {
       if (!authHeader) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Token is required');
+        // throw new ApiError(httpStatus.BAD_REQUEST, 'Token is required');
+        throw new ApiError(httpStatus.BAD_REQUEST, 'Đăng nhập để tiếp tục');
       }
 
       const token = authHeader.split(' ')[1];

@@ -262,35 +262,35 @@ export default function CartBody() {
         <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0"></div>
         <div className="flex-1">
           <div className="sticky top-28">
-            <h3 className="text-lg font-semibold ">Order Summary</h3>
+            <h3 className="text-lg font-semibold ">Đơn hàng của bạn</h3>
             <div className="mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80">
               <div className="flex justify-between pb-4">
-                <span>Subtotal</span>
+                <span>Tổng tiền hàng</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(subTotal)}
                 </span>
               </div>
               <div className="flex justify-between py-4">
-                <span>Shpping estimate</span>
+                <span>Phí vận chuyển</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(SHIPPING_FEE)}
                 </span>
               </div>
               <div className="flex justify-between py-4">
-                <span>Tax estimate 8%</span>
+                <span>Thuế VAT 8%</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {formatVnCurrency(subTotal * 0.1)}
                 </span>
               </div>
               <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
-                <span>Order total</span>
+                <span>Thành tiền</span>
                 <span>
                   {formatVnCurrency(subTotal + SHIPPING_FEE + subTotal * 0.1)}
                 </span>
               </div>
             </div>
             <ButtonPrimary href="/checkout" className="mt-8 w-full">
-              Checkout
+              Tới thanh toán
             </ButtonPrimary>
             <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
               <p className="block relative pl-5">

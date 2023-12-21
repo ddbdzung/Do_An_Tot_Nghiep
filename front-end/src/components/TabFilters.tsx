@@ -61,11 +61,11 @@ const DATA_sizes = [
 ];
 
 const DATA_sortOrderRadios = [
-  { name: "Most Popular", id: "Most-Popular" },
-  { name: "Best Rating", id: "Best-Rating" },
-  { name: "Newest", id: "Newest" },
-  { name: "Price Low - Hight", id: "Price-low-hight" },
-  { name: "Price Hight - Low", id: "Price-hight-low" },
+  { name: "Phổ biến nhất", id: "Most-Popular" },
+  { name: "Đánh giá cao nhất", id: "Best-Rating" },
+  { name: "Mới nhất", id: "Newest" },
+  { name: "Giá từ thấp đến cao", id: "Price-low-hight" },
+  { name: "Giá từ cao đến thấp", id: "Price-hight-low" },
 ];
 
 export type cateType = ICategory & { productCount: number };
@@ -110,7 +110,9 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
   //
   const [isOnSale, setIsIsOnSale] = useState(false);
   const [rangePrices, setRangePrices] = useState(PRICE_RANGE);
-  const [categoriesState, setCategoriesState] = useState<string[]>([]);
+  const [categoriesState, setCategoriesState] = useState<string[]>([
+    "all-categories",
+  ]);
   const [colorsState, setColorsState] = useState<string[]>([]);
   const [sizesState, setSizesState] = useState<string[]>([]);
   const [sortOrderStates, setSortOrderStates] = useState<string>("");
@@ -228,7 +230,7 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                 />
               </svg>
 
-              <span className="ml-2">Categories</span>
+              <span className="ml-2">Danh mục</span>
               {!categoriesState.length ? (
                 <ChevronDownIcon className="w-4 h-4 ml-3" />
               ) : (
@@ -250,8 +252,8 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                 <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                   <div className="relative flex flex-col px-5 py-6 space-y-5">
                     <Checkbox
-                      name="All Categories"
-                      label="All Categories"
+                      name="Tất cả danh mục"
+                      label="Tất cả danh mục"
                       defaultChecked={categoriesState.includes(
                         "all-categories"
                       )}
@@ -281,7 +283,7 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                       }}
                       className="px-4 py-2 sm:px-5"
                     >
-                      Clear
+                      Xóa
                     </ButtonThird>
                     {formStatus && formStatus === "idle" ? (
                       <ButtonPrimary
@@ -291,11 +293,11 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                           handleApplyFilter(close, FILTER_TYPE.CATEGORY)
                         }
                       >
-                        Apply
+                        Áp dụng
                       </ButtonPrimary>
                     ) : (
                       <ButtonPrimary type="submit">
-                        <span className="mx-2">Loading</span>
+                        <span className="mx-2">Đang tải</span>
                         <svg
                           role="status"
                           className="inline mr-3 w-4 h-4 text-white animate-spin px-4 py-2 sm:px-5"
@@ -428,13 +430,13 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                       }}
                       className="px-4 py-2 sm:px-5"
                     >
-                      Clear
+                      Xóa
                     </ButtonThird>
                     <ButtonPrimary
                       onClick={close}
                       className="px-4 py-2 sm:px-5"
                     >
-                      Apply
+                      Áp dụng
                     </ButtonPrimary>
                   </div>
                 </div>
@@ -870,7 +872,7 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
           />
         </svg>
 
-        <span className="line-clamp-1 ml-2">On sale</span>
+        <span className="line-clamp-1 ml-2">Khuyến mãi</span>
         {isOnSale && renderXClear()}
       </div>
     );
@@ -1035,7 +1037,7 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                       {/* --------- */}
                       {/* ---- */}
                       <div className="py-7">
-                        <h3 className="text-xl font-medium">Categories</h3>
+                        <h3 className="text-xl font-medium">Danh mục</h3>
                         <div className="mt-6 relative ">
                           {renderMoreFilterItem(DATA_categories)}
                         </div>
@@ -1132,7 +1134,7 @@ const TabFilters = ({ categories }: { categories: cateType[] } = []) => {
                       {/* --------- */}
                       {/* ---- */}
                       <div className="py-7">
-                        <h3 className="text-xl font-medium">Sort Order</h3>
+                        <h3 className="text-xl font-medium">Sắp xếp</h3>
                         <div className="mt-6 relative ">
                           <div className="relative flex flex-col space-y-5">
                             {DATA_sortOrderRadios.map((item) => (

@@ -44,7 +44,7 @@ const CardCategory4: FC<CateWithMeta> = ({
               height={80}
             />
             <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
-              {productCount} products
+              {productCount} sản phẩm
             </span>
           </div>
 
@@ -61,7 +61,7 @@ const CardCategory4: FC<CateWithMeta> = ({
             href={"/collection"}
             className="flex items-center text-sm font-medium group-hover:text-primary-500 transition-colors"
           >
-            <span>See Collection</span>
+            <span>Xem danh sách sản phẩm</span>
             <ArrowRightIcon className="w-4 h-4 ml-2.5" />
           </Link>
         </div>

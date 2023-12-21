@@ -52,7 +52,7 @@ const AccountSavelists = () => {
     <div className="space-y-10 sm:space-y-12">
       <div>
         <h2 className="text-2xl sm:text-3xl font-semibold">
-          List of saved products
+          Danh sách sản phẩm yêu thích
         </h2>
       </div>
 
@@ -66,12 +66,12 @@ const AccountSavelists = () => {
         ) : (
           <>
             <div className="flex justify-center items-center"></div>
-            <p className="text-lg">No saved products</p>
+            <p className="text-lg">Không có sản phẩm nào được yêu thích</p>
           </>
         )}
       </div>
       <div className="flex !mt-20 justify-center items-center">
-        <ButtonSecondary /*loading*/>Show me more</ButtonSecondary>
+        <ButtonSecondary /*loading*/>Xem thêm</ButtonSecondary>
       </div>
     </div>
   );

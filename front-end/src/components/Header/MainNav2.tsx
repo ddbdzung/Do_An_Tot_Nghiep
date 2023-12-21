@@ -60,7 +60,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
           {renderMagnifyingGlassIcon()}
           <input
             type="text"
-            placeholder="Type and press enter"
+            placeholder="Nhập và tìm kiếm"
             className="border-none bg-transparent focus:outline-none focus:ring-0 w-full text-base"
             autoFocus
           />

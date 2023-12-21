@@ -17,18 +17,18 @@ const CartPage = () => {
       <main className="container py-16 lg:pb-28 lg:pt-20 ">
         <div className="mb-12 sm:mb-16">
           <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold ">
-            Cart
+            Giỏ hàng
           </h2>
           <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
             <Link href={"/"} className="">
-              Homepage
+              Trang chủ
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <Link href={"/collection"} className="">
-              Collection
+              Danh sách sản phẩm
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <span className="underline">Cart</span>
+            <span className="underline">Giỏ hàng</span>
           </div>
         </div>
 

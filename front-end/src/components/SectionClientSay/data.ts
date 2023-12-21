@@ -1,20 +1,20 @@
 export const DEMO_DATA = [
   {
     id: 1,
-    clientName: "Tiana Abie",
+    clientName: "Dũng Đặng",
     content:
-      "Great quality products, affordable prices, fast and friendly delivery. I very recommend.",
+      "Chất luợng sản phẩm tốt, giá cả phải chăng, giao hàng nhanh chóng và thân thiện. Tôi rất khuyến khích.",
   },
   {
     id: 2,
-    clientName: "Lennie Swiffan",
+    clientName: "Minh Nguyễn",
     content:
-      "Great quality products, affordable prices, fast and friendly delivery. I very recommend.",
+      "Chất luợng sản phẩm tốt, giá cả phải chăng, giao hàng nhanh chóng và thân thiện. Tôi rất khuyến khích.",
   },
   {
     id: 3,
-    clientName: "Berta Emili",
+    clientName: "Văn Tài",
     content:
-      "Great quality products, affordable prices, fast and friendly delivery. I very recommend.",
+      "Chất luợng sản phẩm tốt, giá cả phải chăng, giao hàng nhanh chóng và thân thiện. Tôi rất khuyến khích.",
   },
 ];

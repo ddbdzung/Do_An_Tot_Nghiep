@@ -75,7 +75,9 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
           </span>
           <div className="sm:ml-8">
             <h3 className=" text-slate-700 dark:text-slate-300 flex ">
-              <span className="uppercase tracking-tight">CONTACT INFO</span>
+              <span className="uppercase tracking-tight">
+                THÔNG TIN LIÊN HỆ
+              </span>
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -99,7 +101,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             className="py-2 px-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 mt-5 sm:mt-0 sm:ml-auto text-sm font-medium rounded-lg"
             onClick={() => onOpenActive()}
           >
-            Change
+            Thay đổi
           </button>
         </div>
         <div
@@ -120,7 +122,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
           )}
 
           <div className="max-w-lg">
-            <Label className="text-sm">Your phone number</Label>
+            <Label className="text-sm">Số điện thoại</Label>
             <Input
               className="mt-1.5"
               value={guestPhoneNumber}
@@ -130,7 +132,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             />
           </div>
           <div className="max-w-lg">
-            <Label className="text-sm">Email address</Label>
+            <Label className="text-sm">Địa chỉ email</Label>
             <Input
               className="mt-1.5"
               defaultValue={email}
@@ -142,7 +144,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
             <Checkbox
               className="!text-sm"
               name="uudai"
-              label="Email me news and offers"
+              label="Email tôi tin tức và ưu đãi đặc biệt"
               defaultChecked
             />
           </div>
@@ -153,13 +155,13 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
               className="sm:!px-7 shadow-none"
               onClick={() => onCloseActive()}
             >
-              Save and next to Shipping
+              Lưu và tiếp tục
             </ButtonPrimary>
             <ButtonSecondary
               className="mt-3 sm:mt-0 sm:ml-3"
               onClick={handleCancel}
             >
-              Cancel
+              Hủy bỏ
             </ButtonSecondary>
           </div>
         </div>

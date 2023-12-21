@@ -57,7 +57,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
                 fontSize="text-sm font-medium"
                 className="nc-shadow-lg"
               >
-                Show me all
+                Xem tất cả
               </ButtonSecondary>
             </div>
           </div>

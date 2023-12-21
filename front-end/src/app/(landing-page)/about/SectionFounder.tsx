@@ -43,12 +43,7 @@ const FOUNDER_DEMO: People[] = [
 const SectionFounder = () => {
   return (
     <div className="nc-SectionFounder relative">
-      <Heading
-        desc="We’re impartial and independent, and every day we create distinctive,
-          world-class programmes and content"
-      >
-        ⛱ Founder
-      </Heading>
+      <Heading desc="">⛱ Founder</Heading>
       <div className="grid sm:grid-cols-2 gap-x-5 gap-y-8 lg:grid-cols-4 xl:gap-x-8">
         {FOUNDER_DEMO.map((item) => (
           <div key={item.id} className="max-w-sm">

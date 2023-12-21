@@ -16,23 +16,23 @@ interface Hero2DataType {
 export const HERO2_DEMO_DATA: Hero2DataType[] = [
   {
     image: imageRightPng2,
-    heading: "Water purifier for everyone",
-    subHeading: "In this year, we have the best 🔥",
-    btnText: "Explore now",
+    heading: "Máy lọc nước cho mọi nhà",
+    subHeading: "Vào năm nay, chúng tôi phân phối những sản phẩm tốt nhất 🔥",
+    btnText: "Khám phá ngay",
     btnLink: "/",
   },
   {
     image: imageRightPng3,
-    heading: "Water purifier for everyone",
-    subHeading: "In this year, we have the best 🔥",
-    btnText: "Explore now",
+    heading: "Máy lọc nước cho mọi nhà",
+    subHeading: "Vào năm nay, chúng tôi phân phối những sản phẩm tốt nhất 🔥",
+    btnText: "Khám phá ngay",
     btnLink: "/",
   },
   {
     image: imageRightPng,
-    heading: "Water purifier for everyone",
-    subHeading: "In this year, we have the best 🔥",
-    btnText: "Explore now",
+    heading: "Máy lọc nước cho mọi nhà",
+    subHeading: "Vào năm nay, chúng tôi phân phối những sản phẩm tốt nhất 🔥",
+    btnText: "Khám phá ngay",
     btnLink: "/",
   },
 ];

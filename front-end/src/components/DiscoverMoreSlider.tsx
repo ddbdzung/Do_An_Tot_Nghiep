@@ -61,10 +61,10 @@ const DiscoverMoreSlider = () => {
       <Heading
         className="mb-12 lg:mb-14 text-neutral-900 dark:text-neutral-50 nc-p-r-container "
         desc=""
-        rightDescText="Pack services for your business"
+        rightDescText="Các dịch vụ trọn gói cho doanh nghiệp"
         hasNextPrev
       >
-        Discover more
+        Khám phá thêm
       </Heading>
       <div className="" data-glide-el="track">
         <ul className="glide__slides">

@@ -110,7 +110,7 @@ function CartDropdown() {
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-500 dark:text-slate-400">{`Qty ${amount}`}</p>
+            <p className="text-gray-500 dark:text-slate-400">{`SL ${amount}`}</p>
 
             <div className="flex">
               <button
@@ -118,7 +118,7 @@ function CartDropdown() {
                 onClick={(e) => handleRemoveItem(productId)}
                 className="font-medium text-primary-6000 dark:text-primary-500 "
               >
-                Remove
+                Xóa
               </button>
             </div>
           </div>
@@ -194,7 +194,7 @@ function CartDropdown() {
               <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
                 <div className="relative bg-white dark:bg-neutral-800">
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
-                    <h3 className="text-xl font-semibold">Shopping cart</h3>
+                    <h3 className="text-xl font-semibold">Giỏ hàng của bạn</h3>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700">
                       {Array.isArray(items) &&
                         items.map((item, index) =>
@@ -205,9 +205,9 @@ function CartDropdown() {
                   <div className="bg-neutral-50 dark:bg-slate-900 p-5">
                     <p className="flex justify-between font-semibold text-slate-900 dark:text-slate-100">
                       <span>
-                        <span>Subtotal</span>
+                        <span>Tổng tiền hàng</span>
                         <span className="block text-sm text-slate-500 dark:text-slate-400 font-normal">
-                          Shipping and taxes calculated at checkout.
+                          Phí vận chuyển và thuế được tính ở trang thanh toán.
                         </span>
                       </span>
                       <span className="">{formatVnCurrency(total)}</span>
@@ -218,14 +218,14 @@ function CartDropdown() {
                         className="flex-1 border border-slate-200 dark:border-slate-700"
                         onClick={close}
                       >
-                        View cart
+                        Xem giỏ hàng
                       </ButtonSecondary>
                       <ButtonPrimary
                         href="/checkout"
                         onClick={close}
                         className="flex-1"
                       >
-                        Check out
+                        Thanh toán
                       </ButtonPrimary>
                     </div>
                   </div>

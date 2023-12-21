@@ -211,7 +211,7 @@ const PaymentMethod: FC<Props> = ({
           </label>
           <div className={`mt-6 mb-4 ${active ? "block" : "hidden"}`}>
             <p className="text-sm dark:text-slate-300">
-              Your order will be delivered to you after you transfer to:
+              Đơn hàng của bạn sẽ được giao đến sau khi bạn chuyển khoản đến:
             </p>
             <ul className="mt-3.5 text-sm text-slate-500 dark:text-slate-400 space-y-2">
               <li>
@@ -221,14 +221,14 @@ const PaymentMethod: FC<Props> = ({
               </li>
               <li>
                 {" "}
-                Bank name:{" "}
+                Tên ngân hàng:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
                   Vietcombank
                 </span>
               </li>
               <li>
                 {" "}
-                Account number:{" "}
+                Số tài khoản:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
                   555 888 777
                 </span>
@@ -324,8 +324,9 @@ const PaymentMethod: FC<Props> = ({
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
               <p>
-                You will be redirected to Google / Apple Pay to complete your
-                payment. Please check your order details before confirming.
+                Bạn sẽ được chuyển hướng đến Google / Apple Pay để hoàn tất
+                thanh toán. Vui lòng kiểm tra chi tiết đơn hàng của bạn trước
+                khi xác nhận.
               </p>
             </div>
           </div>
@@ -377,8 +378,9 @@ const PaymentMethod: FC<Props> = ({
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
               <p>
-                Your order will be delivered to you and you will pay cash on
-                delivery. Please check your order details before confirming.
+                Đơn hàng của bạn sẽ được giao đến bạn và bạn sẽ thanh toán tiền
+                mặt khi nhận hàng. Vui lòng kiểm tra chi tiết đơn hàng của bạn
+                trước khi xác nhận.
               </p>
             </div>
           </div>
@@ -440,7 +442,9 @@ const PaymentMethod: FC<Props> = ({
           </span>
           <div className="sm:ml-8">
             <h3 className=" text-slate-700 dark:text-slate-400 flex ">
-              <span className="uppercase tracking-tight">PAYMENT METHOD</span>
+              <span className="uppercase tracking-tight">
+                PHƯƠNG THỨC THANH TOÁN
+              </span>
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -463,7 +467,7 @@ const PaymentMethod: FC<Props> = ({
             className="py-2 px-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 mt-5 sm:mt-0 sm:ml-auto text-sm font-medium rounded-lg"
             onClick={onOpenActive}
           >
-            Change
+            Thay đổi
           </button>
         </div>
 
@@ -489,10 +493,10 @@ const PaymentMethod: FC<Props> = ({
               className="w-full max-w-[240px]"
               onClick={onCloseActive}
             >
-              Confirm order
+              Xác nhận thanh toán
             </ButtonPrimary>
             <ButtonSecondary className="ml-3" onClick={onCloseActive}>
-              Cancel
+              Hủy bỏ
             </ButtonSecondary>
           </div>
         </div>

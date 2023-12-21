@@ -217,7 +217,7 @@ const SectionSliderLargeProduct2: FC<SectionSliderLargeProduct2Props> = ({
                           />
                         </svg>
                       </div>
-                      <span className="text-sm mt-1">Show me more</span>
+                      <span className="text-sm mt-1">Xem thêm</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5 mt-1.5">

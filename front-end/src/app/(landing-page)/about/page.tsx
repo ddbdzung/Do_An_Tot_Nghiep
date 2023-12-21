@@ -17,9 +17,9 @@ const PageAbout = ({}) => {
       <div className="container py-16 lg:py-28 space-y-16 lg:space-y-28">
         <SectionHero
           rightImg={rightImg}
-          heading="👋 About Us."
+          heading="👋 Về công ty"
           btnText=""
-          subHeading="We’re impartial and independent, and every day we create distinctive, world-class programmes and content which inform, educate and entertain millions of people in the around the world."
+          subHeading="Chúng tôi là một công ty chuyên cung cấp các sản phẩm thiết bị lọc nước và phụ tùng, cũng như dịch vụ bảo hành lắp đặt cho cá nhân và doanh nghiệp."
         />
 
         <SectionFounder />

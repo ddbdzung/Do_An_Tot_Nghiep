@@ -72,7 +72,7 @@ const AccountPage = () => {
       <div className="space-y-10 sm:space-y-12">
         {/* HEADING */}
         <h2 className="text-2xl sm:text-3xl font-semibold">
-          Account infomation
+          Thông Tin Tài Khoản
         </h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-col md:flex-row">
@@ -103,7 +103,7 @@ const AccountPage = () => {
                     />
                   </svg>
 
-                  <span className="mt-1 text-xs">Change Image</span>
+                  <span className="mt-1 text-xs">Thay ảnh</span>
                 </div>
                 <input
                   type="file"
@@ -113,7 +113,7 @@ const AccountPage = () => {
             </div>
             <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
               <div>
-                <Label>Full name</Label>
+                <Label>Họ và tên</Label>
                 <Input
                   className="mt-1.5"
                   id="fullname"
@@ -144,7 +144,7 @@ const AccountPage = () => {
 
               {/* ---- */}
               <div className="max-w-lg">
-                <Label>Date of birth</Label>
+                <Label>Ngày sinh</Label>
                 <div className="mt-1.5 flex">
                   <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
                     <i className="text-2xl las la-calendar"></i>
@@ -161,7 +161,7 @@ const AccountPage = () => {
               </div>
               {/* ---- */}
               <div>
-                <Label>Address</Label>
+                <Label>Địa chỉ</Label>
                 <div className="mt-1.5 flex">
                   <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
                     <i className="text-2xl las la-map-signs"></i>
@@ -178,7 +178,7 @@ const AccountPage = () => {
 
               {/* ---- */}
               <div>
-                <Label>Gender</Label>
+                <Label>Giới tính</Label>
                 <Select
                   className="mt-1.5"
                   id="gender"
@@ -188,16 +188,16 @@ const AccountPage = () => {
                   defaultChecked=""
                 >
                   <option value="" disabled>
-                    Select
+                    Chọn
                   </option>
-                  <option value="Nam">Male</option>
-                  <option value="Nữ">Female</option>
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
                 </Select>
               </div>
 
               {/* ---- */}
               <div>
-                <Label>Phone number</Label>
+                <Label>Số điện thoại</Label>
                 <div className="mt-1.5 flex">
                   <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
                     <i className="text-2xl las la-phone-volume"></i>
@@ -213,11 +213,11 @@ const AccountPage = () => {
               </div>
               {/* ---- */}
               <div>
-                <Label>About you</Label>
+                <Label>Về bạn</Label>
                 <Textarea className="mt-1.5" defaultValue="..." />
               </div>
               <div className="pt-2">
-                <ButtonPrimary type="submit">Update account</ButtonPrimary>
+                <ButtonPrimary type="submit">Cập nhật</ButtonPrimary>
               </div>
             </div>
           </div>

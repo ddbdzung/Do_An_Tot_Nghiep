@@ -153,7 +153,7 @@ const SectionSliderCategories: FC<SectionSliderCategoriesProps> = ({
                       </svg>
                     </div>
                     <span className="text-sm mt-1 text-slate-800">
-                      Show me more
+                      Xem thêm
                     </span>
                   </div>
                 </div>

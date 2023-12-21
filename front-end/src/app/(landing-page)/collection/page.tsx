@@ -20,11 +20,11 @@ const PageCollection = async ({}) => {
           {/* HEADING */}
           <div className="max-w-screen-sm">
             <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
-              Products collection
+              Danh sách sản phẩm
             </h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
-              We not only provide the best products, but also the best service
-              and warranty
+              Chúng tôi không chỉ cung cấp những sản phẩm tốt nhất, mà còn cung
+              cấp dịch vụ và bảo hành tốt nhất
             </span>
           </div>
 

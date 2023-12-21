@@ -7,19 +7,19 @@ import img3 from "@/images/discover-more-3.png";
 
 const CATS_DISCOVER = [
   {
-    name: "Explore New Arrivals",
-    desc: "Shop the Latest from Top Brands",
+    name: "Khám phá sản phẩm mới",
+    desc: "Trải nghiệm các sản phẩm mới nhất của chúng tôi",
     featuredImage: img1,
   },
   {
-    name: "Digital Gift Cards",
-    desc: "Give the Gift of Choice",
+    name: "Thẻ quà tặng kỹ thuật số",
+    desc: "Tặng người thân và bạn bè của bạn",
     featuredImage: img2,
     //   "https://images.pexels.com/photos/45238/gift-made-surprise-loop-45238.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   },
   {
-    name: "Sale Collection",
-    desc: "Up to 80% Off Retail",
+    name: "Sản phẩm giảm giá",
+    desc: "Lên đến 50% cho các sản phẩm được chọn",
     featuredImage: img3,
   },
 ];
@@ -33,7 +33,7 @@ const DiscoverMoreGrid = () => {
         isCenter
         rightDescText="Good things are waiting for you"
       >
-        Discover more
+        Khám phá thêm.
       </Heading>
       <div className="relative grid grid-cols-3 gap-8">
         {CATS_DISCOVER.map((item, index) => (

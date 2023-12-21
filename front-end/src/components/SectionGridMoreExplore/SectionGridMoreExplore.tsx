@@ -112,7 +112,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
           isCenter
           desc=""
         >
-          Start exploring.
+          Bắt đầu khám phá.
         </Heading>
         <Nav
           className="p-1 bg-white dark:bg-neutral-800 rounded-full shadow-lg overflow-x-auto hiddenScrollbar"

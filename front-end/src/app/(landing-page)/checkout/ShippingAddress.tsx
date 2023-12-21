@@ -87,7 +87,7 @@ const ShippingAddress: FC<Props> = ({
 
           <div className="sm:ml-8">
             <h3 className=" text-slate-700 dark:text-slate-300 flex ">
-              <span className="uppercase">SHIPPING ADDRESS</span>
+              <span className="uppercase">THÔNG TIN VẬN CHUYỂN</span>
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -110,7 +110,7 @@ const ShippingAddress: FC<Props> = ({
             className="py-2 px-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 mt-5 sm:mt-0 sm:ml-auto text-sm font-medium rounded-lg"
             onClick={onOpenActive}
           >
-            Change
+            Thay đổi
           </button>
         </div>
         <div
@@ -122,7 +122,7 @@ const ShippingAddress: FC<Props> = ({
             {/* ============ */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3">
               <div>
-                <Label className="text-sm">Full name</Label>
+                <Label className="text-sm">Họ và tên</Label>
                 <Input className="mt-1.5" defaultValue={fullname} disabled />
               </div>
             </div>
@@ -130,7 +130,7 @@ const ShippingAddress: FC<Props> = ({
             {/* ============ */}
             <div className="sm:flex space-y-4 sm:space-y-0 sm:space-x-3">
               <div className="flex-1">
-                <Label className="text-sm">Address</Label>
+                <Label className="text-sm">Địa chỉ</Label>
                 <Input
                   className="mt-1.5"
                   value={guestAddress}
@@ -147,13 +147,13 @@ const ShippingAddress: FC<Props> = ({
               className="sm:!px-7 shadow-none"
               onClick={onCloseActive}
             >
-              Save and next to Payment
+              Lưu và tiếp tục
             </ButtonPrimary>
             <ButtonSecondary
               className="mt-3 sm:mt-0 sm:ml-3"
               onClick={handleCancel}
             >
-              Cancel
+              Hủy bỏ
             </ButtonSecondary>
           </div>
         </div>

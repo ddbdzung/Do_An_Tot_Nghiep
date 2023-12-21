@@ -16,6 +16,8 @@ const nextConfig = {
       transform: "@mui/icons-material/{{member}}",
     },
   },
+  // reactStrictMode: false,
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {

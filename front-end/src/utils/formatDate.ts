@@ -1,5 +1,5 @@
 export const formatDateToLocale = (date: Date) => {
-  return new Date(date).toLocaleDateString("en-US", {
+  return new Date(date).toLocaleDateString("vi-VN", {
     year: "numeric",
     month: "long",
     day: "numeric",

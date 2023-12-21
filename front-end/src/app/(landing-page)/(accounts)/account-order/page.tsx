@@ -65,7 +65,7 @@ const AccountOrder = () => {
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
             <p className="text-gray-500 dark:text-slate-400 flex items-center">
-              <span className="hidden sm:inline-block">Qty</span>
+              <span className="hidden sm:inline-block">SL</span>
               <span className="inline-block sm:hidden">x</span>
               <span className="ml-2">{amount}</span>
             </p>
@@ -75,7 +75,7 @@ const AccountOrder = () => {
                 type="button"
                 className="font-medium text-indigo-600 dark:text-primary-500 "
               >
-                Leave review
+                Nhận xét
               </button>
             </div>
           </div>
@@ -104,7 +104,7 @@ const AccountOrder = () => {
               sizeClass="py-2.5 px-4 sm:px-6"
               fontSize="text-sm font-medium"
             >
-              View Order
+              Xem đơn hàng
             </ButtonSecondary>
           </div>
         </div>
@@ -118,7 +118,7 @@ const AccountOrder = () => {
   return (
     <div className="space-y-10 sm:space-y-12">
       {/* HEADING */}
-      <h2 className="text-2xl sm:text-3xl font-semibold">Order History</h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold">Lịch sử mua hàng</h2>
       {Array.isArray(transactions) && transactions.map(renderOrder)}
     </div>
   );
