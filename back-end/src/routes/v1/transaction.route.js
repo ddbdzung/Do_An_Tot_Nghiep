@@ -20,4 +20,6 @@ router
     transactionController.createTransactionByUser,
   );
 
+router.route('/test').get(transactionController.test);
+
 module.exports = router;

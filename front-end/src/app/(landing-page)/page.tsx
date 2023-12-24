@@ -41,10 +41,18 @@ const fetchCategoriesWithMetadata = async () => {
 };
 
 async function PageHome() {
-  const [sampleProducts, categories] = await Promise.all([
-    fetchSampleProducts(),
-    fetchCategoriesWithMetadata(),
-  ]);
+  let sampleProducts = [];
+  let categories = [];
+  try {
+    const [prods, cates] = await Promise.all([
+      fetchSampleProducts(),
+      fetchCategoriesWithMetadata(),
+    ]);
+    sampleProducts = prods;
+    categories = cates;
+  } catch (err) {
+    console.log(err);
+  }
 
   return (
     <div className="nc-PageHome relative overflow-hidden">

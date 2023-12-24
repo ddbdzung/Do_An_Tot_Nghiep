@@ -188,4 +188,14 @@ exports.getTransactionsByUserId = async userId => {
   if (transactions.length === 0) return [];
 
   return transactions;
-};   
+};
+
+const momo = require('./momo');
+
+exports.test = async () => {
+  const { options, requestBody } = momo;
+  return {
+    options,
+    requestBody: JSON.parse(requestBody),
+  };
+};

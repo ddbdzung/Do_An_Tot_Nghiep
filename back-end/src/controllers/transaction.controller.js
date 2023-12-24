@@ -2,11 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const {
-  transactionService,
-  productService,
-  emailService,
-} = require('../services');
+const { transactionService } = require('../services');
 const responseEmitter = require('../utils/responseEmitter');
 const getAuthenticatedUser = require('../common/getAuthenticatedUser');
 const _ = require('lodash');
@@ -63,4 +59,12 @@ exports.updateTransaction = catchAsync(async (req, res) => {
     updateTransactionDto,
   );
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], transaction);
+});
+
+exports.test = catchAsync(async (req, res, next) => {
+  const headers = req.headers;
+  console.log('headers', JSON.stringify(headers, null, 2));
+  const x = await transactionService.test();
+
+  responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], x);
 });

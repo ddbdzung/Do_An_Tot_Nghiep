@@ -11,6 +11,9 @@ const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
+const http = require('http');
+const https = require('https');
+
 const {
   errorConverter,
   responseHandler,
@@ -76,4 +79,8 @@ app.use(errorConverter);
 // handle response
 app.use(responseHandler);
 
-module.exports = app;
+const httpServer = http.createServer(app);
+
+module.exports = {
+  http: httpServer,
+};

@@ -45,7 +45,14 @@ const request =
     }
     if (Object.keys(headers).length > 0) {
       /* @ts-nocheck */
-      body.headers = headers;
+      body.headers = {
+        ["ngrok-skip-browser-warning"]: true,
+        ...headers,
+      };
+    } else {
+      body.headers = {
+        ["ngrok-skip-browser-warning"]: true,
+      };
     }
 
     return axios(body);
