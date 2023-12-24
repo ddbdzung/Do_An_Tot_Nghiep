@@ -9,7 +9,7 @@ import { customAxios } from "@/http-service/fetchAPI";
 import { GET_CATEGORIES_WITH_METADATA } from "@/api/category/endpoints";
 import CollectionSection from "@/components/Collection";
 
-const PageCollection = async ({}) => {
+const PageCollection = async ({ searchParams }) => {
   const { data } = await customAxios.get(GET_CATEGORIES_WITH_METADATA({}));
   const categories = data.data.results;
 
@@ -33,7 +33,7 @@ const PageCollection = async ({}) => {
             {/* TABS FILTER */}
             <TabFilters categories={categories} />
 
-            <CollectionSection />
+            <CollectionSection searchName={searchParams?.name || ""} />
           </main>
         </div>
 

@@ -28,6 +28,7 @@ const paginate = schema => {
       price: {},
       categoryIds: [],
       ids: [],
+      textSearch: [],
     },
   ) {
     const { ignoreDeletedAt, lean, price, categoryIds, ids } = extendFilter;
@@ -54,6 +55,9 @@ const paginate = schema => {
     const skip = (page - 1) * limit;
 
     const countPromise = this.countDocuments(filter).exec();
+    if (filter?.name) {
+      filter.name = { $regex: filter.name, $options: 'i' };
+    }
     if (ignoreDeletedAt) {
       filter.deletedAt = { $eq: null };
     }

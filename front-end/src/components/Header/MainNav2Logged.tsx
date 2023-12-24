@@ -9,13 +9,45 @@ import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import useAuthCheck from "@/hooks/useAuthCheck";
+import SearchDropdown from "./SearchDropdown";
+import { throttle } from "lodash";
 
 export interface MainNav2LoggedProps {}
+
+const throttleSubmitSearchProductsByName = throttle(
+  async function (
+    values: { name: string },
+    router: (...arg: any) => any,
+    clearSearchForm: any
+  ) {
+    if (!values?.name) {
+      router?.push("/collection");
+      return;
+    }
+
+    if (!router) {
+      console.warn("router is not defined");
+      return;
+    }
+
+    const url = `/collection?name=${values?.name}`;
+    if (clearSearchForm) {
+      clearSearchForm("");
+    }
+    router?.push(url);
+  },
+  1000,
+  { trailing: false }
+);
 
 const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const inputRef = createRef<HTMLInputElement>();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
+  const [search, setSearch] = React.useState("");
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
 
   const renderMagnifyingGlassIcon = () => {
     return (
@@ -50,8 +82,12 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         className="flex-1 py-2 text-slate-900 dark:text-slate-100"
         onSubmit={(e) => {
           e.preventDefault();
-          router.push("/search");
           inputRef.current?.blur();
+          throttleSubmitSearchProductsByName(
+            { name: search },
+            router,
+            setSearch
+          );
         }}
       >
         <div className="bg-slate-50 dark:bg-slate-800 flex items-center space-x-1.5 px-5 h-full rounded">
@@ -62,6 +98,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             placeholder="Nhập và tìm kiếm"
             className="border-none bg-transparent focus:outline-none focus:ring-0 w-full text-base"
             autoFocus
+            value={search}
+            onChange={handleChangeSearch}
           />
           <button type="button" onClick={() => setShowSearchForm(false)}>
             <XMarkIcon className="w-5 h-5" />

@@ -10,8 +10,13 @@ import { SEARCH_PRODUCTS } from "@/api/product/endpoints";
 import { loadState } from "@/utils/localStorage";
 import { TOGGLE_FAVORITE_PRODUCT } from "@/api/user/endpoints";
 import { toggleFavouriteProductAsync } from "@/redux/features/authSlice";
+import { ISearchProductsDto } from "@/api/product/dto/search-products.dto";
 
-export default function CollectionSection() {
+export default function CollectionSection({
+  searchName,
+}: {
+  searchName: string;
+}) {
   const { products } = useAppSelector((state) => state.productReducer);
   const [page, setPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(1);
@@ -23,8 +28,13 @@ export default function CollectionSection() {
   React.useEffect(() => {
     let mounted = false;
     if (!mounted) {
+      const query: ISearchProductsDto = {
+        price: { min: 1, max: 20000 },
+      };
+      if (searchName) query.name = searchName;
+
       customAxios
-        .get(SEARCH_PRODUCTS({ price: { min: 1, max: 20000 } }))
+        .get(SEARCH_PRODUCTS(query))
         .then((res) => {
           if (res.data.statusCode === 200) {
             setList(res.data.data.results);
@@ -41,6 +51,27 @@ export default function CollectionSection() {
       mounted = true;
     };
   }, []);
+
+  React.useEffect(() => {
+    const query: ISearchProductsDto = {
+      price: { min: 1, max: 20000 },
+    };
+    if (searchName) query.name = searchName;
+
+    customAxios
+      .get(SEARCH_PRODUCTS(query))
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          setList(res.data.data.results);
+          setTotalPage(res.data.data.totalPages);
+          setPageSize(res.data.data.limit);
+          setPage(res.data.data.page);
+          setTotalItems(res.data.data.totalResults);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [searchName]);
+
   const toggleLikeAsync = async (id: string) => {
     dispatch(toggleFavouriteProductAsync(id));
   };
@@ -50,8 +81,14 @@ export default function CollectionSection() {
   }, [products]);
 
   const handleNavigatePagePagination = (e: React.ChangeEvent, page: number) => {
+    const query: ISearchProductsDto = {
+      price: { min: 1, max: 20000 },
+      page,
+    };
+    if (searchName) query.name = searchName;
+
     customAxios
-      .get(SEARCH_PRODUCTS({ price: { min: 1, max: 20000 }, page }))
+      .get(SEARCH_PRODUCTS(query))
       .then((res) => {
         if (res.data.statusCode === 200) {
           setList(res.data.data.results);
