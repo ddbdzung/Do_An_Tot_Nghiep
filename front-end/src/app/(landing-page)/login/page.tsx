@@ -50,11 +50,11 @@ const throttleSubmit = throttle(
     dispatch(signInAsync(payload)).then((result) => {
       if (!result?.meta?.requestStatus === "fulfilled") return;
 
-      const uid = result?.payload.data.user._id;
+      const uid = result?.payload.data?.user?._id;
       if (result?.payload?.statusCode === 200) {
         dispatch(getMeAsync());
+        dispatch(getCartAsync(uid));
       }
-      dispatch(getCartAsync(uid));
     });
   },
   1000,
