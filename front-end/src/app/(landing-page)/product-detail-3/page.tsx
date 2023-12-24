@@ -278,7 +278,7 @@ const ProductDetailPage = () => {
   const renderDetailSection = () => {
     return (
       <div className="">
-        <h2 className="text-2xl font-semibold">Product Details</h2>
+        <h2 className="text-2xl font-semibold">Chi tiết sản phẩm</h2>
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
           <p>
             The patented eighteen-inch hardwood Arrowhead deck --- finely
@@ -422,7 +422,7 @@ const ProductDetailPage = () => {
 
           {/* OTHER SECTION */}
           <SectionSliderProductCard
-            heading="Customers also purchased"
+            heading="Khách hàng khác cũng mua"
             subHeading=""
             headingFontClassName="text-2xl font-semibold"
             headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"

@@ -397,7 +397,9 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"Sign in"}</p>
+                            <p className="text-sm font-medium ">
+                              {"Đăng nhập"}
+                            </p>
                           </div>
                         </Link>
 
@@ -424,7 +426,7 @@ function AvatarDropdown() {
                             </svg>
                           </div>
                           <div className="ml-4">
-                            <p className="text-sm font-medium ">{"Sign up"}</p>
+                            <p className="text-sm font-medium ">{"Đăng ký"}</p>
                           </div>
                         </Link>
 
@@ -464,7 +466,7 @@ function AvatarDropdown() {
                             </div>
                             <div className="ml-4">
                               <p className="text-sm font-medium ">
-                                {"Dark theme"}
+                                {"Chủ đề tối"}
                               </p>
                             </div>
                           </div>

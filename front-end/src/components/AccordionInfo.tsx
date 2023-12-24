@@ -6,7 +6,7 @@ import { FC } from "react";
 
 const DEMO_DATA = [
   {
-    name: "Warranty",
+    name: "Bảo hành",
     content: `<ul class="list-disc list-inside leading-7">
     <li>
     5 year warranty on all hardware
@@ -49,7 +49,7 @@ const AccordionInfo: FC<Props> = ({
   data = DEMO_DATA,
 }) => {
   const dataToRender = description
-    ? [{ name: "Description", content: description }, ...data]
+    ? [{ name: "Mô tả", content: description }, ...data]
     : data;
   return (
     <div className="w-full rounded-2xl space-y-2.5">

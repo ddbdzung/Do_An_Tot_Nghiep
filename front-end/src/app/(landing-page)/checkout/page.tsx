@@ -32,6 +32,7 @@ import {
   clearCheckout,
   createTransactionAsync,
 } from "@/redux/features/checkoutSlice";
+import { loadState } from "@/utils/localStorage";
 
 const SHIPPING_FEE = 20000;
 const CheckoutPage = () => {
@@ -348,18 +349,18 @@ const CheckoutPage = () => {
       <main className="container py-16 lg:pb-28 lg:pt-20 ">
         <div className="mb-16">
           <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold ">
-            Checkout
+            Thanh toán
           </h2>
           <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
             <Link href={"/"} className="">
-              Homepage
+              Trang chủ
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <Link href={"/collection-2"} className="">
-              Categories
+              Danh mục
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <span className="underline">Checkout</span>
+            <span className="underline">Thanh toán</span>
           </div>
         </div>
 
@@ -442,17 +443,17 @@ const CheckoutPage = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                Learn more{` `}
+                Tìm hiểu thêm về{` `}
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
                   href="##"
                   className="text-slate-900 dark:text-slate-200 underline font-medium"
                 >
-                  Taxes
+                  Thuế
                 </a>
                 <span>
-                  {` `}and{` `}
+                  {` `}và{` `}
                 </span>
                 <a
                   target="_blank"
@@ -460,9 +461,8 @@ const CheckoutPage = () => {
                   href="##"
                   className="text-slate-900 dark:text-slate-200 underline font-medium"
                 >
-                  Shipping
+                  Chi phí vận chuyển
                 </a>
-                {` `} infomation
               </p>
             </div>
           </div>

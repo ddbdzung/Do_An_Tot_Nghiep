@@ -335,7 +335,7 @@ const ProductDetailPage2 = ({}) => {
               onClick={handleAddToCart}
             >
               <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
-              <span className="ml-3">Add to cart</span>
+              <span className="ml-3 text-sm">Thêm vào giỏ hàng</span>
             </ButtonPrimary>
           </div>
 
@@ -354,7 +354,7 @@ const ProductDetailPage2 = ({}) => {
                 )}`}</span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                <span>Tax estimate 8%</span>
+                <span>Thuế VAT 8%</span>
                 <span>
                   {formatVnCurrency(product?.price?.lastValue * 0.08)}
                 </span>
@@ -362,7 +362,7 @@ const ProductDetailPage2 = ({}) => {
             </div>
             <div className="border-b border-slate-200 dark:border-slate-700"></div>
             <div className="flex justify-between font-semibold">
-              <span>Total</span>
+              <span>Thành tiền</span>
               <span>{`${formatVnCurrency(
                 product.price?.lastValue * qualitySelected * 1.08
               )}`}</span>
@@ -423,7 +423,7 @@ const ProductDetailPage2 = ({}) => {
   const renderSection2 = () => {
     return (
       <div className="listingSection__wrap !border-b-0 !pb-0">
-        <h2 className="text-2xl font-semibold">Product details</h2>
+        <h2 className="text-2xl font-semibold">Chi tiết sản phẩm</h2>
         {/* <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div> */}
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl">
           {product.details && product.details}
@@ -575,7 +575,7 @@ const ProductDetailPage2 = ({}) => {
                 />
               </svg>
               <span className="ml-2 text-neutral-800 text-sm font-medium">
-                Show all photos
+                Xem tất cả ảnh
               </span>
             </div>
           </div>
@@ -607,7 +607,7 @@ const ProductDetailPage2 = ({}) => {
         <hr className="border-slate-200 dark:border-slate-700" />
 
         <SectionSliderProductCard
-          heading="Customers also purchased"
+          heading="Khách hàng khác cũng mua"
           subHeading=""
           headingFontClassName="text-2xl font-semibold"
           headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const cartItemchema = mongoose.Schema(
+const cartItemSchema = mongoose.Schema(
   {
     product: {
       type: mongoose.SchemaTypes.ObjectId,
@@ -31,7 +31,7 @@ const cartSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    products: [cartItemchema],
+    products: [cartItemSchema],
   },
   {
     timestamps: true,
