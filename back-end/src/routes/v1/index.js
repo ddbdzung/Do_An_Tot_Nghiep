@@ -8,6 +8,7 @@ const packServiceRoute = require('./pack-service.route');
 const productRoute = require('./product.route');
 const categoriesRoute = require('./category.route');
 const cartRoute = require('./cart.route');
+const progressRouter = require('./progress.route');
 // New Route import go here
 
 const config = require('../../config/config');
@@ -27,6 +28,10 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute,
+  },
+  {
+    path: '/progresses',
+    route: progressRouter,
   },
   {
     path: '/pack-services',

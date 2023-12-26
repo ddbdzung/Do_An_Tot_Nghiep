@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-const { Category } = require('../models');
+const Category = require('../models/category.model');
 
 const categories = [
   {

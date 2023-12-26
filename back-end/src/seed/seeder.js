@@ -1,9 +1,10 @@
 const seedCategory = require('./category.seed');
+const seedWorker = require('./worker.seed');
 const { connectMongodb, disconnectMongodb } = require('./db');
 
 async function seed() {
   await connectMongodb();
-  await seedCategory();
+  await Promise.all([seedCategory(), seedWorker()]);
 }
 
 seed()
