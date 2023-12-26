@@ -18,6 +18,27 @@ exports.getCategoryById = async (
   return category;
 };
 
+exports.getCategoriesByCode = async (
+  code,
+  options = {
+    lean: false,
+    projection: {},
+  },
+) => {
+  const category = await Category.find(
+    {
+      code: { $in: code },
+    },
+    {},
+    options,
+  );
+  if (!category || category.deletedAt) {
+    return null;
+  }
+
+  return category;
+};
+
 exports.queryCategories = async (filter, options) => {
   const categories = await Category.paginate(filter, options);
   const { results, ...rest } = categories;

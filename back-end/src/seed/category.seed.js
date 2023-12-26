@@ -1,21 +1,27 @@
+const { CATEGORY_CODE } = require('../common/constants.common');
 const logger = require('../config/logger');
 const Category = require('../models/category.model');
 
 const categories = [
   {
     name: 'Máy lọc nước',
+    code: CATEGORY_CODE.WATER_PURIFIER,
   },
   {
     name: 'Vòi lấy nước',
+    code: CATEGORY_CODE.WATER_TAP,
   },
   {
     name: 'Lõi lọc nước',
+    code: CATEGORY_CODE.WATER_FILTER,
   },
   {
     name: 'Adapter',
+    code: CATEGORY_CODE.ADAPTER,
   },
   {
     name: 'Đèn UV diệt khuẩn',
+    code: CATEGORY_CODE.UV_LIGHT,
   },
 ];
 

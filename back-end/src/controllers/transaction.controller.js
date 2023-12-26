@@ -32,8 +32,6 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   const transaction = await transactionService.createTransaction(
     createTransactionDto,
   );
-  const serializedProductsWithPrice =
-    await transactionService.serializeProductInTransaction(transaction);
 
   responseEmitter(req, res, next)(
     httpStatus.CREATED,
@@ -42,6 +40,8 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
       transaction,
     },
   );
+  const serializedProductsWithPrice =
+    await transactionService.serializeProductInTransaction(transaction);
   // await emailService.sendBillingEmail(
   //   email,
   //   transaction,

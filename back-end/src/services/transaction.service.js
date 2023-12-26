@@ -10,6 +10,11 @@ const _ = require('lodash');
 const { getUserById } = require('./user.service');
 const Mongoose = require('mongoose');
 const { TRANSCTION_METHODS } = require('../config/constant');
+const { getCategoriesByCode } = require('./category.service');
+const { CATEGORY_NEED_INSTALL } = require('../core/modules/category.constant');
+const Progress = require('../models/progress.model');
+const { PROGRESS_STATUS } = require('../common/constants.common');
+const Worker = require('../models/worker.model');
 
 exports.queryTransactions = async (filter, options) => {
   const transactions = await Transaction.paginate(filter, options);
@@ -89,18 +94,35 @@ exports.createTransaction = async createTransactionDto => {
    */
   const productFromOrder = _.keyBy(order, 'productId');
 
-  /**
-   * Products in Database
-   */
-  const products = await getProductsByIds(productIds, {
+  const pProducts = await getProductsByIds(productIds, {
     lean: true,
   });
+  const pCategoriesNeedInstall = await getCategoriesByCode(
+    CATEGORY_NEED_INSTALL,
+    {
+      lean: true,
+    },
+  );
+  const [products, categoriesNeedInstall] = await Promise.all([
+    pProducts,
+    pCategoriesNeedInstall,
+  ]);
   if (products.length !== productIds.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Some product does not exist');
   }
 
   if (products.some(product => product.quantity < 1)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Some product is out of stock');
+  }
+
+  const categoryIdsNeedInstall = categoriesNeedInstall.map(i =>
+    i._id.toString(),
+  );
+  const willSetUpProgress = products.some(
+    product => categoryIdsNeedInstall.indexOf(product.category.toString()) > -1,
+  );
+  if (willSetUpProgress) {
+    transactionSchema.hasProgress = true;
   }
 
   const notEnoughProducts = products.filter(
@@ -135,11 +157,18 @@ exports.createTransaction = async createTransactionDto => {
   });
 
   const transaction = new Transaction(transactionSchema);
-  await Promise.all(
-    transactionSchema.products.map(async item => {
+  const progress = new Progress({
+    transaction: transaction._id,
+    status: willSetUpProgress ? PROGRESS_STATUS.SCHEDULING : null,
+    customer: transaction.customer,
+  });
+
+  await Promise.all([
+    ...transactionSchema.products.map(async item => {
       await atomicUpdateProductQuantity(item.product, -item.amount);
     }),
-  );
+    progress.save(),
+  ]);
 
   return transaction.save();
 };
@@ -187,5 +216,24 @@ exports.getTransactionsByUserId = async userId => {
 
   if (transactions.length === 0) return [];
 
-  return transactions;
+  const serializedTransactions = _.keyBy(transactions, '_id');
+  const transactionIds = _.map(transactions, '_id');
+  const progresses = await Progress.find(
+    {
+      transaction: { $in: transactionIds },
+    },
+    {},
+    { populate: 'workers' },
+  ).lean();
+  progresses.forEach(progress => {
+    const transactionId = progress?.transaction?.toString();
+    if (!_.isEmpty(serializedTransactions[transactionId])) {
+      serializedTransactions[transactionId] = {
+        ..._.cloneDeep(serializedTransactions[transactionId]?.toObject()),
+        progress,
+      };
+    }
+  });
+
+  return Object.values(serializedTransactions);
 };   

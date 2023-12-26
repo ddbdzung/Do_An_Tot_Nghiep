@@ -20,6 +20,14 @@ const permission = {
     UPDATE_TRANSACTIONS: 'update_transactions',
   },
 
+  // progress module
+  PROGRESS: {
+    GET_PROGRESS: 'get_progress',
+    GET_PROGRESSES: 'get_progresses',
+    UPDATE_PROGRESS: 'update_progress',
+    MANAGE_PROGRESSES: 'manage_progresses',
+  },
+
   // school module
   SCHOOL: {
     CREATE_SCHOOL: 'create_school',

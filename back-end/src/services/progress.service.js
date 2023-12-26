@@ -4,56 +4,60 @@ const ApiError = require('../utils/ApiError');
 const Mongoose = require('mongoose');
 const { PROGRESS_STATUS } = require('../common/constants.common');
 const httpStatus = require('http-status');
+const e = require('express');
 
 /**
  * @param {{
  *  transactionId?: string,
  *  userId?: string[],
  *  status?: string
- * }} filter
+ * } | undefined} filter
  * @returns {Promise<Progress[]> | null} Return progresses
  */
 exports.getProgresses = async filter => {
-  if (_.isEmpty(filter)) {
-    throw new Error('Filter is empty');
-  }
-
-  const { transactionId, userIds, status } = filter;
-  if (!transactionId && _.isEmpty(userIds) && !status) {
-    throw new Error('Filter is empty');
-  }
-
-  if (
-    Array.isArray(userIds) &&
-    userIds.some(userId => !Mongoose.Types.ObjectId.isValid(userId))
-  ) {
-    throw new Error('Invalid userId');
-  }
-
-  if (transactionId && !Mongoose.isValidObjectId(transactionId)) {
-    throw new Error('Invalid transactionId');
-  }
-
-  if (!_.isEmpty(userIds) && transactionId) {
-    throw new Error('Cannot filter by both userId and transactionId');
-  }
-
-  if (status && !Object.values(PROGRESS_STATUS).includes(status)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid status');
-  }
-
   const filterObj = {};
+  const { transactionId, customerId, status, page, limit } = filter || {};
   if (transactionId) {
     filterObj.transaction = transactionId;
-  } else if (!_.isEmpty(userIds)) {
-    filterObj.workers = {
-      $in: userIds,
-    };
+  } else if (customerId) {
+    filterObj.customer = customerId;
   }
   if (status) {
     filterObj.status = status;
   }
 
-  const progresses = await Progress.find(filterObj);
+  const skip = page ? (page - 1) * limit : 0;
+  const limitProgress = limit ? limit : 10;
+
+  const progresses = await Progress.find(filterObj)
+    .skip(skip)
+    .limit(limitProgress);
   return progresses;
+};
+
+exports.createProgress = async (transactionId, userId) => {
+  if (!Mongoose.isValidObjectId(transactionId)) {
+    throw new Error('Invalid transactionId');
+  }
+
+  if (!Mongoose.isValidObjectId(userId)) {
+    throw new Error('Invalid userId');
+  }
+
+  return Progress.create({
+    transaction: transactionId,
+    customer: userId,
+  });
+};
+
+exports.updateProgress = async progressDto => {
+  const { id, status, workers } = progressDto;
+  const worker = workers ? workers : [];
+
+  const progress = await Progress.findOneAndUpdate(
+    { _id: id },
+    { status, worker },
+    { new: true },
+  );
+  return progress;
 };

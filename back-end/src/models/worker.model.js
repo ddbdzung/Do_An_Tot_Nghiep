@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { PROGRESS_STATUS } = require('../common/constants.common');
 
 const workerSchema = mongoose.Schema(
   {

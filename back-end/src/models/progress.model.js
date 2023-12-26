@@ -10,6 +10,11 @@ const progressSchema = mongoose.Schema(
         ref: 'Worker',
       },
     ],
+    customer: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+      default: null,
+    },
     transaction: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Transaction',
@@ -36,6 +41,11 @@ const progressSchema = mongoose.Schema(
 
 progressSchema.plugin(toJSON);
 progressSchema.plugin(paginate);
+
+progressSchema.methods.populateOption = async function (populate) {
+  const progressPopulate = await this.populate(populate).execPopulate();
+  return progressPopulate;
+};
 
 /**
  * @typedef Progress

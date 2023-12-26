@@ -87,6 +87,10 @@ const transactionSchema = mongoose.Schema(
       default: null,
     },
     products: [productTransactionSchema],
+    hasProgress: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

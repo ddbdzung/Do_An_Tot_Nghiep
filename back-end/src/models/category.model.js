@@ -34,6 +34,13 @@ const categorySchema = mongoose.Schema(
       type: Date,
       default: null,
     },
+    code: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+      index: true,
+    },
   },
   {
     timestamps: true,

@@ -7,3 +7,4 @@ module.exports.packServiceValidation = require('./pack-service.validation');
 module.exports.productValidation = require('./product.validation');
 module.exports.categoryValidation = require('./category.validation');
 module.exports.cartValidation = require('./cart.validation');
+module.exports.progressValidation = require('./progress.validation');
