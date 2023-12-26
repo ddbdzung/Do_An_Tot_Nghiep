@@ -65,6 +65,8 @@ exports.test = catchAsync(async (req, res, next) => {
   const headers = req.headers;
   console.log('headers', JSON.stringify(headers, null, 2));
   const x = await transactionService.test();
+  const { requestBody } = x;
+  console.log(JSON.stringify(requestBody));
 
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], x);
 });

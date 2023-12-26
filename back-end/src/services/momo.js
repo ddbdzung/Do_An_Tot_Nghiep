@@ -9,7 +9,7 @@ var orderInfo = 'pay with MoMo';
 var redirectUrl = 'https://momo.vn/return';
 var ipnUrl = 'https://callback.url/notify';
 // var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
-var amount = '50000';
+var amount = '1000';
 var requestType = 'captureWallet';
 var extraData = ''; //pass empty value if your merchant does not have stores
 
