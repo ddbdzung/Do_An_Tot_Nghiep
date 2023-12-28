@@ -43,11 +43,11 @@ exports.createTransactionByUser = catchAsync(async (req, res, next) => {
   );
   const serializedProductsWithPrice =
     await transactionService.serializeProductInTransaction(transaction);
-  // await emailService.sendBillingEmail(
-  //   email,
-  //   transaction,
-  //   serializedProductsWithPrice,
-  // );
+  await emailService.sendBillingEmail(
+    email,
+    transaction,
+    serializedProductsWithPrice,
+  );
 });
 
 exports.getTransactionsOfMe = catchAsync(async (req, res, next) => {
@@ -84,7 +84,9 @@ exports.getTransactionOfMeById = catchAsync(async (req, res, next) => {
 
   const progresses = await progressService.getProgresses({
     transactionId,
-    limit: 8,
+    limit: 100,
+    toPlainObject: true,
+    withVirtualProps: true,
   });
 
   responseEmitter(req, res, next)(httpStatus.OK, httpStatus[200], {

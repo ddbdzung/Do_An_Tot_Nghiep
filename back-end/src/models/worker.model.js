@@ -18,6 +18,10 @@ const workerSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    address: {
+      type: String,
+      trim: true,
+    },
     responsibility: {
       type: String,
       required: true,

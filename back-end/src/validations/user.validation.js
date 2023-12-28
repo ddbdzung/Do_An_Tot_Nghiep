@@ -68,6 +68,7 @@ const updateMe = {
       gender: Joi.string().valid(...Object.values(GENDER)),
       dateOfBirth: Joi.date(),
       phoneNumber: Joi.string(),
+      fullname: Joi.string(),
     })
     .min(1),
 };

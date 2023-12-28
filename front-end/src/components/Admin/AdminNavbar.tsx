@@ -49,7 +49,7 @@ const LINKS = [
   },
   {
     text: "Lắp đặt - Bảo trì",
-    href: "/admin/servicing",
+    href: "/admin/servicing/progresses",
     icon: PlumbingIcon,
   },
 ];

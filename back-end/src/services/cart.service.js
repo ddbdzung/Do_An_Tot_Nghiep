@@ -102,3 +102,14 @@ exports.removeProductFromCart = async (userId, productId) => {
   );
   return cart.save();
 };
+
+exports.removeCartByUserId = async id => {
+  const cart = await Cart.deleteOne({
+    user: id,
+  });
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  return cart;
+};

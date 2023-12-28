@@ -92,12 +92,14 @@ const getMe = catchAsync(async (req, res, next) => {
 const updateMe = catchAsync(async (req, res, next) => {
   const { _id: id } = req.user;
   const updateMeBody = pick(req.body, [
-    'name',
+    'fullname',
     'address',
     'gender',
     'dateOfBirth',
     'phoneNumber',
   ]);
+  updateMeBody.name = updateMeBody.fullname;
+  delete updateMeBody.fullname;
   const user = await userService.updateUserById(id, updateMeBody);
   responseEmitter(req, res, next)(
     httpStatus.OK,

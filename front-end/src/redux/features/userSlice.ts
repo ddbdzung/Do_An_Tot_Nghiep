@@ -40,6 +40,7 @@ type UserState = {
   address: string;
   phoneNumber: string;
   gender: string;
+  fullname: string;
 };
 
 const initialState = {
@@ -47,6 +48,7 @@ const initialState = {
   address: loadState("address") || "",
   phoneNumber: loadState("phoneNumber") || "",
   gender: loadState("gender") || "",
+  fullname: loadState("gender") || "",
 } as UserState;
 
 export const userSlice = createSlice({
@@ -76,10 +78,12 @@ export const userSlice = createSlice({
           state.address = data?.address;
           state.phoneNumber = data?.phoneNumber;
           state.gender = data?.gender;
+          state.fullname = data?.fullname;
           saveState("dateOfBirth", data?.dateOfBirth);
           saveState("address", data?.address);
           saveState("phoneNumber", data?.phoneNumber);
           saveState("gender", data?.gender);
+          saveState("fullname", data?.fullname);
           return state;
         }
       )
@@ -103,10 +107,12 @@ export const userSlice = createSlice({
           state.address = data?.address;
           state.phoneNumber = data?.phoneNumber;
           state.gender = data?.gender;
+          state.fullname = data?.fullname;
           saveState("dateOfBirth", data?.dateOfBirth);
           saveState("address", data?.address);
           saveState("phoneNumber", data?.phoneNumber);
           saveState("gender", data?.gender);
+          saveState("fullname", data?.fullname);
           return state;
         }
       )

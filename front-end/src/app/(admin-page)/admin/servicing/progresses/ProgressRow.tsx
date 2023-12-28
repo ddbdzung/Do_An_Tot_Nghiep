@@ -19,9 +19,14 @@ import { useRouter } from "next/navigation";
 import { ITransaction } from "@/api/transactions/dto/transaction.dto";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import { notifyError } from "@/utils/notify";
-import { TRANSACTION_STATUS } from "@/app/(landing-page)/(accounts)/account-order/page";
+import { IProgress } from "@/api/progress/dto/progress.dto";
+import {
+  PROGRESS_STATUS,
+  TRANSACTION_STATUS,
+} from "@/app/(landing-page)/(accounts)/account-order/page";
+import Link from "next/link";
 
-function Row(props: { row: ITransaction }) {
+function Row(props: { row: IProgress }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { row } = props;
@@ -30,15 +35,10 @@ function Row(props: { row: ITransaction }) {
   const handleViewDetailBtn = () => {
     notifyError("This feature is not available yet");
     return;
+    // router.push(`/admin/servicing/progresses/${row.id}/v`);
   };
   const handleEditBtn = () => {
-    router.push(`/admin/manage/orders/${row.id}/u`);
-  };
-  const calcTotalPrice = (row: ITransaction) => {
-    return row.products.reduce(
-      (acc, cur) => acc + cur?.productDetail?.price * cur.amount,
-      0
-    );
+    router.push(`/admin/servicing/progresses/${row.id}/u`);
   };
 
   return (
@@ -53,12 +53,19 @@ function Row(props: { row: ITransaction }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="left">{row?.customerInfo?.name}</TableCell>
-        <TableCell align="right">{row?.customerInfo?.phoneNumber}</TableCell>
-        <TableCell align="left">{TRANSACTION_STATUS[row?.status]}</TableCell>
         <TableCell align="left">
-          {formatVnCurrency(calcTotalPrice(row))}
+          <Link
+            style={{ textDecoration: "none" }}
+            href={`/admin/manage/orders/${row?.transaction?.id}/u`}
+          >
+            {row?.transaction?.id}
+          </Link>
         </TableCell>
+        <TableCell align="left">{row?.customer?.name}</TableCell>
+        <TableCell align="left">
+          {TRANSACTION_STATUS[row?.transaction?.status]}
+        </TableCell>
+        <TableCell align="left">{PROGRESS_STATUS[row?.status]}</TableCell>
         <TableCell align="left">{formatDateToLocale(row?.updatedAt)}</TableCell>
         <TableCell align="left">{formatDateToLocale(row?.createdAt)}</TableCell>
         <TableCell align="center">

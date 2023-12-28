@@ -8,25 +8,34 @@ const { progressValidation } = require('../../validations');
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/:id')
   .get(
     auth([
       permission.PROGRESS.GET_PROGRESS,
       permission.PROGRESS.MANAGE_PROGRESSES,
     ]),
-    validate(progressValidation.getProgresses),
-    progressController.getProgresses,
-  );
-
-router
-  .route('/:id')
+    validate(progressValidation.getProgressById),
+    progressController.getProgressById,
+  )
   .put(
     auth([
+      permission.PROGRESS.GET_PROGRESS,
       permission.PROGRESS.UPDATE_PROGRESS,
       permission.PROGRESS.MANAGE_PROGRESSES,
     ]),
-    validate(progressValidation.getProgresses),
+    validate(progressValidation.updateProgress),
     progressController.updateProgress,
+  );
+
+router
+  .route('/')
+  .get(
+    auth([
+      permission.PROGRESS.GET_PROGRESSES,
+      permission.PROGRESS.MANAGE_PROGRESSES,
+    ]),
+    validate(progressValidation.getProgresses),
+    progressController.getProgresses,
   );
 
 module.exports = router;

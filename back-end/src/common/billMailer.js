@@ -1,3 +1,9 @@
+const formatPrice = price => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(price);
+};
 const html = (transactionDocument, serializedProductsInTransaction) => {
   const total = transactionDocument?.products?.reduce((acc, item) => {
     const serializedItem = serializedProductsInTransaction[item.product];
@@ -5,8 +11,8 @@ const html = (transactionDocument, serializedProductsInTransaction) => {
 
     return acc + serializedItem.amount * serializedItem.price;
   }, 0);
-  const TAX = '8%';
-  const SHIPPING_FEE = '20,000 VND';
+  const TAX = 8;
+  const SHIPPING_FEE = 20000;
   const totalWithTaxAndShipping = total * 1.08 + 20000;
 
   return `<html lang="en">
@@ -52,7 +58,7 @@ const html = (transactionDocument, serializedProductsInTransaction) => {
     Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
     </p>
   
-    <h2>Hóa đơn</h2>
+    <h2 align="center" style="font-style: uppercase">Hóa đơn</h2>
   
     <table>
       <thead>
@@ -70,13 +76,13 @@ const html = (transactionDocument, serializedProductsInTransaction) => {
             <tr>
               <td>${serializedProductsInTransaction[item.product]?.name}</td>
               <td>${item.amount}</td>
-              <td>${
-                serializedProductsInTransaction[item.product]?.price || 0
-              } VND</td>
-              <td>${
+              <td>${format(
+                serializedProductsInTransaction[item.product]?.price || 0,
+              )}</td>
+              <td>${format(
                 item.amount *
-                  serializedProductsInTransaction[item.product]?.price || 0
-              } VND</td>
+                  serializedProductsInTransaction[item.product]?.price || 0,
+              )}</td>
             </tr>
           `,
         )}
@@ -86,9 +92,9 @@ const html = (transactionDocument, serializedProductsInTransaction) => {
     </table>
   
     <p class="total">Tổng tiền các sản phẩm: ${total} VND</p>
-    <p class="total">Thuế VAT: ${TAX}</p>
-    <p class="total">Shipping: ${SHIPPING_FEE}</p>
-    <p class="total">Tổng: ${totalWithTaxAndShipping} VND</p>
+    <p class="total">Thuế VAT: ${TAX}%</p>
+    <p class="total">Shipping: ${formatPrice(SHIPPING_FEE)}</p>
+    <p class="total">Tổng: ${formatPrice(totalWithTaxAndShipping)} VND</p>
   
   </body>
   </html>`;

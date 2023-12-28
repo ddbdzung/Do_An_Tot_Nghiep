@@ -122,8 +122,8 @@ export default function CollectionSection({
         />
 
         <span className="hidden sm:block text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
-          Showing {pageSize * (page - 1) + 1} -{" "}
-          {pageSize * (page - 1) + list.length} of {totalItems} results
+          Xem {pageSize * (page - 1) + 1} -{" "}
+          {pageSize * (page - 1) + list.length} của {totalItems} kết quả.
         </span>
         {/* <ButtonPrimary loading>Show me more</ButtonPrimary> */}
       </div>

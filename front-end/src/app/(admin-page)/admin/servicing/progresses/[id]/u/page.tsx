@@ -8,6 +8,7 @@ import {
   adminUpdateProductAsync,
   createProductAsync,
   getCategoriesAsync,
+  updateProgressAsync,
   updateTransactionAsync,
 } from "@/redux/features/adminSlice";
 import {
@@ -43,9 +44,14 @@ import { renderImageCloudinary } from "@/utils/renderImage";
 import { IUpdateTransactionDto } from "@/api/transactions/dto/update-transaction.dto";
 import { fetchGetTransaction } from "@/redux/services/checkoutApi";
 import { ITransaction } from "@/api/transactions/dto/transaction.dto";
-import { TRANSACTION_STATUS } from "./constants";
-import BasicTable from "./SimpleTable";
 import formatVnCurrency from "@/utils/formatVnCurrency";
+import { PROGRESS_STATUS as progressStatusConstant } from "./progress.constant";
+import { IUpdateProgressDto } from "@/api/progress/dto/update-progress.dto";
+import { fetchGetProgress } from "@/redux/services/progressApi";
+import { IProgress } from "@/api/progress/dto/progress.dto";
+import { PROGRESS_STATUS } from "@/app/(landing-page)/(accounts)/account-order/page";
+import { formatDateToLocale } from "@/utils/formatDate";
+import BasicTable from "./SimpleTable";
 
 const throttleUpdate = throttle(
   async function (
@@ -53,25 +59,25 @@ const throttleUpdate = throttle(
     actions: FormikHelpers<any>,
     dispatch: (...arg: any) => any
   ) {
-    dispatch(updateTransactionAsync(values as IUpdateTransactionDto));
+    dispatch(updateProgressAsync(values as IUpdateProgressDto));
   },
   1000,
   { trailing: false }
 );
 
 function UpdateProductPage() {
-  const transactionStatus = Object.values(TRANSACTION_STATUS);
+  const progressStatus = Object.values(progressStatusConstant);
   const router = useRouter();
   const { id } = useParams();
 
   const { accessToken, formStatus } = useAppSelector(
     (state) => state.authReducer
   );
-  const [transaction, setTransaction] = useState<ITransaction | null>(null);
+  const [progress, setProgress] = useState<IProgress | null>(null);
 
-  const fetchTransactionPromise = (mounted: boolean) =>
-    fetchGetTransaction({ access: accessToken }, { id }).then(
-      (res: IResponsePayload<ITransaction>) => {
+  const fetchProgressPromise = (mounted: boolean) =>
+    fetchGetProgress({ access: accessToken }, { id }).then(
+      (res: IResponsePayload<IProgress>) => {
         if (mounted) {
           if (res.statusCode !== 200) {
             notifyError(res.message);
@@ -79,7 +85,7 @@ function UpdateProductPage() {
               router.back();
             });
           } else {
-            setTransaction(res.data);
+            setProgress(res.data);
           }
         }
       }
@@ -87,9 +93,9 @@ function UpdateProductPage() {
 
   useEffect(() => {
     let mounted = true;
-    notifyPromise(fetchTransactionPromise(mounted), {
-      successMessage: "Get transaction successfully",
-      errorMessage: "Get transaction failed",
+    notifyPromise(fetchProgressPromise(mounted), {
+      successMessage: "Get progress successfully",
+      errorMessage: "Get progress failed",
     });
 
     return () => {
@@ -106,13 +112,13 @@ function UpdateProductPage() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      status: transaction?.status ?? "",
+      status: progress?.status ?? "",
     },
     validationSchema: Yup.object({
-      status: Yup.string().required("Required").oneOf(transactionStatus),
+      status: Yup.string().required("Required").oneOf(progressStatus),
     }),
     onSubmit: (values, actions) => {
-      const payload: IUpdateTransactionDto = {
+      const payload: IUpdateProgressDto = {
         params: { id },
         body: values,
       };
@@ -124,7 +130,7 @@ function UpdateProductPage() {
       <form onSubmit={formik.handleSubmit}>
         <Box display="flex" justifyContent="space-between" marginBottom="1rem">
           <Typography variant="h5" gutterBottom>
-            Update Transaction
+            Update Progress
           </Typography>
           <Box display="flex" justifyContent="space-between" gap="0.25rem">
             {formStatus && formStatus === AdminFormStatus.IDLE ? (
@@ -160,20 +166,19 @@ function UpdateProductPage() {
             </Button>
           </Box>
         </Box>
-        <div
-          style={{
-            display: "flex",
-            gap: "3rem",
-            marginTop: "2rem",
-            marginBottom: "2rem",
-          }}
-        >
-          <Typography gutterBottom>VAT: 8%</Typography>
-          <Typography gutterBottom>
-            Shipping fee: {formatVnCurrency(20000)}
-          </Typography>
-        </div>
         <Grid container spacing={2}>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Transaction ID"
+              variant="outlined"
+              fullWidth
+              type="text"
+              id="transactionId"
+              name="transactionId"
+              value={progress?.transaction?.id ?? ""}
+              disabled
+            />
+          </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
               label="Customer Name"
@@ -182,7 +187,7 @@ function UpdateProductPage() {
               type="text"
               id="customerName"
               name="customerName"
-              value={transaction?.customerInfo.name ?? ""}
+              value={progress?.customer?.name ?? ""}
               disabled
             />
           </Grid>
@@ -192,57 +197,36 @@ function UpdateProductPage() {
               variant="outlined"
               fullWidth
               type="text"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={transaction?.customerInfo.phoneNumber ?? ""}
+              id="customerPhoneNumber"
+              name="customerPhoneNumber"
+              value={progress?.customer?.phoneNumber ?? ""}
               disabled
             />
           </Grid>
           <Grid item xs={12} sm={3}>
             <TextField
-              label="Address"
+              label="Schedule time"
               variant="outlined"
               fullWidth
               type="text"
-              id="address"
-              name="address"
-              value={transaction?.customerInfo.address ?? ""}
+              id="schedule"
+              name="schedule"
+              value={
+                progress?.schedule ? formatDateToLocale(progress?.schedule) : ""
+              }
               disabled
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={6}>
             <TextField
-              label="Payment method"
+              label="Note"
               variant="outlined"
               fullWidth
               type="text"
-              id="paymentMethod"
-              name="paymentMethod"
-              value={transaction?.paymentMethod ?? ""}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Progress Period"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="hasProgress"
-              name="hasProgress"
-              value={transaction?.hasProgress ? "Yes" : "No"}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Total price"
-              variant="outlined"
-              fullWidth
-              type="text"
-              id="totalPrice"
-              name="totalPrice"
-              value={formatVnCurrency(transaction?.totalPrice)}
+              id="note"
+              name="note"
+              rows={4}
+              value={progress?.note ?? ""}
               disabled
             />
           </Grid>
@@ -257,9 +241,9 @@ function UpdateProductPage() {
               value={formik.values.status}
               onChange={formik.handleChange}
             >
-              {transactionStatus?.map((status) => (
+              {progressStatus?.map((status) => (
                 <MenuItem key={uniqueId()} value={status}>
-                  {status}
+                  {PROGRESS_STATUS[status]}
                 </MenuItem>
               ))}
             </Select>
@@ -279,17 +263,13 @@ function UpdateProductPage() {
         </Grid>
       </form>
       <Typography variant="h5" gutterBottom marginTop="1rem">
-        Details
+        Workers
       </Typography>
-      <BasicTable rows={transaction?.products} />
+      <BasicTable rows={progress?.workers || []} />
     </>
   );
 }
 
 export default withAuth({
-  requiredRights: [
-    "get_transaction",
-    "update_transactions",
-    "manage_transactions",
-  ],
+  requiredRights: ["get_progress", "update_progress", "manage_progresses"],
 })(UpdateProductPage);

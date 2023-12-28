@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Box, Button, Typography } from "@mui/material";
-import OrderTable, { headersType } from "./Table";
+import ProgressTable, { headersType } from "./Table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   getProductsAsync,
+  getProgressesAsync,
   getTransactionsAsync,
 } from "@/redux/features/adminSlice";
 import { useEffect, useState } from "react";
@@ -14,26 +15,22 @@ import { throttle } from "lodash";
 
 const headers: headersType = [
   {
+    title: "Transaction ID",
+  },
+  {
     title: "Customer Name",
   },
   {
-    title: "Customer Phone Number",
-    align: "right",
+    title: "Transaction Status",
   },
   {
-    title: "Status",
-  },
-  {
-    title: "Total Price",
-    align: "right",
+    title: "Progress Status",
   },
   {
     title: "Updated At",
-    align: "left",
   },
   {
     title: "Created At",
-    align: "left",
   },
   {
     title: "Actions",
@@ -41,11 +38,17 @@ const headers: headersType = [
   },
 ];
 
-const throttleReloadGetTranscations = throttle(
+const throttleReloadGetProgresses = throttle(
   async function (dispatch: (...arg: any) => any) {
     dispatch(
+      getProgressesAsync({
+        limit: 30,
+        page: 1,
+      })
+    );
+    dispatch(
       getTransactionsAsync({
-        limit: 8,
+        limit: 30,
         page: 1,
       })
     );
@@ -56,28 +59,28 @@ const throttleReloadGetTranscations = throttle(
   }
 );
 
-function ManageTransactionPage() {
-  const { formStatus, transactions } = useAppSelector(
+function ManageProgressPage() {
+  const { formStatus, progresses } = useAppSelector(
     (state) => state.adminReducer
   );
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(
-      getTransactionsAsync({
+      getProgressesAsync({
         limit: 30,
         page: 1,
       })
     );
   }, []);
   const handleReloadBtn = () => {
-    throttleReloadGetTranscations(dispatch);
+    throttleReloadGetProgresses(dispatch);
   };
 
   return (
     <>
       <Box display="flex" justifyContent="space-between" marginBottom="1rem">
         <Typography variant="h5" gutterBottom>
-          Orders
+          Progresses
         </Typography>
         <Box>
           <Button
@@ -87,20 +90,20 @@ function ManageTransactionPage() {
           >
             Reload
           </Button>
-          <Link href="/admin/manage/orders/c">
+          <Link href="/admin/servicing/progresses/c">
             <Button variant="contained">Create</Button>
           </Link>
         </Box>
       </Box>
-      <OrderTable
+      <ProgressTable
         headers={headers}
         status={formStatus}
-        rows={_.isEmpty(transactions) ? [] : transactions}
+        rows={_.isEmpty(progresses) ? [] : progresses}
       />
     </>
   );
 }
 
 export default withAuth({
-  requiredRights: ["get_transactions", "manage_transactions"],
-})(ManageTransactionPage);
+  requiredRights: ["get_progresses", "manage_progresses"],
+})(ManageProgressPage);

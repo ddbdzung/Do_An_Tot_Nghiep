@@ -19,5 +19,13 @@ exports.updateProgress = {
   body: Joi.object({
     status: Joi.string().valid(...Object.values(PROGRESS_STATUS)),
     workers: Joi.array().items(Joi.string().custom(objectId)),
+    schedule: Joi.date(),
+    note: Joi.string(),
+  }),
+};
+
+exports.getProgressById = {
+  params: Joi.object({
+    id: Joi.string().custom(objectId),
   }),
 };

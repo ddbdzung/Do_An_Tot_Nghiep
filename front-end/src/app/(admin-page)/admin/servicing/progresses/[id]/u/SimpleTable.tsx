@@ -11,20 +11,6 @@ import Paper from "@mui/material/Paper";
 import formatVnCurrency from "@/utils/formatVnCurrency";
 import Link from "next/link";
 
-type ProductDetail = {
-  image: string;
-  name: string;
-  price: number;
-};
-
-type Product = {
-  amount: number;
-  price: string;
-  product: string;
-  _id: string;
-  productDetail: ProductDetail;
-};
-
 type HeaderType = {
   title: string;
   align: "left" | "right" | "center";
@@ -36,20 +22,20 @@ const headers: HeaderType[] = [
     align: "left",
   },
   {
-    title: "Price",
+    title: "Phone Number",
+    align: "left",
+  },
+  {
+    title: "Age",
     align: "right",
   },
   {
-    title: "Amount",
-    align: "right",
-  },
-  {
-    title: "Total",
-    align: "right",
+    title: "Responsibility",
+    align: "left",
   },
 ];
 
-export default function BasicTable<T>({ rows }: { rows: Product[] }) {
+export default function BasicTable<T>({ rows }: { rows: any[] }) {
   const styledRows = rows?.map((row, idx) => ({
     ...row,
     key: row._id,
@@ -71,21 +57,10 @@ export default function BasicTable<T>({ rows }: { rows: Product[] }) {
                 key={row.key}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="left">
-                  <Link
-                    style={{ textDecoration: "none" }}
-                    href={`/admin/manage/products/${row.product}/v`}
-                  >
-                    {row.productDetail.name}
-                  </Link>
-                </TableCell>
-                <TableCell align="right">
-                  {formatVnCurrency(row.productDetail.price)}
-                </TableCell>
-                <TableCell align="right">{row.amount}</TableCell>
-                <TableCell align="right">
-                  {formatVnCurrency(row.amount * row.productDetail.price)}
-                </TableCell>
+                <TableCell align="left">{row?.name}</TableCell>
+                <TableCell align="left">{row?.phoneNumber}</TableCell>
+                <TableCell align="right">{row?.age}</TableCell>
+                <TableCell align="left">{row?.responsibility}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -15,6 +15,10 @@ const enUS = {
         GET_TRANSACTIONS_SUCCESS: "Transactions fetched successfully",
         UPDATE_TRANSACTION_SUCCESS: "Transaction updated successfully",
       },
+      PROGRESSES: {
+        GET_PROGRESSES_SUCCESS: "Progresses fetched successfully",
+        UPDATE_PROGRESS_SUCCESS: "Progress updated successfully",
+      },
     },
   },
 };

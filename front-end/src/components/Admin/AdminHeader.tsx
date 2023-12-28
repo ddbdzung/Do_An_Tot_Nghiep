@@ -1,10 +1,10 @@
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import AppBar from '@mui/material/AppBar';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import { deepOrange } from '@mui/material/colors';
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import AppBar from "@mui/material/AppBar";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import { deepOrange } from "@mui/material/colors";
 import { EnvironmentVariables } from "@/configurations/EnvironmentVariable";
 
 export default function AdminHeader() {

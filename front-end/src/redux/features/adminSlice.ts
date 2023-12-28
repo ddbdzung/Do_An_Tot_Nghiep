@@ -56,6 +56,38 @@ import {
 } from "@/api/transactions/dto/transaction.dto";
 import _ from "lodash";
 import { plainToInstance } from "class-transformer";
+import {
+  fetchGetProgresses,
+  fetchUpdateProgress,
+} from "../services/progressApi";
+import { IProgress } from "@/api/progress/dto/progress.dto";
+import { IUpdateProgressDto } from "@/api/progress/dto/update-progress.dto";
+
+export const updateProgressAsync = createAsyncThunk(
+  "admin/updateProgress",
+  async (payload: IUpdateProgressDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+
+    const data = await fetchUpdateProgress(tokens, payload);
+    return data;
+  }
+);
+
+export const getProgressesAsync = createAsyncThunk(
+  "admin/getProgresses",
+  async (query: IGetProgressesQueryDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+
+    const data = await fetchGetProgresses(tokens, query);
+    return data;
+  }
+);
 
 export const getTransactionsAsync = createAsyncThunk(
   "admin/getTransactions",
@@ -211,6 +243,7 @@ export type AdminState = {
   categories: ICategory[] | null;
   products: IProduct[] | null;
   transactions: ITransaction[] | null;
+  progresses: IProgress[] | null;
 };
 
 const initialState = {
@@ -218,6 +251,7 @@ const initialState = {
   categories: null,
   products: null,
   transactions: null,
+  progresses: null,
 } as AdminState;
 
 export const admin = createSlice({
@@ -501,6 +535,66 @@ export const admin = createSlice({
         return state;
       })
       .addCase(updateTransactionAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(getProgressesAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(getProgressesAsync.fulfilled, (state, action) => {
+        console.log(
+          "🚀 ~ file: adminSlice.ts:528 ~ .addCase ~ action:",
+          action
+        );
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<IProgress>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.PROGRESSES.GET_PROGRESSES_SUCCESS,
+        });
+        if (_.isEmpty(res)) {
+          return state;
+        }
+        if (_.isEmpty(state.progresses)) {
+          state.progresses = [];
+        }
+        state.progresses = res.data as IProgress[];
+        return state;
+      })
+      .addCase(getProgressesAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(updateProgressAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(updateProgressAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<IProgress>(action.payload, {
+          successMessage: enUS.ADMIN.MANAGE.PROGRESSES.UPDATE_PROGRESS_SUCCESS,
+        });
+        if (_.isEmpty(res)) {
+          return state;
+        }
+
+        if (!state.progresses) {
+          state.progresses = [res.data];
+          return state;
+        }
+
+        const prevProgresses = _.cloneDeep(state.progresses);
+        const updatedProgress = prevProgresses?.findIndex(
+          (i) => i.id === res.data?.id
+        );
+        if (updatedProgress === -1) {
+          return state;
+        }
+        prevProgresses[updatedProgress] = res.data as IProgress;
+        state.progresses = prevProgresses;
+        return state;
+      })
+      .addCase(updateProgressAsync.rejected, (state, action) => {
+        console.error("updateProgressAsync action", action);
         state.formStatus = AdminFormStatus.IDLE;
         return state;
       });

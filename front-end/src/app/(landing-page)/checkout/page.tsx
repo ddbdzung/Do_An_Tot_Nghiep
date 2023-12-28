@@ -33,9 +33,11 @@ import {
   createTransactionAsync,
 } from "@/redux/features/checkoutSlice";
 import { loadState } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
 
 const SHIPPING_FEE = 20000;
 const CheckoutPage = () => {
+  const router = useRouter();
   const { items } = useAppSelector((state) => state.cartReducer);
   const { uid } = useAppSelector((state) => state.authReducer);
   const { paymentMethod, phoneNumber, address } = useAppSelector(
@@ -82,16 +84,21 @@ const CheckoutPage = () => {
         address,
       },
     };
-    dispatch(createTransactionAsync(payload)).then((res) => {
-      if (
-        res?.meta?.requestStatus === "fulfilled" &&
-        res?.payload?.statusCode === 201
-      ) {
-        dispatch(clearCart());
-        dispatch(clearCheckout());
-        setCart([]);
-      }
-    });
+    dispatch(createTransactionAsync(payload))
+      .then((res) => {
+        if (
+          res?.meta?.requestStatus === "fulfilled" &&
+          res?.payload?.statusCode === 201
+        ) {
+          dispatch(clearCart());
+          dispatch(clearCheckout());
+          setCart([]);
+        }
+      })
+      .then(() => {
+        router.push("/account-order");
+        return;
+      });
   };
   const handleUpdateCart = throttle(
     async (amount, product) => {

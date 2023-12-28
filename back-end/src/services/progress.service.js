@@ -1,9 +1,20 @@
 const Progress = require('../models/progress.model');
 const _ = require('lodash');
-const ApiError = require('../utils/ApiError');
 const Mongoose = require('mongoose');
-const { PROGRESS_STATUS } = require('../common/constants.common');
+const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const { PROGRESS_STATUS } = require('../common/constants.common');
+const { TRANSACTION_STATUS } = require('../config/constant');
+
+exports.getProgressById = async id => {
+  const progress = await Progress.findById(id)
+    .populate('workers')
+    .populate('transaction')
+    .populate('customer');
+  return progress.toObject({
+    virtuals: true,
+  });
+};
 
 /**
  * @param {{
@@ -33,7 +44,19 @@ exports.getProgresses = async filter => {
   const progresses = await Progress.find(filterObj)
     .skip(skip)
     .limit(limitProgress)
-    .populate('workers');
+    .populate('workers')
+    .populate('transaction')
+    .populate('customer');
+
+  const { toPlainObject, withVirtualProps } = filter;
+  if (toPlainObject) {
+    return progresses.map(progress => {
+      return toPlainObject
+        ? progress.toObject({ virtuals: withVirtualProps })
+        : progress;
+    });
+  }
+
   return progresses;
 };
 
@@ -52,14 +75,61 @@ exports.createProgress = async (transactionId, userId) => {
   });
 };
 
-exports.updateProgress = async progressDto => {
-  const { id, status, workers } = progressDto;
-  const worker = workers ? workers : [];
+exports.updateProgress = async (id, progressDto) => {
+  const { status, workers, note, schedule } = progressDto;
+  const progressUpdateBody = {
+    workers: _.isEmpty(workers) ? [] : workers,
+  };
+  if (status) {
+    progressUpdateBody.status = status;
+  }
+  if (note) {
+    progressUpdateBody.note = note;
+  }
+  if (schedule) {
+    progressUpdateBody.schedule = schedule;
+  }
+  const progress = await Progress.findById(id).populate('transaction');
+  const transactionStatus = progress.transaction.status;
+  if (transactionStatus === TRANSACTION_STATUS.DONE) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Transaction is done');
+  }
+  if (transactionStatus === TRANSACTION_STATUS.RETURN) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Transaction is return. Cannot change progress',
+    );
+  }
+  if (transactionStatus === TRANSACTION_STATUS.CANCEL) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Transaction is canceled');
+  }
+  if (progress.status === PROGRESS_STATUS.DONE) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Progress is done');
+  }
+  if (progress.status === PROGRESS_STATUS.CANCEL) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Progress is canceled');
+  }
+  switch (status) {
+    case PROGRESS_STATUS.SCHEDULING:
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Cannot change transaction status to scheduling',
+      );
+    case PROGRESS_STATUS.ON_GOING:
+    case PROGRESS_STATUS.IN_PROGRESS:
+    case PROGRESS_STATUS.DONE:
+      if (transactionStatus !== TRANSACTION_STATUS.DELIVERING) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          'Cannot change transaction status to on_going. Transaction status must be delivering',
+        );
+      }
+      break;
+    default:
+      break;
+  }
 
-  const progress = await Progress.findOneAndUpdate(
-    { _id: id },
-    { status, worker },
-    { new: true },
-  );
-  return progress;
+  return Progress.findOneAndUpdate({ _id: id }, progressUpdateBody, {
+    new: true,
+  });
 };

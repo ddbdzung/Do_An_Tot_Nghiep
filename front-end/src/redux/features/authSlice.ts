@@ -81,6 +81,12 @@ export const auth = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    updateFullname: (state, action: PayloadAction<string>) => {
+      console.log("action.payload", action.payload);
+      state.fullname = action.payload;
+      saveState("fullname", action.payload);
+      return state;
+    },
     signOut: (state) => {
       state.accessToken = null;
       state.email = null;
@@ -187,5 +193,5 @@ export const auth = createSlice({
   },
 });
 
-export const { reset, signOut } = auth.actions;
+export const { reset, signOut, updateFullname } = auth.actions;
 export default auth.reducer;

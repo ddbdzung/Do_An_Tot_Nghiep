@@ -24,6 +24,7 @@ const {
   TAX,
   SHIPPING_FEE,
 } = require('../core/modules/transaction/transaction.constant');
+const { removeCartByUserId } = require('./cart.service');
 
 exports.getTransactionById = async id => {
   const transaction = await Transaction.findById(id);
@@ -194,6 +195,7 @@ exports.createTransaction = async createTransactionDto => {
       await atomicUpdateProductQuantity(item.product, -item.amount);
     }),
     progress.save(),
+    removeCartByUserId(customerId),
   ]);
 
   return transaction.save();
@@ -302,9 +304,6 @@ exports.updateTransactionById = async (id, updateDto) => {
     }
 
     case TRANSACTION_STATUS.DONE: {
-      // Check if all progress is done or not
-      // If not, throw error
-      // Else, update transaction status
       const progress = await Progress.findOne({
         transaction: id,
       });
@@ -330,14 +329,8 @@ exports.updateTransactionById = async (id, updateDto) => {
       if (!progress) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Progress not found');
       }
-      if (progress.status !== PROGRESS_STATUS.ON_GOING) {
-        throw new ApiError(
-          httpStatus.BAD_REQUEST,
-          'Progress is not delivering yet, cannot complete transaction',
-        );
-      }
 
-      transaction.status = TRANSACTION_STATUS.DELIVERED;
+      transaction.status = TRANSACTION_STATUS.DELIVERING;
       await transaction.save();
       break;
     }

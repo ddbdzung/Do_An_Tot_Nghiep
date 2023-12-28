@@ -16,6 +16,7 @@ import { getChangedValues } from "@/utils/getChangesObject";
 import { throttle } from "lodash";
 import { IUpdateMeBodyDto } from "@/api/user/dto/update-me.dto";
 import { notifyError } from "@/utils/notify";
+import { updateFullname } from "@/redux/features/authSlice";
 
 const throttleUpdate = throttle(
   async function (
@@ -23,7 +24,12 @@ const throttleUpdate = throttle(
     actions: FormikHelpers<any>,
     dispatch: (...arg: any) => any
   ) {
-    dispatch(updateMeAsync(values));
+    dispatch(updateMeAsync(values)).then((res) => {
+      if (updateMeAsync.fulfilled.match(res)) {
+        dispatch(updateFullname(res.payload?.data?.name));
+      }
+      actions.setSubmitting(false);
+    });
   },
   1000,
   { trailing: false }
