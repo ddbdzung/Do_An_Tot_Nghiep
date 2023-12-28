@@ -1,6 +1,15 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
-const { TRANSCTION_METHODS } = require('../config/constant');
+const {
+  TRANSCTION_METHODS,
+  TRANSACTION_STATUS,
+} = require('../config/constant');
+
+exports.getTransactionById = {
+  params: Joi.object().keys({
+    id: Joi.string().custom(objectId),
+  }),
+};
 
 exports.createTransactionByUser = {
   body: Joi.object().keys({
@@ -28,6 +37,16 @@ exports.createTransactionByUser = {
   }),
 };
 
+exports.getTransactionsOfMe = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    role: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 exports.getTransactions = {
   query: Joi.object().keys({
     name: Joi.string(),
@@ -35,6 +54,17 @@ exports.getTransactions = {
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
+  }),
+};
+
+exports.updateTransaction = {
+  params: Joi.object().keys({
+    id: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    status: Joi.string()
+      .required()
+      .valid(...Object.values(TRANSACTION_STATUS)),
   }),
 };
 

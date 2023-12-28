@@ -4,6 +4,7 @@ const {
   TRANSACTION_STATUS,
   TRANSCTION_METHODS,
 } = require('../config/constant');
+const Worker = require('./worker.model');
 
 const productTransactionSchema = mongoose.Schema(
   {
@@ -90,6 +91,10 @@ const transactionSchema = mongoose.Schema(
     hasProgress: {
       type: Boolean,
       default: false,
+    },
+    totalItemPrice: {
+      type: Number,
+      required: true,
     },
   },
   {

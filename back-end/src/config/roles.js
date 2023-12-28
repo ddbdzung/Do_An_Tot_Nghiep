@@ -9,7 +9,16 @@ const roles = {
 const adminRights = Object.values(permissionArr);
 
 // Set user rights here
-const userRights = [];
+const userRights = [
+  permission.TRANSACTION.GET_TRANSACTIONS,
+  permission.TRANSACTION.GET_TRANSACTION,
+  permission.TRANSACTION.CREATE_TRANSACTION,
+
+  permission.CART.UPDATE_CART,
+  permission.CART.CREATE_CART,
+  permission.CART.GET_CART,
+  permission.CART.DELETE_CART,
+];
 
 // Set director rights here
 const directorRights = [permission.TRANSACTION.GET_TRANSACTIONS];

@@ -9,16 +9,38 @@ const {
 const _ = require('lodash');
 const { getUserById } = require('./user.service');
 const Mongoose = require('mongoose');
-const { TRANSCTION_METHODS } = require('../config/constant');
+const {
+  TRANSCTION_METHODS,
+  TRANSACTION_STATUS,
+} = require('../config/constant');
 const { getCategoriesByCode } = require('./category.service');
 const { CATEGORY_NEED_INSTALL } = require('../core/modules/category.constant');
 const Progress = require('../models/progress.model');
-const { PROGRESS_STATUS } = require('../common/constants.common');
 const Worker = require('../models/worker.model');
+const { PROGRESS_STATUS } = require('../common/constants.common');
+
+exports.getTransactionById = async id => {
+  const transaction = await Transaction.findById(id);
+  if (!transaction) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
+  }
+
+  return transaction;
+};
 
 exports.queryTransactions = async (filter, options) => {
   const transactions = await Transaction.paginate(filter, options);
   return transactions;
+};
+
+const calculateTotalPrice = products => {
+  const totalPrice = products.reduce((acc, product) => {
+    const price = product.productDetail.price;
+    const amount = product.amount;
+    return acc + price * amount;
+  }, 0);
+  const totalPriceWithVATAndShip = totalPrice * 1.08 + 20000;
+  return totalPriceWithVATAndShip;
 };
 
 exports.createTransaction = async createTransactionDto => {
@@ -236,4 +258,98 @@ exports.getTransactionsByUserId = async userId => {
   });
 
   return Object.values(serializedTransactions);
-};   
+};
+
+exports.updateTransactionById = async (id, updateDto) => {
+  const transaction = await Transaction.findById(id);
+  if (!transaction)
+    throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
+
+  if (updateDto.status === transaction.status) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Transaction is already ${transaction.status}`,
+    );
+  }
+
+  switch (updateDto.status) {
+    case TRANSACTION_STATUS.RETURN:
+    case TRANSACTION_STATUS.CANCEL: {
+      // Rollback product quantity in store
+      const products = await getProductsByIds(
+        transaction.products.map(i => i.product),
+        {
+          lean: true,
+        },
+      );
+      await Promise.all(
+        products.map(product =>
+          atomicUpdateProductQuantity(
+            product._id,
+            transaction.products.find(
+              i => i.product.toString() === product._id.toString(),
+            ).amount,
+          ),
+        ),
+      );
+      transaction.status = updateDto.status;
+      await transaction.save();
+      break;
+    }
+
+    case TRANSACTION_STATUS.DONE: {
+      // Check if all progress is done or not
+      // If not, throw error
+      // Else, update transaction status
+      const progress = await Progress.findOne({
+        transaction: id,
+      });
+      if (!progress) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Progress not found');
+      }
+      if (progress.status !== PROGRESS_STATUS.DONE) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          'Progress is not done yet, cannot complete transaction',
+        );
+      }
+
+      transaction.status = TRANSACTION_STATUS.DONE;
+      await transaction.save();
+      break;
+    }
+
+    case TRANSACTION_STATUS.DELIVERING: {
+      const progress = await Progress.findOne({
+        transaction: id,
+      });
+      if (!progress) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Progress not found');
+      }
+      if (progress.status !== PROGRESS_STATUS.ON_GOING) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          'Progress is not delivering yet, cannot complete transaction',
+        );
+      }
+
+      transaction.status = TRANSACTION_STATUS.DELIVERED;
+      await transaction.save();
+      break;
+    }
+
+    case TRANSACTION_STATUS.PREPARING: {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Cannot update transaction to preparing',
+      );
+    }
+
+    default:
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        `Cannot update transaction to ${updateDto.status}`,
+      );
+  }
+  return transaction;
+};

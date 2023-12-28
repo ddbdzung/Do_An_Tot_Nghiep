@@ -11,6 +11,8 @@ const e = require('express');
  *  transactionId?: string,
  *  userId?: string[],
  *  status?: string
+ *  page?: number,
+ *  limit?: number
  * } | undefined} filter
  * @returns {Promise<Progress[]> | null} Return progresses
  */

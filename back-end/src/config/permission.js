@@ -15,6 +15,8 @@ const permission = {
 
   // transaction module
   TRANSACTION: {
+    MANAGE_TRANSACTIONS: 'manage_transactions',
+    GET_TRANSACTION: 'get_transaction',
     GET_TRANSACTIONS: 'get_transactions',
     CREATE_TRANSACTION: 'create_transaction',
     UPDATE_TRANSACTIONS: 'update_transactions',

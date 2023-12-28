@@ -26,7 +26,6 @@ const TRANSCTION_METHODS = {
 const TRANSACTION_STATUS = {
   PREPARING: 'preparing',
   DELIVERING: 'delivering',
-  DELIVERED: 'delivered',
   CANCEL: 'cancel',
   RETURN: 'return',
   DONE: 'done',
