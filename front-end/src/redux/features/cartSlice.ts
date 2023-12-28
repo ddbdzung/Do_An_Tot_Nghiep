@@ -138,7 +138,7 @@ export const cartSlice = createSlice({
         }
         if (
           currentCart?.items?.length === 0 ||
-          currentCart?.items.findIndex((i) => i.product?._id !== res.data?._id)
+          currentCart?.items?.findIndex((i) => i.product?._id !== res.data?._id)
         ) {
           saveState("cart", {
             id: res.data?._id,

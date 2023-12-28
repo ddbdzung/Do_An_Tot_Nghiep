@@ -14,6 +14,7 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportIcon from "@mui/icons-material/Support";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import Link from "next/link";
 import PeopleIcon from "@mui/icons-material/People";
 import PlumbingIcon from "@mui/icons-material/Plumbing";
@@ -28,7 +29,8 @@ import { clearCheckout } from "@/redux/features/checkoutSlice";
 const DRAWER_WIDTH = 240;
 
 const LINKS = [
-  { text: "Trang chủ", href: "/admin", icon: HomeIcon },
+  { text: "Trang chủ", href: "/", icon: HomeIcon },
+  { text: "Thống kê", href: "/admin", icon: AnalyticsIcon },
   { text: "Quản lý người dùng", href: "/admin/manage/users", icon: PeopleIcon },
   {
     text: "Quản lý đơn hàng",

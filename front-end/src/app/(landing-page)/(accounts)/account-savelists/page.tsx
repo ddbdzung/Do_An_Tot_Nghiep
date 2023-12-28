@@ -12,6 +12,7 @@ import { toggleFavouriteProductAsync } from "@/redux/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import { loadState } from "@/utils/localStorage";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const AccountSavelists = () => {
@@ -33,6 +34,7 @@ const AccountSavelists = () => {
   const toggleLikeAsync = async (id: string) => {
     dispatch(toggleFavouriteProductAsync(id));
   };
+  const router = useRouter();
 
   useEffect(() => {
     let mounted = false;
@@ -71,7 +73,13 @@ const AccountSavelists = () => {
         )}
       </div>
       <div className="flex !mt-20 justify-center items-center">
-        <ButtonSecondary /*loading*/>Xem thêm</ButtonSecondary>
+        <ButtonSecondary
+          onClick={() => {
+            router.push("/collection");
+          }} /*loading*/
+        >
+          Xem thêm
+        </ButtonSecondary>
       </div>
     </div>
   );

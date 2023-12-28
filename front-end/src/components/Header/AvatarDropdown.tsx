@@ -21,11 +21,16 @@ function AvatarDropdown() {
   const [isAuth, setAuth] = useState<boolean>(
     !accessToken || permissions.length === 0 ? false : true
   );
+  const [isAdmin, setIsAdmin] = useState<boolean>(
+    permissions.includes("admin")
+  );
   useEffect(() => {
     if (accessToken && permissions.length > 0) {
       setAuth(true);
+      setIsAdmin(permissions.includes("admin"));
     } else {
       setAuth(false);
+      setIsAdmin(false);
     }
   }, [accessToken, permissions]);
 
@@ -101,6 +106,39 @@ function AvatarDropdown() {
                     {/* Avatar End */}
                     {isAuth ? (
                       <>
+                        {/* ------------------ Admin --------------------- */}
+                        {isAdmin && (
+                          <>
+                            <Link
+                              href={"/admin"}
+                              className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                              onClick={() => close()}
+                            >
+                              <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={1.5}
+                                  stroke="currentColor"
+                                  className="w-6 h-6"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="ml-4">
+                                <p className="text-sm font-medium ">
+                                  {"Trang quản trị"}
+                                </p>
+                              </div>
+                            </Link>
+                          </>
+                        )}
+
                         {/* ------------------ Account --------------------- */}
                         <Link
                           href={"/account"}

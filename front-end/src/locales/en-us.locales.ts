@@ -11,6 +11,10 @@ const enUS = {
         UPDATE_CATEGORY_SUCCESS: "Category updated successfully",
         DELETE_CATEGORY_SUCCESS: "Category deleted successfully",
       },
+      TRANSACTIONS: {
+        GET_TRANSACTIONS_SUCCESS: "Transactions fetched successfully",
+        UPDATE_TRANSACTION_SUCCESS: "Transaction updated successfully",
+      },
     },
   },
 };

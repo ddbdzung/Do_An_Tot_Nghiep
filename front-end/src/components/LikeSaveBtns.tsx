@@ -26,7 +26,7 @@ const LikeSaveBtns = ({ toggleLike, itemId, liked }) => {
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
             />
           </svg>
-          <span className="hidden sm:block ml-2">cChia sẻ</span>
+          <span className="hidden sm:block ml-2">Chia sẻ</span>
         </span>
         <span
           className={`py-1.5 px-3 flex rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer `}

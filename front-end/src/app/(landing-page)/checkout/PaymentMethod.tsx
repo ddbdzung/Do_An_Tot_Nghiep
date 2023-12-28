@@ -23,6 +23,7 @@ const PaymentMethod: FC<Props> = ({
   isActive,
   onCloseActive,
   onOpenActive,
+  checkout,
 }) => {
   const [methodActive, setMethodActive] = useState<
     PaymentMethod.INTERNET_BANKING | PaymentMethod.COD | PaymentMethod.MOMO
@@ -142,19 +143,19 @@ const PaymentMethod: FC<Props> = ({
   };
 
   const renderInterNetBanking = () => {
-    const active = methodActive === "Internet-banking";
+    const active = methodActive === "internet-banking";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
           className="pt-3.5"
           name="payment-method"
-          id="Internet-banking"
+          id="internet-banking"
           defaultChecked={active}
           onChange={(e) => setMethodActive(e as any)}
         />
         <div className="flex-1">
           <label
-            htmlFor="Internet-banking"
+            htmlFor="internet-banking"
             className="flex items-center space-x-4 sm:space-x-6"
           >
             <div
@@ -268,13 +269,13 @@ const PaymentMethod: FC<Props> = ({
         <Radio
           className="pt-3.5"
           name="payment-method"
-          id="Wallet"
+          id="momo"
           defaultChecked={active}
           onChange={(e) => setMethodActive(e as any)}
         />
         <div className="flex-1">
           <label
-            htmlFor="Wallet"
+            htmlFor="momo"
             className="flex items-center space-x-4 sm:space-x-6 "
           >
             <div
@@ -341,13 +342,13 @@ const PaymentMethod: FC<Props> = ({
         <Radio
           className="pt-3.5"
           name="payment-method"
-          id="COD"
+          id="cod"
           defaultChecked={active}
           onChange={(e) => setMethodActive(e as any)}
         />
         <div className="flex-1">
           <label
-            htmlFor="COD"
+            htmlFor="cod"
             className="flex items-center space-x-4 sm:space-x-6 "
           >
             <div
@@ -489,10 +490,7 @@ const PaymentMethod: FC<Props> = ({
           <div>{renderCashOnDelivery()}</div>
 
           <div className="flex pt-6">
-            <ButtonPrimary
-              className="w-full max-w-[240px]"
-              onClick={onCloseActive}
-            >
+            <ButtonPrimary className="w-full max-w-[240px]" onClick={checkout}>
               Xác nhận thanh toán
             </ButtonPrimary>
             <ButtonSecondary className="ml-3" onClick={onCloseActive}>

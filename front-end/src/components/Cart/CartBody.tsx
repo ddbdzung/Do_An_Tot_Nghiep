@@ -321,17 +321,17 @@ export default function CartBody() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                Learn more{` `}
+                Xen thêm về{` `}
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
                   href="##"
                   className="text-slate-900 dark:text-slate-200 underline font-medium"
                 >
-                  Taxes
+                  Thuế
                 </a>
                 <span>
-                  {` `}and{` `}
+                  {` `}và{` `}
                 </span>
                 <a
                   target="_blank"
@@ -339,9 +339,8 @@ export default function CartBody() {
                   href="##"
                   className="text-slate-900 dark:text-slate-200 underline font-medium"
                 >
-                  Shipping
+                  phí vận chuyển.
                 </a>
-                {` `} infomation
               </p>
             </div>
           </div>
@@ -351,9 +350,9 @@ export default function CartBody() {
   ) : (
     <div className="text-center">
       <span className="text-lg">
-        Cart is empty. Let{"'"}s look at some products{" "}
+        Giỏ hàng trống. Hãy xem các sản phẩm của chúng tôi{" "}
         <Link style={{ color: "blue" }} href="/collection">
-          here
+          tại đây
         </Link>
       </span>
     </div>

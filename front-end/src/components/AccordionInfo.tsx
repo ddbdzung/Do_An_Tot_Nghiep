@@ -9,13 +9,13 @@ const DEMO_DATA = [
     name: "Bảo hành",
     content: `<ul class="list-disc list-inside leading-7">
     <li>
-    5 year warranty on all hardware
+    5 năm bảo hành cho tất cả phụ kiện
     </li>
     <li>
-    1 year warranty on all other elements
+    1 năm bảo hành cho tất cả các phần khác
     </li>
     <li>
-    With a 5 year warranty on all hardware and 1 year warranty on all other elements, you can be sure that your essentials are built to last.
+    Với chính sách bảo hành 5 năm cho tất cả phần cứng và 1 năm cho tất cả các thành phần khác, quý khách hoàn toàn có thể tin tưởng rằng các sản phẩm cần thiết của mình đã được xây dựng để có tuổi thọ cao.
     </li>
   </ul>`,
   },
@@ -23,15 +23,17 @@ const DEMO_DATA = [
     name: "FAQ",
     content: `
     <ul class="list-disc list-inside leading-7">
-    <li>All full-priced, unworn items, with tags attached and in their original packaging are eligible for return or exchange within 30 days of placing your order.</li>
     <li>
-    Please note, packs must be returned in full. We do not accept partial returns of packs.
+    Tất cả các sản phẩm chưa qua sử dụng, có thẻ treo và trong bao bì gốc của chúng tôi đều có thể được trả lại hoặc trao đổi trong vòng 30 ngày kể từ khi đặt hàng.
     </li>
     <li>
-    Want to know our full returns policies? Here you go.
+    Hãy lưu ý, các sản phẩm phải được trả về đầy đủ. Chúng tôi không chấp nhận trả lại một phần của các sản phẩm.
     </li>
     <li>
-    Want more info about shipping, materials or care instructions? Here!
+    Bạn có thể xem chính sách hoàn trả của chúng tôi tại đây.
+    </li>
+    <li>
+    Để biết thêm thông tin về vận chuyển, vật liệu hoặc hướng dẫn chăm sóc? Ở đây!
     </li>
   </ul>
     `,

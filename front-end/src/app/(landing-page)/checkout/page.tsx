@@ -139,7 +139,7 @@ const CheckoutPage = () => {
 
   const renderProduct = (item: ICartItemNotRedux, index: number) => {
     const { product, amount } = item;
-    const { images, price, name } = product;
+    const { images, price, name, id } = product;
 
     return (
       <div key={index} className="relative flex py-7 first:pt-0 last:pb-0">
@@ -151,7 +151,10 @@ const CheckoutPage = () => {
             className="h-full w-full object-contain object-center"
             sizes="150px"
           />
-          <Link href="/product-detail" className="absolute inset-0"></Link>
+          <Link
+            href={`/product-detail/${id}`}
+            className="absolute inset-0"
+          ></Link>
         </div>
 
         <div className="ml-3 sm:ml-6 flex flex-1 flex-col">
@@ -338,6 +341,7 @@ const CheckoutPage = () => {
               handleScrollToEl("PaymentMethod");
             }}
             onCloseActive={() => setTabActive("PaymentMethod")}
+            checkout={handleCheckout}
           />
         </div>
       </div>

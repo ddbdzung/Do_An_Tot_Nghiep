@@ -45,6 +45,41 @@ import { ICreateCategoryBodyDto } from "@/api/category/dto/create-category.dto";
 import { IGetCategoryQueryDto } from "@/api/category/dto/get-category.dto";
 import { IUpdateCategoryDto } from "@/api/category/dto/update-category.dto";
 import { IDeleteCategoryQueryDto } from "@/api/category/dto/delete-category.dto";
+import {
+  fetchGetTransactions,
+  fetchUpdateTransaction,
+} from "../services/checkoutApi";
+import { GetTransactionsQueryDto } from "@/api/transactions/dto/get-transactions.dto";
+import {
+  ITransaction,
+  TransactionDto,
+} from "@/api/transactions/dto/transaction.dto";
+import _ from "lodash";
+import { plainToInstance } from "class-transformer";
+
+export const getTransactionsAsync = createAsyncThunk(
+  "admin/getTransactions",
+  async (payload: GetTransactionsQueryDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchGetTransactions(tokens, payload);
+    return data;
+  }
+);
+
+export const updateTransactionAsync = createAsyncThunk(
+  "admin/updateTransaction",
+  async (payload: TransactionDto, { getState }) => {
+    const states: RootState = getState();
+    const tokens = {
+      access: states.authReducer.accessToken,
+    };
+    const data = await fetchUpdateTransaction(tokens, payload);
+    return data;
+  }
+);
 
 export const getProductsAsync = createAsyncThunk(
   "admin/getProductsAsync",
@@ -175,12 +210,14 @@ export type AdminState = {
   formStatus: AdminFormStatus;
   categories: ICategory[] | null;
   products: IProduct[] | null;
+  transactions: ITransaction[] | null;
 };
 
 const initialState = {
   formStatus: AdminFormStatus.IDLE,
   categories: null,
   products: null,
+  transactions: null,
 } as AdminState;
 
 export const admin = createSlice({
@@ -406,6 +443,64 @@ export const admin = createSlice({
         return state;
       })
       .addCase(deleteCategoryAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(getTransactionsAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+
+        return state;
+      })
+      .addCase(getTransactionsAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<ITransaction>(action.payload, {
+          successMessage:
+            enUS.ADMIN.MANAGE.TRANSACTIONS.GET_TRANSACTIONS_SUCCESS,
+        });
+        if (_.isEmpty(res)) {
+          return state;
+        }
+        if (_.isEmpty(state.transactions)) {
+          state.transactions = [];
+        }
+        state.transactions = res.data?.results as ITransaction[];
+        return state;
+      })
+      .addCase(getTransactionsAsync.rejected, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        return state;
+      })
+      .addCase(updateTransactionAsync.pending, (state) => {
+        state.formStatus = AdminFormStatus.LOADING;
+        return state;
+      })
+      .addCase(updateTransactionAsync.fulfilled, (state, action) => {
+        state.formStatus = AdminFormStatus.IDLE;
+        const res = handleResponsePayload<ITransaction>(action.payload, {
+          successMessage:
+            enUS.ADMIN.MANAGE.TRANSACTIONS.UPDATE_TRANSACTION_SUCCESS,
+        });
+        if (_.isEmpty(res)) {
+          return state;
+        }
+
+        if (!state.transactions) {
+          state.transactions = [res.data];
+          return state;
+        }
+
+        const prevTransactions = _.cloneDeep(state.transactions);
+        const updatedTransaction = prevTransactions?.findIndex(
+          (i) => i.id === res.data?.id
+        );
+        if (updatedTransaction === -1) {
+          return state;
+        }
+        prevTransactions[updatedTransaction] = res.data as ITransaction;
+        state.transactions = prevTransactions;
+        return state;
+      })
+      .addCase(updateTransactionAsync.rejected, (state, action) => {
         state.formStatus = AdminFormStatus.IDLE;
         return state;
       });

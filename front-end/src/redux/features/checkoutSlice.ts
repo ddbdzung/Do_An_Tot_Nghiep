@@ -44,7 +44,7 @@ export enum PaymentMethod {
   COD = "cod",
   MOMO = "momo",
   PAYPAL = "paypal",
-  INTERNET_BANKING = "Internet-banking",
+  INTERNET_BANKING = "internet-banking",
 }
 
 const initialState = {
