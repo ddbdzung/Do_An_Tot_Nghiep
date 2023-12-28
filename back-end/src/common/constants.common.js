@@ -14,7 +14,3 @@ exports.PROGRESS_STATUS = {
   // Is canceled by workers along with transaction
   CANCEL: 'cancel',
 };
-
-exports.TAX = 0.08;
-
-exports.SHIPPING_FEE = 20000;

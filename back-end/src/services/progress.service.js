@@ -4,7 +4,6 @@ const ApiError = require('../utils/ApiError');
 const Mongoose = require('mongoose');
 const { PROGRESS_STATUS } = require('../common/constants.common');
 const httpStatus = require('http-status');
-const e = require('express');
 
 /**
  * @param {{

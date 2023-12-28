@@ -14,10 +14,16 @@ const {
   TRANSACTION_STATUS,
 } = require('../config/constant');
 const { getCategoriesByCode } = require('./category.service');
-const { CATEGORY_NEED_INSTALL } = require('../core/modules/category.constant');
+const {
+  CATEGORY_NEED_INSTALL,
+} = require('../core/modules/category/category.constant');
 const Progress = require('../models/progress.model');
 const Worker = require('../models/worker.model');
 const { PROGRESS_STATUS } = require('../common/constants.common');
+const {
+  TAX,
+  SHIPPING_FEE,
+} = require('../core/modules/transaction/transaction.constant');
 
 exports.getTransactionById = async id => {
   const transaction = await Transaction.findById(id);
@@ -31,16 +37,6 @@ exports.getTransactionById = async id => {
 exports.queryTransactions = async (filter, options) => {
   const transactions = await Transaction.paginate(filter, options);
   return transactions;
-};
-
-const calculateTotalPrice = products => {
-  const totalPrice = products.reduce((acc, product) => {
-    const price = product.productDetail.price;
-    const amount = product.amount;
-    return acc + price * amount;
-  }, 0);
-  const totalPriceWithVATAndShip = totalPrice * 1.08 + 20000;
-  return totalPriceWithVATAndShip;
 };
 
 exports.createTransaction = async createTransactionDto => {
@@ -177,6 +173,14 @@ exports.createTransaction = async createTransactionDto => {
       price: priceId,
     };
   });
+
+  const totalItemPrice = transactionSchema.products?.reduce((acc, product) => {
+    const price = product.productDetail.price;
+    const amount = product.amount;
+    return acc + price * amount;
+  }, 0);
+  const finalPrice = totalItemPrice + totalItemPrice * TAX + SHIPPING_FEE;
+  transactionSchema.totalPrice = finalPrice;
 
   const transaction = new Transaction(transactionSchema);
   const progress = new Progress({
