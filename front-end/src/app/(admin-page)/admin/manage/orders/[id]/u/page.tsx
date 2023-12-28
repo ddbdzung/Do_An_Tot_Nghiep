@@ -44,6 +44,7 @@ import { IUpdateTransactionDto } from "@/api/transactions/dto/update-transaction
 import { fetchGetTransaction } from "@/redux/services/checkoutApi";
 import { ITransaction } from "@/api/transactions/dto/transaction.dto";
 import { TRANSACTION_STATUS } from "./constants";
+import BasicTable from "./SimpleTable";
 
 const throttleUpdate = throttle(
   async function (
@@ -239,6 +240,10 @@ function UpdateProductPage() {
           </Grid>
         </Grid>
       </form>
+      <Typography variant="h5" gutterBottom marginTop="1rem">
+        Details
+      </Typography>
+      <BasicTable rows={transaction?.products} />
     </>
   );
 }

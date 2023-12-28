@@ -32,7 +32,8 @@ exports.getProgresses = async filter => {
 
   const progresses = await Progress.find(filterObj)
     .skip(skip)
-    .limit(limitProgress);
+    .limit(limitProgress)
+    .populate('workers');
   return progresses;
 };
 
